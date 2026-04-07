@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
@@ -38,55 +38,20 @@
     <!-- Main CSS File -->
     <link href="assets/css/main.css" rel="stylesheet" />
 
-
-    <!-- =======================================================
-  * Template Name: Arsha
-  * Template URL: https://bootstrapmade.com/arsha-free-bootstrap-html-template-corporate/
-  * Updated: Feb 22 2025 with Bootstrap v5.3.3
-  * Author: BootstrapMade.com
-  * License: https://bootstrapmade.com/license/
-  ======================================================== -->
-    <script src="assets/js/jquery-1.10.2.min.js" type="text/javascript"></script>
-    <script src="assets/js/jquery-jvectormap-1.2.2.min.js" type="text/javascript"></script>
+    <script src="js/loadMenu.js"></script>
+    <script
+      src="assets/js/jquery-1.10.2.min.js"
+      type="text/javascript"
+    ></script>
+    <script
+      src="assets/js/jquery-jvectormap-1.2.2.min.js"
+      type="text/javascript"
+    ></script>
     <script src="assets/js/brazil.js" type="text/javascript"></script>
   </head>
 
   <body class="index-page">
-    <header id="header" class="header d-flex align-items-center fixed-top">
-      <div
-        class="container-fluid container-xl position-relative d-flex align-items-center"
-      >
-        <a href="index.html" class="logo d-flex align-items-center me-auto">
-          <!-- Uncomment the line below if you also wish to use an image logo -->
-          <!-- <img src="assets/img/logo.webp" alt=""> -->
-          <h1 class="sitename">Portal</h1>
-        </a>
-
-        <nav id="navmenu" class="navmenu">
-          <ul>
-            <li><a href="#hero" class="active">Home</a></li>
-            <li><a href="#noticias">Notícias</a></li>
-            <li class="dropdown">
-              <a href="#"
-                ><span>Egressos</span>
-                <i class="bi bi-chevron-down toggle-dropdown"></i
-              ></a>
-              <ul>
-                <li><a href="#grafico">Acompanhamento de Egressos</a></li>
-                <li><a href="#testimonials">Depoimentos</a></li>
-                <li><a href="#work-process">Oportunidades</a></li>
-              </ul>
-            </li>
-            <li><a href="#eventos">Eventos</a></li>
-            <li><a href="blog.html">Blog</a></li>
-            <li><a href="#contact">Contato</a></li>
-          </ul>
-          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-        </nav>
-
-        <a class="btn-getstarted" href="#about"><i class="bi bi-person-circle"></i> Entrar</a>
-      </div>
-    </header>
+    <div id="menu-placeholder"></div>
 
     <main class="main">
       <!-- Hero Section -->
@@ -99,13 +64,15 @@
             >
               <h1>Portal de Egressos - UFJ</h1>
               <p>
-                Mantenha o vínculo com a sua universidade. Conecte-se a milhares de egressos da UFJ e abra novas portas. 
+                Mantenha o vínculo com a sua universidade. Conecte-se a milhares
+                de egressos da UFJ e abra novas portas.
               </p>
               <div class="d-flex">
                 <a
                   href="https://www.youtube.com/watch?v=Y7f98aduVJ8"
                   class="glightbox btn-watch-video d-flex align-items-center"
-                  ><i class="bi bi-play-circle"></i><span>Assista ao vídeo!</span></a
+                  ><i class="bi bi-play-circle"></i
+                  ><span>Assista ao vídeo!</span></a
                 >
               </div>
             </div>
@@ -132,144 +99,23 @@
         <!-- Section Title -->
         <div class="container section-title" data-aos="fade-up">
           <h2>Notícias</h2>
-          <p>
-            Confira as últimas notícias...
-          </p>
+          <p>Confira as últimas notícias...</p>
         </div>
         <!-- End Section Title -->
 
         <div class="container">
-          <div class="row gy-5">
-            <div class="col-xl-4 col-md-6">
-              <div
-                class="post-item position-relative h-100"
-                data-aos="fade-up"
-                data-aos-delay="100"
+          <div class="row gy-5" id="noticias-container"></div>
+
+          <div class="row mt-5" id="btn-todas-noticias" style="display: none">
+            <div class="col-12 text-center">
+              <a href="blog.html" class="btn btn-outline-primary"
+                >Ver todas as notícias</a
               >
-                <div class="post-img position-relative overflow-hidden">
-                  <img
-                    src="assets/img/blog/blog-post-1.webp"
-                    class="img-fluid"
-                    alt=""
-                  />
-                  <span class="post-date">12 de Dezembro</span>
-                </div>
-
-                <div class="post-content d-flex flex-column">
-                  <h3 class="post-title">
-                    Exemplo de noticia 1
-                  </h3>
-
-                  <div class="meta d-flex align-items-center">
-                    <div class="d-flex align-items-center">
-                      <i class="bi bi-person"></i>
-                      <span class="ps-2">Autor(a)</span>
-                    </div>
-                    <span class="px-3 text-black-50">/</span>
-                    <div class="d-flex align-items-center">
-                      <i class="bi bi-folder2"></i>
-                      <span class="ps-2">Educação</span>
-                    </div>
-                  </div>
-
-                  <hr />
-
-                  <a href="blog-details.html" class="readmore stretched-link"
-                    ><span>Saiba mais</span><i class="bi bi-arrow-right"></i
-                  ></a>
-                </div>
-              </div>
             </div>
-            <!-- End post item -->
-
-            <div class="col-xl-4 col-md-6">
-              <div
-                class="post-item position-relative h-100"
-                data-aos="fade-up"
-                data-aos-delay="100"
-              >
-                <div class="post-img position-relative overflow-hidden">
-                  <img
-                    src="assets/img/blog/blog-post-2.webp"
-                    class="img-fluid"
-                    alt=""
-                  />
-                  <span class="post-date">12 de Dezembro</span>
-                </div>
-
-                <div class="post-content d-flex flex-column">
-                  <h3 class="post-title">
-                    Exemplo de noticia 2
-                  </h3>
-
-                  <div class="meta d-flex align-items-center">
-                    <div class="d-flex align-items-center">
-                      <i class="bi bi-person"></i>
-                      <span class="ps-2">Autor(a)</span>
-                    </div>
-                    <span class="px-3 text-black-50">/</span>
-                    <div class="d-flex align-items-center">
-                      <i class="bi bi-folder2"></i>
-                      <span class="ps-2">Educação</span>
-                    </div>
-                  </div>
-
-                  <hr />
-
-                  <a href="blog-details.html" class="readmore stretched-link"
-                    ><span>Saiba mais</span><i class="bi bi-arrow-right"></i
-                  ></a>
-                </div>
-              </div>
-            </div>
-            <!-- End post item -->
-
-            <div class="col-xl-4 col-md-6">
-              <div
-                class="post-item position-relative h-100"
-                data-aos="fade-up"
-                data-aos-delay="100"
-              >
-                <div class="post-img position-relative overflow-hidden">
-                  <img
-                    src="assets/img/blog/blog-post-3.webp"
-                    class="img-fluid"
-                    alt=""
-                  />
-                  <span class="post-date">12 de Dezembro</span>
-                </div>
-
-                <div class="post-content d-flex flex-column">
-                  <h3 class="post-title">
-                    Exemplo de noticia 3
-                  </h3>
-
-                  <div class="meta d-flex align-items-center">
-                    <div class="d-flex align-items-center">
-                      <i class="bi bi-person"></i>
-                      <span class="ps-2">Autor(a)</span>
-                    </div>
-                    <span class="px-3 text-black-50">/</span>
-                    <div class="d-flex align-items-center">
-                      <i class="bi bi-folder2"></i>
-                      <span class="ps-2">Educação</span>
-                    </div>
-                  </div>
-
-                  <hr />
-
-                  <a href="blog-details.html" class="readmore stretched-link"
-                    ><span>Saiba mais</span><i class="bi bi-arrow-right"></i
-                  ></a>
-                </div>
-              </div>
-            </div>
-            <!-- End post item -->
           </div>
         </div>
       </section>
       <!-- /Recent Blog Postst Section -->
-
 
       <!-- Skills Section -->
       <section id="grafico" class="skills section">
@@ -287,9 +133,7 @@
 
             <div class="col-lg-5 pt-4 pt-lg-0 content" id="clicked-region">
               <h3>Acompanhamento de Egressos</h3>
-              <p class="fst-italic">
-                Dados e indicadores dos egressos da UFJ
-              </p>
+              <p class="fst-italic">Dados e indicadores dos egressos da UFJ</p>
 
               <div class="skills-content skills-animation">
                 <div class="progress">
@@ -310,7 +154,8 @@
 
                 <div class="progress">
                   <span class="skill"
-                    ><span>Outras cidades (GO)</span> <i class="val">90%</i></span
+                    ><span>Outras cidades (GO)</span>
+                    <i class="val">90%</i></span
                   >
                   <div class="progress-bar-wrap">
                     <div
@@ -326,7 +171,8 @@
 
                 <div class="progress">
                   <span class="skill"
-                    ><span>Outras cidades (exceto GO)</span> <i class="val">75%</i></span
+                    ><span>Outras cidades (exceto GO)</span>
+                    <i class="val">75%</i></span
                   >
                   <div class="progress-bar-wrap">
                     <div
@@ -364,80 +210,19 @@
 
       <!-- Services Section -->
       <section id="eventos" class="services section light-background">
-        <!-- Section Title -->
         <div class="container section-title" data-aos="fade-up">
           <h2>Eventos</h2>
-          <p>
-            Confira nossos próximos eventos
-          </p>
+          <p>Confira nossos próximos eventos</p>
         </div>
-        <!-- End Section Title -->
-
         <div class="container">
-          <div class="row gy-4">
-            <div
-              class="col-xl-3 col-md-6 d-flex"
-              data-aos="fade-up"
-              data-aos-delay="100"
-            >
-              <div class="service-item position-relative">
-                <div class="icon"><i class="bi bi-calendar4-week icon"></i></div>
-                <h4><a href="" class="stretched-link">Evento 1</a></h4>
-                <p>
-                  Informações sobre o evento
-                </p>
-              </div>
-            </div>
-            <!-- End Service Item -->
+          <div class="row gy-4" id="eventos-container"></div>
 
-            <div
-              class="col-xl-3 col-md-6 d-flex"
-              data-aos="fade-up"
-              data-aos-delay="200"
-            >
-              <div class="service-item position-relative">
-                <div class="icon"><i class="bi bi-calendar4-week icon"></i></div>
-                <h4><a href="" class="stretched-link">Evento 2</a></h4>
-                <p>
-                  Informações sobre o evento
-                </p>
-              </div>
+          <div class="row mt-5" id="btn-todos-eventos" style="display: none">
+            <div class="col-12 text-center">
+              <a href="eventos.html" class="btn btn-outline-primary"
+                >Ver todos os eventos</a
+              >
             </div>
-            <!-- End Service Item -->
-
-            <div
-              class="col-xl-3 col-md-6 d-flex"
-              data-aos="fade-up"
-              data-aos-delay="300"
-            >
-              <div class="service-item position-relative">
-                <div class="icon">
-                  <i class="bi bi-calendar4-week icon"></i>
-                </div>
-                <h4><a href="" class="stretched-link">Evento 3</a></h4>
-                <p>
-                  Informações sobre o evento
-                </p>
-              </div>
-            </div>
-            <!-- End Service Item -->
-
-            <div
-              class="col-xl-3 col-md-6 d-flex"
-              data-aos="fade-up"
-              data-aos-delay="400"
-            >
-              <div class="service-item position-relative">
-                <div class="icon">
-                  <i class="bi bi-calendar4-week icon"></i>
-                </div>
-                <h4><a href="" class="stretched-link">Evento 4</a></h4>
-                <p>
-                  Informações sobre o evento
-                </p>
-              </div>
-            </div>
-            <!-- End Service Item -->
           </div>
         </div>
       </section>
@@ -448,9 +233,7 @@
         <!-- Section Title -->
         <div class="container section-title" data-aos="fade-up">
           <h2>Oportunidades e Recursos</h2>
-          <p>
-            Compartilhe as oportunidades disponíveis e ajude a
-          </p>
+          <p>Compartilhe as oportunidades disponíveis e ajude a</p>
         </div>
         <!-- End Section Title -->
 
@@ -471,7 +254,8 @@
                   <h3>Divulgue &amp; Contrate</h3>
                   <!-- <h3>Research &amp; Analysis</h3> -->
                   <p>
-                    Divulgue as oportunidades da sua empresa e contrate pessoas qualificadas.
+                    Divulgue as oportunidades da sua empresa e contrate pessoas
+                    qualificadas.
                   </p>
                   <div class="steps-features">
                     <div class="feature-item">
@@ -506,7 +290,8 @@
                   <div class="steps-number">02</div>
                   <h3>Qualifique a sua empresa</h3>
                   <p>
-                    Com colaboradores capacitados, os resultados serão mais expressivos.
+                    Com colaboradores capacitados, os resultados serão mais
+                    expressivos.
                   </p>
                   <div class="steps-features">
                     <div class="feature-item">
@@ -540,9 +325,7 @@
                 <div class="steps-content">
                   <div class="steps-number">03</div>
                   <h3>Veja seu negócio decolar!</h3>
-                  <p>
-                    Sua empresa em lugar de destaque no mundo dos negócios.
-                  </p>
+                  <p>Sua empresa em lugar de destaque no mundo dos negócios.</p>
                   <div class="steps-features">
                     <div class="feature-item">
                       <i class="bi bi-check-circle"></i>
@@ -568,15 +351,10 @@
 
       <!-- Testimonials Section -->
       <section id="testimonials" class="testimonials section">
-        <!-- Section Title -->
         <div class="container section-title" data-aos="fade-up">
           <h2>Depoimentos</h2>
-          <p>
-            Acompanhe os depoimentos dos nossos egressos:
-          </p>
+          <p>Acompanhe os depoimentos dos nossos egressos:</p>
         </div>
-        <!-- End Section Title -->
-
         <div class="container" data-aos="fade-up" data-aos-delay="100">
           <div class="swiper init-swiper">
             <script type="application/json" class="swiper-config">
@@ -594,157 +372,9 @@
                 }
               }
             </script>
-            <div class="swiper-wrapper">
-              <div class="swiper-slide">
-                <div class="testimonial-item">
-                  <img
-                    src="assets/img/person/person-m-9.webp"
-                    class="testimonial-img"
-                    alt=""
-                  />
-                  <h3>João Martins</h3>
-                  <h4>Biologia</h4>
-                  <div class="stars">
-                    <i class="bi bi-star-fill"></i
-                    ><i class="bi bi-star-fill"></i
-                    ><i class="bi bi-star-fill"></i
-                    ><i class="bi bi-star-fill"></i
-                    ><i class="bi bi-star-fill"></i>
-                  </div>
-                  <p>
-                    <i class="bi bi-quote quote-icon-left"></i>
-                    <span
-                      >Proin iaculis purus consequat sem cure digni ssim donec
-                      porttitora entum suscipit rhoncus. Accusantium quam,
-                      ultricies eget id, aliquam eget nibh et. Maecen aliquam,
-                      risus at semper.</span
-                    >
-                    <i class="bi bi-quote quote-icon-right"></i>
-                  </p>
-                </div>
-              </div>
-              <!-- End testimonial item -->
 
-              <div class="swiper-slide">
-                <div class="testimonial-item">
-                  <img
-                    src="assets/img/person/person-f-5.webp"
-                    class="testimonial-img"
-                    alt=""
-                  />
-                  <h3>Ana Maria</h3>
-                  <h4>Medicina</h4>
-                  <div class="stars">
-                    <i class="bi bi-star-fill"></i
-                    ><i class="bi bi-star-fill"></i
-                    ><i class="bi bi-star-fill"></i
-                    ><i class="bi bi-star-fill"></i
-                    ><i class="bi bi-star-fill"></i>
-                  </div>
-                  <p>
-                    <i class="bi bi-quote quote-icon-left"></i>
-                    <span
-                      >Export tempor illum tamen malis malis eram quae irure
-                      esse labore quem cillum quid cillum eram malis quorum
-                      velit fore eram velit sunt aliqua noster fugiat irure amet
-                      legam anim culpa.</span
-                    >
-                    <i class="bi bi-quote quote-icon-right"></i>
-                  </p>
-                </div>
-              </div>
-              <!-- End testimonial item -->
+            <div class="swiper-wrapper" id="depoimentos-wrapper"></div>
 
-              <div class="swiper-slide">
-                <div class="testimonial-item">
-                  <img
-                    src="assets/img/person/person-f-12.webp"
-                    class="testimonial-img"
-                    alt=""
-                  />
-                  <h3>Maria Sueli</h3>
-                  <h4>Direito</h4>
-                  <div class="stars">
-                    <i class="bi bi-star-fill"></i
-                    ><i class="bi bi-star-fill"></i
-                    ><i class="bi bi-star-fill"></i
-                    ><i class="bi bi-star-fill"></i
-                    ><i class="bi bi-star-fill"></i>
-                  </div>
-                  <p>
-                    <i class="bi bi-quote quote-icon-left"></i>
-                    <span
-                      >Enim nisi quem export duis labore cillum quae magna enim
-                      sint quorum nulla quem veniam duis minim tempor labore
-                      quem eram duis noster aute amet eram fore quis sint
-                      minim.</span
-                    >
-                    <i class="bi bi-quote quote-icon-right"></i>
-                  </p>
-                </div>
-              </div>
-              <!-- End testimonial item -->
-
-              <div class="swiper-slide">
-                <div class="testimonial-item">
-                  <img
-                    src="assets/img/person/person-m-12.webp"
-                    class="testimonial-img"
-                    alt=""
-                  />
-                  <h3>José Martins</h3>
-                  <h4>Engenharia Agronômica</h4>
-                  <div class="stars">
-                    <i class="bi bi-star-fill"></i
-                    ><i class="bi bi-star-fill"></i
-                    ><i class="bi bi-star-fill"></i
-                    ><i class="bi bi-star-fill"></i
-                    ><i class="bi bi-star-fill"></i>
-                  </div>
-                  <p>
-                    <i class="bi bi-quote quote-icon-left"></i>
-                    <span
-                      >Fugiat enim eram quae cillum dolore dolor amet nulla
-                      culpa multos export minim fugiat minim velit minim dolor
-                      enim duis veniam ipsum anim magna sunt elit fore quem
-                      dolore labore illum veniam.</span
-                    >
-                    <i class="bi bi-quote quote-icon-right"></i>
-                  </p>
-                </div>
-              </div>
-              <!-- End testimonial item -->
-
-              <div class="swiper-slide">
-                <div class="testimonial-item">
-                  <img
-                    src="assets/img/person/person-m-13.webp"
-                    class="testimonial-img"
-                    alt=""
-                  />
-                  <h3>Maurício</h3>
-                  <h4>Medicina Veterinária</h4>
-                  <div class="stars">
-                    <i class="bi bi-star-fill"></i
-                    ><i class="bi bi-star-fill"></i
-                    ><i class="bi bi-star-fill"></i
-                    ><i class="bi bi-star-fill"></i
-                    ><i class="bi bi-star-fill"></i>
-                  </div>
-                  <p>
-                    <i class="bi bi-quote quote-icon-left"></i>
-                    <span
-                      >Quis quorum aliqua sint quem legam fore sunt eram irure
-                      aliqua veniam tempor noster veniam enim culpa labore duis
-                      sunt culpa nulla illum cillum fugiat legam esse veniam
-                      culpa fore nisi cillum quid.</span
-                    >
-                    <i class="bi bi-quote quote-icon-right"></i>
-                  </p>
-                </div>
-              </div>
-              <!-- End testimonial item -->
-            </div>
             <div class="swiper-pagination"></div>
           </div>
         </div>
@@ -756,9 +386,7 @@
         <!-- Section Title -->
         <div class="container section-title" data-aos="fade-up">
           <h2>Contato</h2>
-          <p>
-            Entre em contato conosco!
-          </p>
+          <p>Entre em contato conosco!</p>
         </div>
         <!-- End Section Title -->
 
@@ -774,7 +402,10 @@
                   <i class="bi bi-geo-alt flex-shrink-0"></i>
                   <div>
                     <h3>Endereço:</h3>
-                    <p>UFJ - Campus Jatobá | BR 364 km 195 - Setor Parque Industrial</p>
+                    <p>
+                      UFJ - Campus Jatobá | BR 364 km 195 - Setor Parque
+                      Industrial
+                    </p>
                   </div>
                 </div>
                 <!-- End Info Item -->
@@ -806,11 +437,12 @@
                 <!-- End Info Item -->
 
                 <iframe
-                  style="border:0; width: 100%; height: 270px;"
+                  style="border: 0; width: 100%; height: 270px"
                   loading="lazy"
                   allowfullscreen
                   referrerpolicy="no-referrer-when-downgrade"
-                  src="https://www.google.com/maps?q=UFJ%20-%20Campus%20Jatob%C3%A1%20(Cidade%20Universit%C3%A1ria%20Jos%C3%A9%20Cruciano%20de%20Ara%C3%BAjo)%2C%20BR%20364%20km%20195%20-%20Setor%20Parque%20Industrial%2C%20Jata%C3%AD%20-%20GO%2C%2075801-615&output=embed">
+                  src="https://www.google.com/maps?q=UFJ%20-%20Campus%20Jatob%C3%A1%20(Cidade%20Universit%C3%A1ria%20Jos%C3%A9%20Cruciano%20de%20Ara%C3%BAjo)%2C%20BR%20364%20km%20195%20-%20Setor%20Parque%20Industrial%2C%20Jata%C3%AD%20-%20GO%2C%2075801-615&output=embed"
+                >
                 </iframe>
               </div>
             </div>
@@ -894,7 +526,8 @@
             <div class="col-lg-6">
               <h4>Receba nossas novidades!</h4>
               <p>
-                Inscreva-se para receber as últimas novidades e notícias da Universidade! 
+                Inscreva-se para receber as últimas novidades e notícias da
+                Universidade!
               </p>
               <form
                 action="forms/newsletter.php"
@@ -925,8 +558,12 @@
               <span class="sitename">Universidade Federal de Jataí</span>
             </a>
             <div class="footer-contact pt-3">
-              <p>UFJ - Campus Jatobá | BR 364 km 195 - Setor Parque Industrial</p>
-              <p>UFJ - Campus Riachuelo | Rua Riachuelo n° 1530 - Samuel Grahan</p>
+              <p>
+                UFJ - Campus Jatobá | BR 364 km 195 - Setor Parque Industrial
+              </p>
+              <p>
+                UFJ - Campus Riachuelo | Rua Riachuelo n° 1530 - Samuel Grahan
+              </p>
               <p>Jataí - GO</p>
               <p class="mt-3">
                 <strong>Telefone:</strong> <span>+55 (64) 3606-8202</span>
@@ -940,23 +577,20 @@
             <ul>
               <li><i class="bi bi-chevron-right"></i> <a href="#">Home</a></li>
               <li>
-                <i class="bi bi-chevron-right"></i> <a href="#">Acompanhamento de Egressos</a>
+                <i class="bi bi-chevron-right"></i>
+                <a href="#">Acompanhamento de Egressos</a>
               </li>
               <li>
-                <i class="bi bi-chevron-right"></i> <a href="#">Dados e Indicadores</a>
+                <i class="bi bi-chevron-right"></i>
+                <a href="#">Dados e Indicadores</a>
               </li>
-              <li>
-                <i class="bi bi-chevron-right"></i> <a href="#">Blog</a>
-              </li>
+              <li><i class="bi bi-chevron-right"></i> <a href="#">Blog</a></li>
             </ul>
           </div>
 
-
           <div class="col-lg-4 col-md-12">
             <h4>Social Media</h4>
-            <p>
-              Nos siga em nossas redes sociais!
-            </p>
+            <p>Nos siga em nossas redes sociais!</p>
             <div class="social-links d-flex">
               <a href=""><i class="bi bi-twitter-x"></i></a>
               <a href=""><i class="bi bi-facebook"></i></a>
@@ -1004,67 +638,100 @@
     <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
 
     <!-- Mapa JS -->
+
     <script type="text/javascript">
       $(function () {
-        // Seus dados de egressos
-        const dadosEgressos = {
-            'ac': { name: 'Acre', count: 15 }, 'al': { name: 'Alagoas', count: 22 }, 'ap': { name: 'Amapá', count: 18 },
-            'am': { name: 'Amazonas', count: 45 }, 'ba': { name: 'Bahia', count: 110 }, 'ce': { name: 'Ceará', count: 95 },
-            'df': { name: 'Distrito Federal', count: 250 }, 'es': { name: 'Espírito Santo', count: 60 }, 'go': { name: 'Goiás', count: 320 },
-            'ma': { name: 'Maranhão', count: 40 }, 'mt': { name: 'Mato Grosso', count: 77 }, 'ms': { name: 'Mato Grosso do Sul', count: 55 },
-            'mg': { name: 'Minas Gerais', count: 280 }, 'pa': { name: 'Pará', count: 88 }, 'pb': { name: 'Paraíba', count: 41 },
-            'pr': { name: 'Paraná', count: 180 }, 'pe': { name: 'Pernambuco', count: 130 }, 'pi': { name: 'Piauí', count: 35 },
-            'rj': { name: 'Rio de Janeiro', count: 350 }, 'rn': { name: 'Rio Grande do Norte', count: 52 }, 'rs': { name: 'Rio Grande do Sul', count: 190 },
-            'ro': { name: 'Rondônia', count: 38 }, 'rr': { name: 'Roraima', count: 12 }, 'sc': { name: 'Santa Catarina', count: 160 },
-            'sp': { name: 'São Paulo', count: 750 }, 'se': { name: 'Sergipe', count: 33 }, 'to': { name: 'Tocantins', count: 48 }
-        };
-
-        // Armazena o popover ativo para que possamos fechá-lo
         let activePopover = null;
 
-        $('#brazil-map').vectorMap({
-          map: 'brazil',
-          backgroundColor: '#fff',
-          // Desativa o tooltip padrão da biblioteca
-          showTooltip: false,
-          regionStyle: {
-            initial: {
-              fill: '#def6f8', 'fill-opacity': 0.9, stroke: '#fff',
-              'stroke-width': 1.5, 'stroke-opacity': 1
+        // 1. Função para renderizar o mapa (lógica visual)
+        function renderizarMapa(dadosEgressos) {
+          $("#brazil-map").vectorMap({
+            map: "brazil",
+            backgroundColor: "#fff",
+            showTooltip: false,
+            regionStyle: {
+              initial: {
+                fill: "#def6f8",
+                "fill-opacity": 0.9,
+                stroke: "#fff",
+                "stroke-width": 1.5,
+                "stroke-opacity": 1,
+              },
+              hover: { "fill-opacity": 1, fill: "#00709a" },
             },
-            hover: { 'fill-opacity': 1, fill: '#00709a' }
-          },
+            onRegionClick: function (event, code) {
+              const clickedRegion = $(event.target);
+              if (activePopover) activePopover.popover("dispose");
 
-          onRegionClick: function (event, code) {
-            // Pega o elemento SVG do estado que foi clicado
-            const clickedRegion = $(event.target);
-            
-            // Se já existir um balão aberto, fecha ele primeiro
-            if (activePopover) {
-              activePopover.popover('dispose');
-            }
+              const estado = dadosEgressos[code];
+              if (estado) {
+                activePopover = clickedRegion;
+                activePopover
+                  .popover({
+                    container: "body",
+                    placement: "top",
+                    trigger: "manual",
+                    html: true,
+                    content: `<strong>${estado.name}</strong><br>Egressos: ${estado.count}`,
+                  })
+                  .popover("show");
+              }
+            },
+          });
+        }
 
-            const estado = dadosEgressos[code];
-            if (estado) {
-              // Define o elemento clicado como o popover ativo
-              activePopover = clickedRegion;
+        // 2. Função assíncrona para buscar dados da API
+        async function carregarDadosMapa() {
+          try {
+            // QUANDO A API ESTIVER PRONTA, DESCOMENTE AS LINHAS ABAIXO E APAGUE O MOCK:
+            // const response = await fetch('URL_DA_SUA_API/egressos/estados');
+            // const dadosEgressos = await response.json();
 
-              // Cria e exibe o popover do Bootstrap
-              activePopover.popover({
-                container: 'body', // Garante que o popover apareça sobre outros elementos
-                placement: 'top',  // Posição do balão
-                trigger: 'manual', // Controlamos manualmente quando ele aparece
-                html: true,        // Permite usar HTML no conteúdo
-                content: `<strong>${estado.name}</strong><br>Egressos: ${estado.count}`
-              }).popover('show');
-            }
+            // MOCK TEMPORÁRIO (mantém o layout funcionando enquanto não há API)
+            const dadosEgressos = {
+              ac: { name: "Acre", count: 15 },
+              al: { name: "Alagoas", count: 22 },
+              ap: { name: "Amapá", count: 18 },
+              am: { name: "Amazonas", count: 45 },
+              ba: { name: "Bahia", count: 110 },
+              ce: { name: "Ceará", count: 95 },
+              df: { name: "Distrito Federal", count: 250 },
+              es: { name: "Espírito Santo", count: 60 },
+              go: { name: "Goiás", count: 320 },
+              ma: { name: "Maranhão", count: 40 },
+              mt: { name: "Mato Grosso", count: 77 },
+              ms: { name: "Mato Grosso do Sul", count: 55 },
+              mg: { name: "Minas Gerais", count: 280 },
+              pa: { name: "Pará", count: 88 },
+              pb: { name: "Paraíba", count: 41 },
+              pr: { name: "Paraná", count: 180 },
+              pe: { name: "Pernambuco", count: 130 },
+              pi: { name: "Piauí", count: 35 },
+              rj: { name: "Rio de Janeiro", count: 350 },
+              rn: { name: "Rio Grande do Norte", count: 52 },
+              rs: { name: "Rio Grande do Sul", count: 190 },
+              ro: { name: "Rondônia", count: 38 },
+              rr: { name: "Roraima", count: 12 },
+              sc: { name: "Santa Catarina", count: 160 },
+              sp: { name: "São Paulo", count: 750 },
+              se: { name: "Sergipe", count: 33 },
+              to: { name: "Tocantins", count: 48 },
+            };
+
+            renderizarMapa(dadosEgressos);
+          } catch (error) {
+            console.error("Erro ao carregar dados do mapa:", error);
+            // Opcional: Renderizar mapa vazio ou mostrar alerta de erro
           }
-        });
+        }
 
-        // Opcional: Fecha o balão se o usuário clicar em qualquer outro lugar fora do mapa
-        $(document).on('click', function (e) {
-          if (activePopover && !$(e.target).closest('#brazil-map').length) {
-            activePopover.popover('dispose');
+        // 3. Inicializa o processo
+        carregarDadosMapa();
+
+        // Fecha o balão se clicar fora
+        $(document).on("click", function (e) {
+          if (activePopover && !$(e.target).closest("#brazil-map").length) {
+            activePopover.popover("dispose");
             activePopover = null;
           }
         });

@@ -1,0 +1,670 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Painel do Egresso - UFJ</title>
+
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="../assets/vendor/bootstrap/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="../assets/vendor/bootstrap-icons/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+
+    <link href="../assets/css/main.css" rel="stylesheet" />
+    <link href="../assets/css/painel.css" rel="stylesheet" />
+  </head>
+
+  <body>
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-md-3 col-lg-2 p-0 sidebar position-fixed">
+          <div class="sidebar-header">
+            <img
+              src="../assets/img/logo_ufj_branca.png"
+              alt="Logo UFJ"
+              class="img-fluid mb-3"
+              style="max-height: 55px"
+            />
+            <h6 class="mb-0 text-white fw-bold">Painel do Egresso</h6>
+          </div>
+
+          <nav class="nav flex-column flex-grow-1" id="sidebar-menu">
+            <a href="#" class="active" data-target="sec-perfil">
+              <i class="bi bi-person-fill"></i> Meu Perfil
+            </a>
+            <a href="#" data-target="sec-oportunidades">
+              <i class="bi bi-briefcase-fill"></i> Oportunidades
+            </a>
+          </nav>
+
+          <a href="../index.html" class="logout-btn">
+            <i class="bi bi-box-arrow-left"></i> Sair do Painel
+          </a>
+        </div>
+
+        <div class="col-md-9 offset-md-3 col-lg-10 offset-lg-2 content-area">
+          <div
+            class="d-flex justify-content-between align-items-center mb-5 bg-white p-4 shadow-sm rounded-3 border-0"
+          >
+            <h4 class="mb-0 text-secondary fw-bold" id="page-title">
+              Meu Perfil
+            </h4>
+            <div class="d-flex align-items-center">
+              <span class="me-3 fw-medium text-secondary" id="user-name"
+                >Egresso UFJ</span
+              >
+              <img
+                src="../assets/img/person/person-m-9.webp"
+                alt="Profile"
+                class="rounded-circle shadow-sm"
+                style="width: 45px; height: 45px; object-fit: cover"
+              />
+            </div>
+          </div>
+
+          <div id="sec-perfil" class="panel-section active">
+            <div class="card p-4 shadow-sm border-0 rounded-4">
+              <ul class="nav nav-tabs mb-4" id="perfilTabs" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link active"
+                    id="pessoais-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#pessoais"
+                    type="button"
+                    role="tab"
+                  >
+                    Informações Pessoais
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    id="academicas-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#academicas"
+                    type="button"
+                    role="tab"
+                  >
+                    Acadêmicas
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    id="profissionais-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#profissionais"
+                    type="button"
+                    role="tab"
+                  >
+                    Profissionais
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    id="contato-tab"
+                    data-bs-toggle="tab"
+                    data-bs-target="#contato"
+                    type="button"
+                    role="tab"
+                  >
+                    Contato
+                  </button>
+                </li>
+              </ul>
+
+              <div class="tab-content" id="perfilTabsContent">
+                <div
+                  class="tab-pane fade show active"
+                  id="pessoais"
+                  role="tabpanel"
+                >
+                  <form class="row g-3">
+                    <div class="col-12 mb-3">
+                      <label class="form-label fw-medium">Foto de Perfil</label>
+                      <input type="file" class="form-control" />
+                    </div>
+                    <div class="col-md-8">
+                      <label class="form-label fw-medium">Nome Completo</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Seu nome completo"
+                      />
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label fw-medium"
+                        >Data de Nascimento</label
+                      >
+                      <input type="date" class="form-control" />
+                    </div>
+
+                    <h6 class="mt-4 mb-2 fw-bold text-secondary">Endereço</h6>
+                    <div class="col-md-3">
+                      <label class="form-label fw-medium">CEP</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="cep"
+                        placeholder="Apenas números"
+                        maxlength="8"
+                      />
+                      <small
+                        id="cep-error"
+                        class="text-danger"
+                        style="display: none"
+                        >CEP não encontrado</small
+                      >
+                    </div>
+                    <div class="col-md-7">
+                      <label class="form-label fw-medium"
+                        >Logradouro (Rua/Av)</label
+                      >
+                      <input type="text" class="form-control" id="logradouro" />
+                    </div>
+                    <div class="col-md-2">
+                      <label class="form-label fw-medium">Número</label>
+                      <input type="text" class="form-control" id="numero" />
+                    </div>
+                    <div class="col-md-5">
+                      <label class="form-label fw-medium">Bairro</label>
+                      <input type="text" class="form-control" id="bairro" />
+                    </div>
+                    <div class="col-md-5">
+                      <label class="form-label fw-medium">Cidade</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="cidade"
+                        readonly
+                      />
+                    </div>
+                    <div class="col-md-2">
+                      <label class="form-label fw-medium">Estado</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="estado"
+                        readonly
+                      />
+                    </div>
+                    <div class="col-12 mt-4 text-end">
+                      <button type="button" class="btn btn-primary px-4">
+                        Salvar Informações Pessoais
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="tab-pane fade" id="academicas" role="tabpanel">
+                  <form class="row g-3">
+                    <h6 class="mb-3 fw-bold text-secondary">
+                      Graduação na UFJ
+                    </h6>
+                    <div class="col-md-8">
+                      <label class="form-label fw-medium">Curso</label>
+                      <select class="form-select">
+                        <option selected disabled>
+                          Selecione seu curso...
+                        </option>
+                        <option>Ciência da Computação</option>
+                        <option>Engenharia de Software</option>
+                        <option>Medicina</option>
+                        <option>Agronomia</option>
+                        <option>Medicina Veterinária</option>
+                        <option>Direito</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label fw-medium"
+                        >Ano de Conclusão</label
+                      >
+                      <input
+                        type="number"
+                        class="form-control"
+                        placeholder="Ex: 2024"
+                      />
+                    </div>
+
+                    <hr class="my-5" />
+
+                    <div
+                      class="d-flex justify-content-between align-items-center mb-3"
+                    >
+                      <h6 class="fw-bold text-secondary mb-0">
+                        Outras Formações (Pós, Mestrado, etc)
+                      </h6>
+                      <button
+                        type="button"
+                        class="btn btn-sm btn-outline-primary"
+                        id="btn-add-formacao"
+                      >
+                        <i class="bi bi-plus-circle me-1"></i> Adicionar
+                        Formação
+                      </button>
+                    </div>
+
+                    <div id="container-formacoes">
+                      <div
+                        class="row g-3 p-3 mb-3 border rounded bg-light position-relative formacao-item"
+                      >
+                        <div class="col-md-3">
+                          <label class="form-label fw-medium">Tipo</label>
+                          <select class="form-select form-select-sm">
+                            <option>Especialização</option>
+                            <option>Mestrado</option>
+                            <option>Doutorado</option>
+                            <option>Outra Graduação</option>
+                          </select>
+                        </div>
+                        <div class="col-md-4">
+                          <label class="form-label fw-medium"
+                            >Nome do Curso</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control form-control-sm"
+                            placeholder="Ex: Engenharia de Dados"
+                          />
+                        </div>
+                        <div class="col-md-3">
+                          <label class="form-label fw-medium"
+                            >Instituição</label
+                          >
+                          <input
+                            type="text"
+                            class="form-control form-control-sm"
+                            placeholder="Ex: USP"
+                          />
+                        </div>
+                        <div class="col-md-2">
+                          <label class="form-label fw-medium">Ano</label>
+                          <input
+                            type="text"
+                            class="form-control form-control-sm"
+                            placeholder="Ex: 2026"
+                          />
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="col-12 mt-4 text-end">
+                      <button type="button" class="btn btn-primary px-4">
+                        Salvar Dados Acadêmicos
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="tab-pane fade" id="profissionais" role="tabpanel">
+                  <form class="row g-3">
+                    <div class="col-md-6">
+                      <label class="form-label fw-medium">Empresa Atual</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Onde você trabalha?"
+                      />
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label fw-medium">Cargo / Função</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Seu cargo"
+                      />
+                    </div>
+                    <div class="col-md-2">
+                      <label class="form-label fw-medium"
+                        >Data de Admissão</label
+                      >
+                      <input type="date" class="form-control" />
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label fw-medium"
+                        >Atividades Executadas (Breve descrição)</label
+                      >
+                      <textarea
+                        class="form-control"
+                        rows="4"
+                        placeholder="Descreva brevemente suas atividades..."
+                      ></textarea>
+                    </div>
+                    <div class="col-12 mt-4 text-end">
+                      <button type="button" class="btn btn-primary px-4">
+                        Salvar Dados Profissionais
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="tab-pane fade" id="contato" role="tabpanel">
+                  <form class="row g-3">
+                    <div class="col-md-6">
+                      <label class="form-label fw-medium"
+                        >E-mail Principal</label
+                      >
+                      <input
+                        type="email"
+                        class="form-control"
+                        placeholder="seuemail@exemplo.com"
+                      />
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label fw-medium">Telefone Fixo</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="(00) 0000-0000"
+                      />
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label fw-medium">WhatsApp</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="(00) 90000-0000"
+                      />
+                    </div>
+                    <div class="col-12 mt-4 text-end">
+                      <button type="button" class="btn btn-primary px-4">
+                        Salvar Contatos
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="sec-oportunidades" class="panel-section">
+            <div class="card p-0 shadow-sm border-0 rounded-4 overflow-hidden">
+              <ul
+                class="nav nav-tabs pt-3 px-4 bg-white"
+                id="vagasTabs"
+                role="tablist"
+              >
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link active"
+                    data-bs-toggle="tab"
+                    data-bs-target="#vagas-disponiveis"
+                    type="button"
+                    role="tab"
+                  >
+                    Vagas na sua Área
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    data-bs-toggle="tab"
+                    data-bs-target="#minhas-vagas"
+                    type="button"
+                    role="tab"
+                  >
+                    Vagas que Cadastrei
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link text-primary fw-bold"
+                    data-bs-toggle="tab"
+                    data-bs-target="#cadastrar-vaga"
+                    type="button"
+                    role="tab"
+                  >
+                    <i class="bi bi-plus-circle"></i> Cadastrar Nova Vaga
+                  </button>
+                </li>
+              </ul>
+
+              <div class="tab-content p-4" id="vagasTabsContent">
+                <div
+                  class="tab-pane fade show active"
+                  id="vagas-disponiveis"
+                  role="tabpanel"
+                >
+                  <div class="row g-3">
+                    <div class="col-md-6">
+                      <div class="border rounded p-3 h-100">
+                        <div class="d-flex justify-content-between">
+                          <h5 class="fw-bold text-primary mb-1">
+                            Desenvolvedor Full Stack
+                          </h5>
+                          <span class="badge bg-success">Aberta</span>
+                        </div>
+                        <h6 class="text-secondary">
+                          <i class="bi bi-building"></i> Agrotechx
+                        </h6>
+                        <p class="small mt-2">
+                          Buscamos desenvolvedor para atuar em sistemas de
+                          sincronização agrícola. Necessário conhecimento em
+                          Node.js e React.
+                        </p>
+                        <a href="#" class="btn btn-sm btn-outline-primary"
+                          >Ver Detalhes / Contato</a
+                        >
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <div class="tab-pane fade" id="minhas-vagas" role="tabpanel">
+                  <div class="table-responsive">
+                    <table class="table table-hover align-middle">
+                      <thead class="table-light">
+                        <tr>
+                          <th>Título da Vaga</th>
+                          <th>Empresa</th>
+                          <th>Data de Envio</th>
+                          <th>Status</th>
+                          <th>Ações</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        <tr>
+                          <td class="fw-medium">Analista de Qualidade QA</td>
+                          <td>Minha Empresa LTDA</td>
+                          <td>06/04/2026</td>
+                          <td>
+                            <span class="badge bg-warning text-dark"
+                              >Aguardando Aprovação</span
+                            >
+                          </td>
+                          <td>
+                            <button class="btn btn-sm btn-light text-secondary">
+                              <i class="bi bi-pencil"></i>
+                            </button>
+                            <button class="btn btn-sm btn-light text-danger">
+                              <i class="bi bi-trash"></i>
+                            </button>
+                          </td>
+                        </tr>
+                        <tr>
+                          <td class="fw-medium">Estágio em Suporte</td>
+                          <td>Tech Solutions</td>
+                          <td>01/04/2026</td>
+                          <td>
+                            <span class="badge bg-success">Aprovada</span>
+                          </td>
+                          <td>
+                            <button class="btn btn-sm btn-light text-secondary">
+                              <i class="bi bi-eye"></i>
+                            </button>
+                          </td>
+                        </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+                <div class="tab-pane fade" id="cadastrar-vaga" role="tabpanel">
+                  <div class="alert alert-info small">
+                    <i class="bi bi-info-circle-fill me-2"></i> As oportunidades
+                    cadastradas passarão pela análise da coordenação antes de
+                    ficarem visíveis para os outros egressos.
+                  </div>
+                  <form class="row g-3 mt-1">
+                    <div class="col-md-8">
+                      <label class="form-label fw-medium">Título da Vaga</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Ex: Engenheiro Agrônomo Júnior"
+                      />
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label fw-medium"
+                        >Área de Atuação</label
+                      >
+                      <select class="form-select">
+                        <option>Agrárias</option>
+                        <option>Exatas e Tecnologia</option>
+                        <option>Saúde</option>
+                        <option>Humanas</option>
+                      </select>
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label fw-medium"
+                        >Atribuições e Requisitos</label
+                      >
+                      <textarea
+                        class="form-control"
+                        rows="4"
+                        placeholder="Descreva o que o profissional fará e o que é exigido..."
+                      ></textarea>
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label fw-medium"
+                        >Link para Inscrição ou E-mail de Contato</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        placeholder="Ex: https://gupy.io/... ou rh@empresa.com"
+                      />
+                    </div>
+                    <div class="col-12 mt-4 text-end">
+                      <button type="button" class="btn btn-primary px-4">
+                        <i class="bi bi-send me-2"></i> Enviar para Aprovação
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        // 1. Navegação Dinâmica do Menu Lateral
+        const menuLinks = document.querySelectorAll(
+          "#sidebar-menu a[data-target]",
+        );
+        const sections = document.querySelectorAll(".panel-section");
+        const pageTitle = document.getElementById("page-title");
+
+        menuLinks.forEach((link) => {
+          link.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            menuLinks.forEach((l) => l.classList.remove("active"));
+            sections.forEach((s) => s.classList.remove("active"));
+
+            this.classList.add("active");
+            pageTitle.innerText = this.innerText.trim();
+
+            const targetId = this.getAttribute("data-target");
+            document.getElementById(targetId).classList.add("active");
+          });
+        });
+
+        // 2. Autocompletar Endereço via API do ViaCEP
+        const inputCep = document.getElementById("cep");
+        inputCep.addEventListener("blur", async function () {
+          let cep = this.value.replace(/\D/g, ""); // Remove tudo que não for número
+
+          if (cep.length === 8) {
+            try {
+              const response = await fetch(
+                `https://viacep.com.br/ws/${cep}/json/`,
+              );
+              const data = await response.json();
+
+              if (!data.erro) {
+                document.getElementById("logradouro").value = data.logradouro;
+                document.getElementById("bairro").value = data.bairro;
+                document.getElementById("cidade").value = data.localidade;
+                document.getElementById("estado").value = data.uf;
+                document.getElementById("cep-error").style.display = "none";
+                document.getElementById("numero").focus(); // Joga o cursor pro número
+              } else {
+                document.getElementById("cep-error").style.display = "block";
+              }
+            } catch (error) {
+              console.error("Erro ao buscar CEP:", error);
+            }
+          }
+        });
+
+        // 3. Adicionar "Outras Formações" Dinamicamente
+        const btnAddFormacao = document.getElementById("btn-add-formacao");
+        const containerFormacoes = document.getElementById(
+          "container-formacoes",
+        );
+        let formacaoCount = 1;
+
+        btnAddFormacao.addEventListener("click", function () {
+          formacaoCount++;
+          const html = `
+          <div class="row g-3 p-3 mb-3 border rounded bg-light position-relative formacao-item" id="formacao-${formacaoCount}">
+            <button type="button" class="btn-close position-absolute top-0 end-0 m-2" aria-label="Close" onclick="this.parentElement.remove()"></button>
+            <div class="col-md-3">
+              <label class="form-label fw-medium">Tipo</label>
+              <select class="form-select form-select-sm">
+                <option>Especialização</option>
+                <option>Mestrado</option>
+                <option>Doutorado</option>
+                <option>Outra Graduação</option>
+              </select>
+            </div>
+            <div class="col-md-4">
+              <label class="form-label fw-medium">Nome do Curso</label>
+              <input type="text" class="form-control form-control-sm" placeholder="Ex: Engenharia de Dados">
+            </div>
+            <div class="col-md-3">
+              <label class="form-label fw-medium">Instituição</label>
+              <input type="text" class="form-control form-control-sm" placeholder="Ex: USP">
+            </div>
+            <div class="col-md-2">
+              <label class="form-label fw-medium">Ano</label>
+              <input type="text" class="form-control form-control-sm" placeholder="Ex: 2026">
+            </div>
+          </div>
+        `;
+          // Adiciona a nova linha no final do container
+          containerFormacoes.insertAdjacentHTML("beforeend", html);
+        });
+      });
+    </script>
+  </body>
+</html>

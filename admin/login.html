@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Login - Portal de Egressos UFJ</title>
+
+    <link
+      href="../assets/vendor/bootstrap/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="../assets/vendor/bootstrap-icons/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link href="../assets/css/main.css" rel="stylesheet" />
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+  </head>
+
+  <body class="light-background min-vh-100 d-flex align-items-center">
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-md-5">
+          <div class="card shadow-lg border-0 rounded-lg mt-5">
+            <div class="card-header text-center bg-white pt-4 pb-0 border-0">
+              <a href="../index.html">
+                <img
+                  src="../assets/img/logo_ufj.png"
+                  alt="Logo UFJ"
+                  style="max-height: 80px"
+                />
+              </a>
+              <h3 class="font-weight-light my-3 text-primary">
+                Acesso ao Portal
+              </h3>
+            </div>
+            <div class="card-body p-5 pt-3">
+              <form id="login-form">
+                <div class="form-floating mb-3">
+                  <input
+                    class="form-control"
+                    id="inputEmail"
+                    type="email"
+                    placeholder="name@example.com"
+                    required
+                  />
+                  <label for="inputEmail">E-mail</label>
+                </div>
+                <div class="form-floating mb-3">
+                  <input
+                    class="form-control"
+                    id="inputPassword"
+                    type="password"
+                    placeholder="Senha"
+                    required
+                  />
+                  <label for="inputPassword">Senha</label>
+                </div>
+
+                <div
+                  class="d-flex align-items-center justify-content-between mt-4 mb-0"
+                >
+                  <a class="small" href="#">Esqueceu a senha?</a>
+                  <button
+                    class="btn btn-primary px-4"
+                    type="submit"
+                    id="btn-login"
+                  >
+                    Entrar
+                  </button>
+                </div>
+
+                <div
+                  id="msg-erro"
+                  class="text-danger mt-3 text-center"
+                  style="display: none"
+                ></div>
+              </form>
+            </div>
+            <div class="card-footer text-center py-3 bg-light">
+              <div class="small">
+                <a href="registro.html"
+                  >É egresso e não tem cadastro? Inscreva-se!</a
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document
+        .getElementById("login-form")
+        .addEventListener("submit", async function (e) {
+          e.preventDefault(); // Impede a página de recarregar
+
+          const btn = document.getElementById("btn-login");
+          const msgErro = document.getElementById("msg-erro");
+
+          // Chaves do Supabase
+          const supabaseUrl = "https://gginfmhtmljrupzxqdic.supabase.co";
+          const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdnaW5mbWh0bWxqcnVwenhxZGljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MzIyNTYsImV4cCI6MjA5MTAwODI1Nn0.bqtLxP8Wf65ulEx_WVHztSbS3Mwobb6-Klq0cfcFTyQ";
+
+          // Trava de segurança para não quebrar o JS se a URL não for válida
+          if (!supabaseUrl.startsWith("http")) {
+            msgErro.innerText =
+              "ATENÇÃO: Você precisa colocar as chaves reais do Supabase no código para fazer o login funcionar.";
+            msgErro.style.display = "block";
+            return; // Para a execução aqui
+          }
+
+          const supabase = window.supabase.createClient(
+            supabaseUrl,
+            supabaseKey,
+          );
+
+          const email = document.getElementById("inputEmail").value;
+          const password = document.getElementById("inputPassword").value;
+
+          btn.innerHTML = "Aguarde...";
+          btn.disabled = true;
+          msgErro.style.display = "none";
+
+          const { data, error } = await supabase.auth.signInWithPassword({
+            email: email,
+            password: password,
+          });
+
+          if (error) {
+            msgErro.innerText = "Credenciais inválidas. Tente novamente.";
+            msgErro.style.display = "block";
+            btn.innerHTML = "Entrar";
+            btn.disabled = false;
+          } else {
+            window.location.href = "painel.html";
+          }
+        });
+    </script>
+  </body>
+</html>
