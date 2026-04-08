@@ -1,0 +1,273 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Oportunidades - Painel UFJ</title>
+
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="../../assets/vendor/bootstrap/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link href="../../assets/css/main.css" rel="stylesheet" />
+    <link href="../../assets/css/painel.css" rel="stylesheet" />
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../../js/adminLayout.js"></script>
+  </head>
+
+  <body>
+    <div id="loading-screen">
+      <div class="spinner-border text-primary" role="status"></div>
+      <h5 class="mt-3 text-secondary fw-bold">Carregando módulo...</h5>
+    </div>
+
+    <div class="container-fluid" id="main-panel" style="display: none">
+      <div class="row">
+        <div class="col-md-3 col-lg-2 p-0 sidebar position-fixed">
+          <div class="sidebar-header">
+            <img
+              src="../../assets/img/logo_ufj_branca.png"
+              alt="Logo UFJ"
+              class="img-fluid mb-3"
+              style="max-height: 55px"
+            />
+            <h6 class="mb-0 text-white fw-bold" id="badge-nivel">Painel</h6>
+          </div>
+          <nav class="nav flex-column flex-grow-1" id="sidebar-menu"></nav>
+          <a href="#" class="logout-btn" id="btn-logout"
+            ><i class="bi bi-box-arrow-left"></i> Sair</a
+          >
+        </div>
+
+        <div class="col-md-9 offset-md-3 col-lg-10 offset-lg-2 content-area">
+          <div
+            class="d-flex justify-content-between align-items-center mb-5 bg-white p-4 shadow-sm rounded-3 border-0"
+          >
+            <h4 class="mb-0 text-secondary fw-bold" id="page-title">
+              Oportunidades
+            </h4>
+            <div class="d-flex align-items-center">
+              <span class="me-3 fw-medium text-secondary" id="user-name"
+                >...</span
+              >
+              <img
+                src="../../assets/img/person/person-m-9.webp"
+                id="top-avatar"
+                alt="Profile"
+                class="rounded-circle shadow-sm bg-light"
+                style="width: 45px; height: 45px; object-fit: cover"
+              />
+            </div>
+          </div>
+
+          <div class="d-flex justify-content-between align-items-center mb-4">
+            <h5 class="fw-bold mb-0">Gerenciar Vagas</h5>
+            <a href="form.html" class="btn btn-primary">
+              <i class="bi bi-plus-lg me-2"></i>Nova Vaga
+            </a>
+          </div>
+
+          <div class="card p-4 shadow-sm border-0 rounded-4">
+            <ul class="nav nav-tabs mb-4" id="vagasTabs" role="tablist">
+              <li class="nav-item" role="presentation">
+                <button
+                  class="nav-link active"
+                  data-bs-toggle="tab"
+                  data-bs-target="#minhas-vagas"
+                  type="button"
+                  role="tab"
+                >
+                  Minhas Vagas
+                </button>
+              </li>
+              <li
+                class="nav-item"
+                id="tab-pendentes-li"
+                style="display: none"
+                role="presentation"
+              >
+                <button
+                  class="nav-link"
+                  data-bs-toggle="tab"
+                  data-bs-target="#vagas-pendentes"
+                  type="button"
+                  role="tab"
+                >
+                  Aprovações Pendentes
+                </button>
+              </li>
+            </ul>
+
+            <div class="tab-content">
+              <div
+                class="tab-pane fade show active"
+                id="minhas-vagas"
+                role="tabpanel"
+              >
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Título da Vaga</th>
+                        <th>Área de Atuação</th>
+                        <th>Status</th>
+                        <th class="text-end">Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tbody-minhas-vagas">
+                      <tr>
+                        <td colspan="4" class="text-center py-4">
+                          Carregando vagas...
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <div class="tab-pane fade" id="vagas-pendentes" role="tabpanel">
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Título da Vaga</th>
+                        <th>Egresso</th>
+                        <th>Área</th>
+                        <th class="text-end">Ações</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tbody-pendentes">
+                      <tr>
+                        <td colspan="4" class="text-center py-4">
+                          Carregando pendências...
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", async function () {
+        const context = await inicializarPainel("vagas", "..");
+        if (!context) return;
+
+        const supabase = context.supabase;
+        const perfil = context.perfil;
+
+        if (perfil.foto_perfil) {
+          document.getElementById("top-avatar").src = perfil.foto_perfil;
+        }
+
+        // Se for coordenação ou admin, mostra a aba de aprovações
+        if (perfil.nivel_acesso !== "egresso") {
+          document.getElementById("tab-pendentes-li").style.display = "block";
+          carregarPendentes();
+        }
+
+        carregarMinhasVagas();
+
+        async function carregarMinhasVagas() {
+          const { data, error } = await supabase
+            .from("vagas")
+            .select("*")
+            .eq("usuario_id", context.session.user.id)
+            .order("data_cadastro", { ascending: false });
+
+          const tbody = document.getElementById("tbody-minhas-vagas");
+
+          if (error || !data || data.length === 0) {
+            tbody.innerHTML =
+              '<tr><td colspan="4" class="text-center text-secondary py-4">Nenhuma vaga cadastrada.</td></tr>';
+            return;
+          }
+
+          tbody.innerHTML = "";
+          data.forEach((v) => {
+            let badgeClass = "bg-warning text-dark";
+            let statusText = "Pendente";
+
+            if (v.status === "aprovado") {
+              badgeClass = "bg-success";
+              statusText = "Aprovado";
+            }
+            if (v.status === "reprovado") {
+              badgeClass = "bg-danger";
+              statusText = "Reprovado";
+            }
+
+            tbody.innerHTML += `
+              <tr>
+                <td class="fw-bold text-primary">${v.titulo_vaga}</td>
+                <td>${v.area_atuacao}</td>
+                <td><span class="badge ${badgeClass}">${statusText}</span></td>
+                <td class="text-end">
+                  <a href="form.html?id=${v.id}" class="btn btn-sm btn-outline-primary" title="Editar / Ver">
+                    <i class="bi bi-pencil"></i>
+                  </a>
+                </td>
+              </tr>
+            `;
+          });
+        }
+
+        async function carregarPendentes() {
+          let query = supabase
+            .from("vagas")
+            .select("*, perfis(nome)")
+            .eq("status", "pendente")
+            .order("data_cadastro", { ascending: false });
+
+          // Se for coordenação, filtra apenas pelas vagas do curso dele
+          if (perfil.nivel_acesso === "coordenacao") {
+            query = query.eq("area_atuacao", perfil.curso);
+          }
+
+          const { data, error } = await query;
+          const tbody = document.getElementById("tbody-pendentes");
+
+          if (error || !data || data.length === 0) {
+            tbody.innerHTML =
+              '<tr><td colspan="4" class="text-center text-secondary py-4">Tudo em dia! Nenhuma pendência de aprovação.</td></tr>';
+            return;
+          }
+
+          tbody.innerHTML = "";
+          data.forEach((v) => {
+            const nomeAutor =
+              v.perfis && v.perfis.nome ? v.perfis.nome : "Anônimo";
+            tbody.innerHTML += `
+              <tr>
+                <td class="fw-bold text-primary">${v.titulo_vaga}</td>
+                <td>${nomeAutor}</td>
+                <td>${v.area_atuacao}</td>
+                <td class="text-end">
+                  <a href="form.html?id=${v.id}" class="btn btn-sm btn-primary">Avaliar Vaga</a>
+                </td>
+              </tr>
+            `;
+          });
+        }
+      });
+    </script>
+  </body>
+</html>

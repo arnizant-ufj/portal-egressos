@@ -1,0 +1,825 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Meu Perfil - Painel UFJ</title>
+
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="../../assets/vendor/bootstrap/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link href="../../assets/css/main.css" rel="stylesheet" />
+    <link href="../../assets/css/painel.css" rel="stylesheet" />
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../../js/adminLayout.js"></script>
+  </head>
+
+  <body>
+    <div id="loading-screen">
+      <div
+        class="spinner-border text-primary"
+        role="status"
+        style="width: 3rem; height: 3rem"
+      ></div>
+      <h5 class="mt-3 text-secondary fw-bold">Carregando seu perfil...</h5>
+    </div>
+
+    <div class="container-fluid" id="main-panel" style="display: none">
+      <div class="row">
+        <div class="col-md-3 col-lg-2 p-0 sidebar position-fixed">
+          <div class="sidebar-header">
+            <img
+              src="../../assets/img/logo_ufj_branca.png"
+              alt="Logo UFJ"
+              class="img-fluid mb-3"
+              style="max-height: 55px"
+            />
+            <h6 class="mb-0 text-white fw-bold" id="badge-nivel">Painel</h6>
+          </div>
+          <nav class="nav flex-column flex-grow-1" id="sidebar-menu"></nav>
+          <a href="#" class="logout-btn" id="btn-logout"
+            ><i class="bi bi-box-arrow-left"></i> Sair</a
+          >
+        </div>
+
+        <div class="col-md-9 offset-md-3 col-lg-10 offset-lg-2 content-area">
+          <div
+            class="d-flex justify-content-between align-items-center mb-4 bg-white p-4 shadow-sm rounded-3 border-0"
+          >
+            <h4 class="mb-0 text-secondary fw-bold" id="page-title">
+              Meu Perfil
+            </h4>
+            <div class="d-flex align-items-center">
+              <span class="me-3 fw-medium text-secondary" id="user-name"
+                >...</span
+              >
+              <img
+                src="../../assets/img/person/person-m-9.webp"
+                id="top-avatar"
+                alt="Profile"
+                class="rounded-circle shadow-sm bg-light"
+                style="width: 45px; height: 45px; object-fit: cover"
+              />
+            </div>
+          </div>
+
+          <div id="form-egresso" style="display: none">
+            <div class="card p-4 shadow-sm border-0 rounded-4">
+              <ul class="nav nav-tabs mb-4" role="tablist">
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link active"
+                    data-bs-toggle="tab"
+                    data-bs-target="#pessoais"
+                    type="button"
+                  >
+                    Informações Pessoais
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    data-bs-toggle="tab"
+                    data-bs-target="#academicas"
+                    type="button"
+                  >
+                    Acadêmicas
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    data-bs-toggle="tab"
+                    data-bs-target="#profissionais"
+                    type="button"
+                  >
+                    Profissionais
+                  </button>
+                </li>
+                <li class="nav-item" role="presentation">
+                  <button
+                    class="nav-link"
+                    data-bs-toggle="tab"
+                    data-bs-target="#contato"
+                    type="button"
+                  >
+                    Contato
+                  </button>
+                </li>
+              </ul>
+
+              <div class="tab-content">
+                <div
+                  class="tab-pane fade show active"
+                  id="pessoais"
+                  role="tabpanel"
+                >
+                  <form class="row g-3" id="form-pessoais">
+                    <div class="col-12 mb-3 d-flex align-items-center">
+                      <img
+                        src="../../assets/img/person/person-m-9.webp"
+                        id="preview-avatar"
+                        class="rounded-circle me-3 border"
+                        style="width: 80px; height: 80px; object-fit: cover"
+                      />
+                      <div>
+                        <label class="form-label fw-medium"
+                          >Foto de Perfil</label
+                        >
+                        <input
+                          type="file"
+                          class="form-control form-control-sm"
+                          id="eg-foto"
+                          accept="image/*"
+                        />
+                        <small class="text-muted"
+                          >Deixe em branco para manter a atual.</small
+                        >
+                      </div>
+                    </div>
+                    <div class="col-md-8">
+                      <label class="form-label fw-medium"
+                        >Nome Completo *</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="eg-nome"
+                        required
+                      />
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label fw-medium"
+                        >Data de Nascimento</label
+                      >
+                      <input
+                        type="date"
+                        class="form-control"
+                        id="eg-nascimento"
+                      />
+                    </div>
+
+                    <h6
+                      class="mt-4 mb-2 fw-bold text-secondary border-bottom pb-2"
+                    >
+                      Endereço
+                    </h6>
+                    <div class="col-md-3">
+                      <label class="form-label fw-medium">CEP</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="cep"
+                        placeholder="Apenas números"
+                        maxlength="8"
+                      />
+                      <small
+                        id="cep-error"
+                        class="text-danger"
+                        style="display: none"
+                        >CEP não encontrado</small
+                      >
+                    </div>
+                    <div class="col-md-7">
+                      <label class="form-label fw-medium"
+                        >Logradouro (Rua/Av)</label
+                      >
+                      <input type="text" class="form-control" id="logradouro" />
+                    </div>
+                    <div class="col-md-2">
+                      <label class="form-label fw-medium">Número</label>
+                      <input type="text" class="form-control" id="numero" />
+                    </div>
+                    <div class="col-md-5">
+                      <label class="form-label fw-medium">Bairro</label>
+                      <input type="text" class="form-control" id="bairro" />
+                    </div>
+                    <div class="col-md-5">
+                      <label class="form-label fw-medium">Cidade</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="cidade"
+                        readonly
+                      />
+                    </div>
+                    <div class="col-md-2">
+                      <label class="form-label fw-medium">Estado</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="estado"
+                        readonly
+                      />
+                    </div>
+                    <div class="col-12 mt-4 text-end">
+                      <button
+                        type="submit"
+                        class="btn btn-primary px-4"
+                        id="btn-salvar-pessoais"
+                      >
+                        Salvar Pessoais
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="tab-pane fade" id="academicas" role="tabpanel">
+                  <form class="row g-3" id="form-academicas">
+                    <h6 class="mb-3 fw-bold text-secondary">
+                      Sua Graduação na UFJ
+                    </h6>
+                    <div class="col-md-8">
+                      <label class="form-label fw-medium">Curso</label>
+                      <select class="form-select" id="eg-curso">
+                        <option value="" selected disabled>
+                          Selecione seu curso...
+                        </option>
+                        <option value="Ciência da Computação">
+                          Ciência da Computação
+                        </option>
+                        <option value="Engenharia de Software">
+                          Engenharia de Software
+                        </option>
+                        <option value="Medicina">Medicina</option>
+                        <option value="Agronomia">Agronomia</option>
+                        <option value="Medicina Veterinária">
+                          Medicina Veterinária
+                        </option>
+                        <option value="Direito">Direito</option>
+                      </select>
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label fw-medium"
+                        >Ano de Conclusão</label
+                      >
+                      <input
+                        type="number"
+                        class="form-control"
+                        id="eg-ano-conclusao"
+                        placeholder="Ex: 2024"
+                      />
+                    </div>
+
+                    <div class="col-12 mt-4">
+                      <div
+                        class="d-flex justify-content-between align-items-center mb-3 border-bottom pb-2"
+                      >
+                        <h6 class="fw-bold text-secondary mb-0">
+                          Outras Formações (Pós, Mestrado, etc)
+                        </h6>
+                        <button
+                          type="button"
+                          class="btn btn-sm btn-outline-primary"
+                          id="btn-add-formacao"
+                        >
+                          <i class="bi bi-plus-circle me-1"></i> Adicionar
+                        </button>
+                      </div>
+                      <div id="container-formacoes"></div>
+                    </div>
+
+                    <div class="col-12 mt-4 text-end">
+                      <button
+                        type="submit"
+                        class="btn btn-primary px-4"
+                        id="btn-salvar-academicas"
+                      >
+                        Salvar Acadêmicas
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="tab-pane fade" id="profissionais" role="tabpanel">
+                  <form class="row g-3" id="form-profissionais">
+                    <div class="col-md-6">
+                      <label class="form-label fw-medium">Empresa Atual</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="eg-empresa"
+                        placeholder="Ex: Agrotechx"
+                      />
+                    </div>
+                    <div class="col-md-6">
+                      <label class="form-label fw-medium">Cargo / Função</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="eg-cargo"
+                        placeholder="Ex: Desenvolvedor Sênior"
+                      />
+                    </div>
+                    <div class="col-md-4">
+                      <label class="form-label fw-medium"
+                        >Data de Admissão</label
+                      >
+                      <input
+                        type="date"
+                        class="form-control"
+                        id="eg-admissao"
+                      />
+                    </div>
+                    <div class="col-12">
+                      <label class="form-label fw-medium"
+                        >Resumo das Atividades</label
+                      >
+                      <textarea
+                        class="form-control"
+                        id="eg-atividades"
+                        rows="4"
+                        placeholder="Descreva brevemente o que você faz..."
+                      ></textarea>
+                    </div>
+                    <div class="col-12 mt-4 text-end">
+                      <button
+                        type="submit"
+                        class="btn btn-primary px-4"
+                        id="btn-salvar-profissionais"
+                      >
+                        Salvar Profissionais
+                      </button>
+                    </div>
+                  </form>
+                </div>
+
+                <div class="tab-pane fade" id="contato" role="tabpanel">
+                  <form class="row g-3" id="form-contato">
+                    <div class="col-md-6">
+                      <label class="form-label fw-medium">E-mail (Login)</label>
+                      <input
+                        type="email"
+                        class="form-control"
+                        id="eg-email"
+                        disabled
+                      />
+                      <small class="text-muted"
+                        >O e-mail de login não pode ser alterado por
+                        aqui.</small
+                      >
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label fw-medium">Telefone Fixo</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="eg-tel-fixo"
+                        placeholder="(00) 0000-0000"
+                      />
+                    </div>
+                    <div class="col-md-3">
+                      <label class="form-label fw-medium"
+                        >Celular / WhatsApp</label
+                      >
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="eg-celular"
+                        placeholder="(00) 90000-0000"
+                      />
+                    </div>
+                    <div class="col-12 mt-4 text-end">
+                      <button
+                        type="submit"
+                        class="btn btn-primary px-4"
+                        id="btn-salvar-contato"
+                      >
+                        Salvar Contatos
+                      </button>
+                    </div>
+                  </form>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div id="form-staff" style="display: none">
+            <div class="card p-4 shadow-sm border-0 rounded-4">
+              <h5 class="fw-bold mb-4 border-bottom pb-2">Dados da Conta</h5>
+              <form class="row g-3" id="form-atualizar-staff">
+                <div class="col-md-6">
+                  <label class="form-label fw-medium">Nome Completo</label>
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="staff-nome"
+                    required
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-medium">E-mail de Login</label>
+                  <input
+                    type="email"
+                    class="form-control"
+                    id="staff-email"
+                    disabled
+                  />
+                </div>
+                <div class="col-md-6">
+                  <label class="form-label fw-medium"
+                    >Telefone de Contato</label
+                  >
+                  <input
+                    type="text"
+                    class="form-control"
+                    id="staff-telefone"
+                    placeholder="(00) 00000-0000"
+                  />
+                </div>
+
+                <h6 class="mt-4 mb-2 fw-bold text-secondary border-bottom pb-2">
+                  Segurança
+                </h6>
+                <div class="col-md-6">
+                  <label class="form-label fw-medium">Nova Senha</label>
+                  <input
+                    type="password"
+                    class="form-control"
+                    id="staff-senha"
+                    placeholder="Deixe em branco para manter a atual"
+                  />
+                </div>
+
+                <div class="col-12 mt-4 text-end">
+                  <button
+                    type="submit"
+                    class="btn btn-primary px-4"
+                    id="btn-salvar-staff"
+                  >
+                    Atualizar Perfil
+                  </button>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", async function () {
+        // Inicializa passando 'perfil' e '..'
+        const context = await inicializarPainel("perfil", "..");
+        if (!context) return;
+
+        const supabase = context.supabase;
+        const perfil = context.perfil;
+        const session = context.session;
+        const userId = session.user.id;
+
+        // Atualiza a foto do topo se existir
+        if (perfil.foto_perfil) {
+          document.getElementById("top-avatar").src = perfil.foto_perfil;
+        }
+
+        // ==========================================
+        // LÓGICA DO EGRESSO
+        // ==========================================
+        if (perfil.nivel_acesso === "egresso") {
+          document.getElementById("form-egresso").style.display = "block";
+
+          // PREENCHER DADOS EXISTENTES
+          if (perfil.foto_perfil)
+            document.getElementById("preview-avatar").src = perfil.foto_perfil;
+          document.getElementById("eg-nome").value = perfil.nome || "";
+          document.getElementById("eg-email").value = perfil.email || "";
+          document.getElementById("eg-nascimento").value =
+            perfil.data_nascimento || "";
+          document.getElementById("cep").value = perfil.cep || "";
+          document.getElementById("logradouro").value = perfil.logradouro || "";
+          document.getElementById("numero").value = perfil.numero || "";
+          document.getElementById("bairro").value = perfil.bairro || "";
+          document.getElementById("cidade").value = perfil.cidade || "";
+          document.getElementById("estado").value = perfil.estado || "";
+
+          document.getElementById("eg-curso").value = perfil.curso_ufj || "";
+          document.getElementById("eg-ano-conclusao").value =
+            perfil.ano_conclusao || "";
+
+          document.getElementById("eg-empresa").value =
+            perfil.empresa_atual || "";
+          document.getElementById("eg-cargo").value = perfil.cargo || "";
+          document.getElementById("eg-admissao").value =
+            perfil.data_admissao || "";
+          document.getElementById("eg-atividades").value =
+            perfil.atividades_executadas || "";
+
+          document.getElementById("eg-tel-fixo").value =
+            perfil.telefone_fixo || "";
+          document.getElementById("eg-celular").value = perfil.celular || "";
+
+          // VIA CEP
+          document
+            .getElementById("cep")
+            .addEventListener("blur", async function () {
+              let cep = this.value.replace(/\D/g, "");
+              if (cep.length === 8) {
+                try {
+                  const response = await fetch(
+                    `https://viacep.com.br/ws/${cep}/json/`,
+                  );
+                  const data = await response.json();
+                  if (!data.erro) {
+                    document.getElementById("logradouro").value =
+                      data.logradouro;
+                    document.getElementById("bairro").value = data.bairro;
+                    document.getElementById("cidade").value = data.localidade;
+                    document.getElementById("estado").value = data.uf;
+                    document.getElementById("cep-error").style.display = "none";
+                    document.getElementById("numero").focus();
+                  } else {
+                    document.getElementById("cep-error").style.display =
+                      "block";
+                  }
+                } catch (error) {}
+              }
+            });
+
+          // PREENCHER FORMAÇÕES EXTRAS (DO BANCO)
+          const containerFormacoes = document.getElementById(
+            "container-formacoes",
+          );
+          let formacaoCount = 0;
+
+          function criarLinhaFormacao(
+            dados = {
+              tipo: "",
+              nome_curso: "",
+              instituicao: "",
+              ano_conclusao: "",
+            },
+          ) {
+            formacaoCount++;
+            const div = document.createElement("div");
+            div.className =
+              "row g-3 p-3 mb-3 border rounded bg-light position-relative formacao-item";
+            div.innerHTML = `
+              <button type="button" class="btn-close position-absolute top-0 end-0 m-2" onclick="this.parentElement.remove()"></button>
+              <div class="col-md-3">
+                <label class="form-label fw-medium">Tipo</label>
+                <select class="form-select form-select-sm f-tipo">
+                  <option value="Especialização" ${dados.tipo === "Especialização" ? "selected" : ""}>Especialização</option>
+                  <option value="Mestrado" ${dados.tipo === "Mestrado" ? "selected" : ""}>Mestrado</option>
+                  <option value="Doutorado" ${dados.tipo === "Doutorado" ? "selected" : ""}>Doutorado</option>
+                  <option value="Outra Graduação" ${dados.tipo === "Outra Graduação" ? "selected" : ""}>Outra Graduação</option>
+                </select>
+              </div>
+              <div class="col-md-4">
+                <label class="form-label fw-medium">Nome do Curso</label>
+                <input type="text" class="form-control form-control-sm f-nome" value="${dados.nome_curso}">
+              </div>
+              <div class="col-md-3">
+                <label class="form-label fw-medium">Instituição</label>
+                <input type="text" class="form-control form-control-sm f-inst" value="${dados.instituicao}">
+              </div>
+              <div class="col-md-2">
+                <label class="form-label fw-medium">Ano</label>
+                <input type="text" class="form-control form-control-sm f-ano" value="${dados.ano_conclusao}">
+              </div>
+            `;
+            containerFormacoes.appendChild(div);
+          }
+
+          // Busca as formações do banco
+          async function carregarFormacoesExtras() {
+            const { data } = await supabase
+              .from("formacoes_extras")
+              .select("*")
+              .eq("usuario_id", userId);
+            if (data && data.length > 0) {
+              data.forEach((f) => criarLinhaFormacao(f));
+            }
+          }
+          carregarFormacoesExtras();
+
+          // Botão Adicionar Formação
+          document
+            .getElementById("btn-add-formacao")
+            .addEventListener("click", () => criarLinhaFormacao());
+
+          // FUNÇÃO GENÉRICA DE ATUALIZAR PERFIL
+          async function atualizarTabelaPerfil(dadosAtualizar, btnId) {
+            const btn = document.getElementById(btnId);
+            const textoOriginal = btn.innerText;
+            btn.innerText = "Salvando...";
+            btn.disabled = true;
+
+            const { error } = await supabase
+              .from("perfis")
+              .update(dadosAtualizar)
+              .eq("id", userId);
+
+            btn.innerText = textoOriginal;
+            btn.disabled = false;
+
+            if (error) {
+              alert("Erro ao salvar dados.");
+              console.error(error);
+            } else {
+              alert("Dados salvos com sucesso!");
+            }
+          }
+
+          // SALVAR ABA: PESSOAIS
+          document
+            .getElementById("form-pessoais")
+            .addEventListener("submit", async function (e) {
+              e.preventDefault();
+              const btn = document.getElementById("btn-salvar-pessoais");
+              btn.disabled = true;
+              btn.innerText = "Salvando foto...";
+
+              let urlFoto = perfil.foto_perfil;
+              const fileInput = document.getElementById("eg-foto");
+
+              // Se escolheu uma foto nova, sobe pro Storage
+              if (fileInput.files.length > 0) {
+                const arquivo = fileInput.files[0];
+                const extensao = arquivo.name.split(".").pop();
+                const nomeUnico = `${userId}_avatar.${extensao}`;
+
+                const { error: uploadError } = await supabase.storage
+                  .from("avatares")
+                  .upload(nomeUnico, arquivo, { upsert: true });
+                if (!uploadError) {
+                  const { data: publicUrlData } = supabase.storage
+                    .from("avatares")
+                    .getPublicUrl(nomeUnico);
+                  urlFoto = publicUrlData.publicUrl + "?t=" + Date.now(); // Força atualizar o cache da imagem
+                  document.getElementById("preview-avatar").src = urlFoto;
+                  document.getElementById("top-avatar").src = urlFoto;
+                }
+              }
+
+              // Atualiza no banco
+              await atualizarTabelaPerfil(
+                {
+                  foto_perfil: urlFoto,
+                  nome: document.getElementById("eg-nome").value,
+                  data_nascimento:
+                    document.getElementById("eg-nascimento").value || null,
+                  cep: document.getElementById("cep").value,
+                  logradouro: document.getElementById("logradouro").value,
+                  numero: document.getElementById("numero").value,
+                  bairro: document.getElementById("bairro").value,
+                  cidade: document.getElementById("cidade").value,
+                  estado: document.getElementById("estado").value,
+                },
+                "btn-salvar-pessoais",
+              );
+            });
+
+          // SALVAR ABA: ACADÊMICAS
+          document
+            .getElementById("form-academicas")
+            .addEventListener("submit", async function (e) {
+              e.preventDefault();
+              const btn = document.getElementById("btn-salvar-academicas");
+              btn.disabled = true;
+              btn.innerText = "Salvando...";
+
+              // 1. Atualiza graduação principal
+              await supabase
+                .from("perfis")
+                .update({
+                  curso_ufj: document.getElementById("eg-curso").value,
+                  ano_conclusao:
+                    document.getElementById("eg-ano-conclusao").value || null,
+                })
+                .eq("id", userId);
+
+              // 2. Atualiza Formações Extras (Exclui tudo e insere as novas da tela)
+              await supabase
+                .from("formacoes_extras")
+                .delete()
+                .eq("usuario_id", userId);
+
+              const items = document.querySelectorAll(".formacao-item");
+              const novasFormacoes = [];
+              items.forEach((item) => {
+                const tipo = item.querySelector(".f-tipo").value;
+                const nome = item.querySelector(".f-nome").value;
+                const inst = item.querySelector(".f-inst").value;
+                const ano = item.querySelector(".f-ano").value;
+
+                if (nome && inst) {
+                  novasFormacoes.push({
+                    usuario_id: userId,
+                    tipo: tipo,
+                    nome_curso: nome,
+                    instituicao: inst,
+                    ano_conclusao: ano,
+                  });
+                }
+              });
+
+              if (novasFormacoes.length > 0) {
+                await supabase.from("formacoes_extras").insert(novasFormacoes);
+              }
+
+              btn.innerText = "Salvar Acadêmicas";
+              btn.disabled = false;
+              alert("Dados acadêmicos salvos com sucesso!");
+            });
+
+          // SALVAR ABA: PROFISSIONAIS
+          document
+            .getElementById("form-profissionais")
+            .addEventListener("submit", async function (e) {
+              e.preventDefault();
+              await atualizarTabelaPerfil(
+                {
+                  empresa_atual: document.getElementById("eg-empresa").value,
+                  cargo: document.getElementById("eg-cargo").value,
+                  data_admissao:
+                    document.getElementById("eg-admissao").value || null,
+                  atividades_executadas:
+                    document.getElementById("eg-atividades").value,
+                },
+                "btn-salvar-profissionais",
+              );
+            });
+
+          // SALVAR ABA: CONTATO
+          document
+            .getElementById("form-contato")
+            .addEventListener("submit", async function (e) {
+              e.preventDefault();
+              await atualizarTabelaPerfil(
+                {
+                  telefone_fixo: document.getElementById("eg-tel-fixo").value,
+                  celular: document.getElementById("eg-celular").value,
+                },
+                "btn-salvar-contato",
+              );
+            });
+        } else {
+          // ==========================================
+          // LÓGICA DO STAFF (COORDENAÇÃO / ADMIN)
+          // ==========================================
+          document.getElementById("form-staff").style.display = "block";
+
+          document.getElementById("staff-nome").value = perfil.nome || "";
+          document.getElementById("staff-email").value = perfil.email || "";
+          document.getElementById("staff-telefone").value =
+            perfil.telefone_fixo || "";
+
+          document
+            .getElementById("form-atualizar-staff")
+            .addEventListener("submit", async function (e) {
+              e.preventDefault();
+              const btn = document.getElementById("btn-salvar-staff");
+              btn.disabled = true;
+              btn.innerText = "Salvando...";
+
+              try {
+                const novoNome = document.getElementById("staff-nome").value;
+                const novoTel = document.getElementById("staff-telefone").value;
+                const novaSenha = document.getElementById("staff-senha").value;
+
+                // Atualiza o perfil
+                await supabase
+                  .from("perfis")
+                  .update({ nome: novoNome, telefone_fixo: novoTel })
+                  .eq("id", userId);
+
+                // Atualiza senha se houver
+                if (novaSenha.trim() !== "") {
+                  const { error } = await supabase.auth.updateUser({
+                    password: novaSenha,
+                  });
+                  if (error) throw error;
+                }
+
+                alert("Perfil atualizado com sucesso!");
+                document.getElementById("user-name").innerText = novoNome;
+                document.getElementById("staff-senha").value = "";
+              } catch (error) {
+                alert("Erro ao atualizar o perfil.");
+                console.error(error);
+              } finally {
+                btn.disabled = false;
+                btn.innerText = "Atualizar Perfil";
+              }
+            });
+        }
+      });
+    </script>
+  </body>
+</html>

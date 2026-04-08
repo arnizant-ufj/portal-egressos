@@ -1,0 +1,305 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Formulário de Evento - Painel UFJ</title>
+
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="../../assets/vendor/bootstrap/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link href="../../assets/css/main.css" rel="stylesheet" />
+    <link href="../../assets/css/painel.css" rel="stylesheet" />
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../../js/adminLayout.js"></script>
+  </head>
+
+  <body>
+    <div id="loading-screen">
+      <div class="spinner-border text-primary" role="status"></div>
+      <h5 class="mt-3 text-secondary fw-bold">Preparando formulário...</h5>
+    </div>
+
+    <div class="container-fluid" id="main-panel" style="display: none">
+      <div class="row">
+        <div class="col-md-3 col-lg-2 p-0 sidebar position-fixed">
+          <div class="sidebar-header">
+            <img
+              src="../../assets/img/logo-ufj-branca.png"
+              alt="Logo UFJ"
+              class="img-fluid mb-3"
+              style="max-height: 55px"
+            />
+            <h6 class="mb-0 text-white fw-bold" id="badge-nivel">Painel</h6>
+          </div>
+          <nav class="nav flex-column flex-grow-1" id="sidebar-menu"></nav>
+          <a href="#" class="logout-btn" id="btn-logout"
+            ><i class="bi bi-box-arrow-left"></i> Sair</a
+          >
+        </div>
+
+        <div class="col-md-9 offset-md-3 col-lg-10 offset-lg-2 content-area">
+          <div
+            class="d-flex justify-content-between align-items-center mb-4 bg-white p-4 shadow-sm rounded-3 border-0"
+          >
+            <h4 class="mb-0 text-secondary fw-bold" id="page-title">Eventos</h4>
+            <div class="d-flex align-items-center">
+              <span class="me-3 fw-medium text-secondary" id="user-name"
+                >...</span
+              >
+              <img
+                src="../../assets/img/person/person-m-9.webp"
+                id="top-avatar"
+                alt="Profile"
+                class="rounded-circle shadow-sm"
+                style="width: 45px; height: 45px; object-fit: cover"
+              />
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <a href="listar.html" class="btn btn-outline-secondary btn-sm">
+              <i class="bi bi-arrow-left me-1"></i> Voltar para a Lista
+            </a>
+          </div>
+
+          <div class="card p-4 shadow-sm border-0 rounded-4">
+            <h5 class="fw-bold mb-4 border-bottom pb-2" id="titulo-form">
+              Cadastrar Novo Evento
+            </h5>
+
+            <form class="row g-3" id="form-evento">
+              <div class="col-md-12">
+                <label class="form-label fw-medium">Título do Evento *</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="ev-titulo"
+                  required
+                />
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-medium">Data de Início *</label>
+                <input
+                  type="date"
+                  class="form-control"
+                  id="ev-inicio"
+                  required
+                />
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-medium"
+                  >Data de Término (Deixe em branco se for apenas 1 dia)</label
+                >
+                <input type="date" class="form-control" id="ev-fim" />
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-medium">Imagem Principal</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  id="ev-img1"
+                  accept="image/*"
+                />
+                <small class="text-muted" id="hint-img1"
+                  >Obrigatório para novos eventos.</small
+                >
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-medium">Imagem Secundária</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  id="ev-img2"
+                  accept="image/*"
+                />
+                <small class="text-muted" id="hint-img2"
+                  >Obrigatório para novos eventos.</small
+                >
+              </div>
+
+              <div class="col-12">
+                <label class="form-label fw-medium"
+                  >Descrição Completa * (Permitido HTML)</label
+                >
+                <textarea
+                  class="form-control"
+                  id="ev-descricao"
+                  rows="6"
+                  required
+                ></textarea>
+              </div>
+
+              <div class="col-12 mt-4 text-end">
+                <button
+                  type="submit"
+                  class="btn btn-primary px-4 btn-lg"
+                  id="btn-salvar"
+                >
+                  <span
+                    class="spinner-border spinner-border-sm d-none"
+                    id="spinner-salvar"
+                    role="status"
+                  ></span>
+                  <span id="texto-btn-salvar"
+                    ><i class="bi bi-check2-circle me-2"></i> Salvar
+                    Evento</span
+                  >
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", async function () {
+        const context = await inicializarPainel("eventos", "..");
+        if (!context) return;
+
+        const supabase = context.supabase;
+        const session = context.session;
+        const perfil = context.perfil;
+
+        if (perfil.foto_perfil) {
+          document.getElementById("top-avatar").src = perfil.foto_perfil;
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const eventoId = urlParams.get("id");
+        let eventoAtual = null;
+
+        const form = document.getElementById("form-evento");
+        const btnSalvar = document.getElementById("btn-salvar");
+        const spinner = document.getElementById("spinner-salvar");
+        const textoBtn = document.getElementById("texto-btn-salvar");
+        const img1Input = document.getElementById("ev-img1");
+        const img2Input = document.getElementById("ev-img2");
+
+        // PREENCHE FORMULÁRIO SE FOR EDIÇÃO
+        if (eventoId) {
+          document.getElementById("titulo-form").innerText =
+            "Editar Evento #" + eventoId;
+          document.getElementById("hint-img1").innerText =
+            "Deixe em branco para manter a imagem atual.";
+          document.getElementById("hint-img2").innerText =
+            "Deixe em branco para manter a imagem atual.";
+
+          const { data, error } = await supabase
+            .from("eventos")
+            .select("*")
+            .eq("id", eventoId)
+            .single();
+
+          if (error || !data) {
+            alert("Evento não encontrado!");
+            window.location.href = "listar.html";
+            return;
+          }
+
+          eventoAtual = data;
+          document.getElementById("ev-titulo").value = data.titulo;
+          document.getElementById("ev-inicio").value = data.data_inicio;
+          document.getElementById("ev-fim").value = data.data_fim || "";
+          document.getElementById("ev-descricao").value = data.descricao;
+        } else {
+          // SE FOR CADASTRO: Torna as imagens obrigatórias
+          img1Input.required = true;
+          img2Input.required = true;
+        }
+
+        async function uploadImagem(arquivoInput, prefixo) {
+          if (arquivoInput.files.length === 0) return null;
+          const arquivo = arquivoInput.files[0];
+          const extensao = arquivo.name.split(".").pop();
+          const nomeUnico = `${Date.now()}_${prefixo}.${extensao}`;
+
+          const { error } = await supabase.storage
+            .from("eventos")
+            .upload(nomeUnico, arquivo);
+          if (error) throw error;
+
+          const { data } = supabase.storage
+            .from("eventos")
+            .getPublicUrl(nomeUnico);
+          return data.publicUrl;
+        }
+
+        // ENVIO DO FORMULÁRIO
+        form.addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          btnSalvar.disabled = true;
+          spinner.classList.remove("d-none");
+          textoBtn.innerHTML = "Salvando dados...";
+
+          try {
+            let urlPrincipal = await uploadImagem(img1Input, "img1");
+            let urlSecundaria = await uploadImagem(img2Input, "img2");
+
+            if (eventoId) {
+              if (!urlPrincipal) urlPrincipal = eventoAtual.imagem_principal;
+              if (!urlSecundaria) urlSecundaria = eventoAtual.imagem_secundaria;
+            }
+
+            // Garante que se data final estiver vazia, vai como null pro banco
+            const dataFimValor = document.getElementById("ev-fim").value;
+
+            const payload = {
+              titulo: document.getElementById("ev-titulo").value,
+              descricao: document.getElementById("ev-descricao").value,
+              data_inicio: document.getElementById("ev-inicio").value,
+              data_fim: dataFimValor ? dataFimValor : null,
+              imagem_principal: urlPrincipal,
+              imagem_secundaria: urlSecundaria,
+              usuario_id: session.user.id,
+            };
+
+            if (eventoId) {
+              const { error } = await supabase
+                .from("eventos")
+                .update(payload)
+                .eq("id", eventoId);
+              if (error) throw error;
+              alert("Evento atualizado com sucesso!");
+            } else {
+              const { error } = await supabase
+                .from("eventos")
+                .insert([payload]);
+              if (error) throw error;
+              alert("Evento publicado com sucesso!");
+            }
+
+            window.location.href = "listar.html";
+          } catch (error) {
+            console.error(error);
+            alert("Ocorreu um erro ao salvar o evento.");
+          } finally {
+            btnSalvar.disabled = false;
+            spinner.classList.add("d-none");
+            textoBtn.innerHTML =
+              '<i class="bi bi-check2-circle me-2"></i> Salvar Evento';
+          }
+        });
+      });
+    </script>
+  </body>
+</html>

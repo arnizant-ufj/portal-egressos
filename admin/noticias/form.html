@@ -1,0 +1,344 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Formulário de Notícia - Painel UFJ</title>
+
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="../../assets/vendor/bootstrap/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link href="../../assets/css/main.css" rel="stylesheet" />
+    <link href="../../assets/css/painel.css" rel="stylesheet" />
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../../js/adminLayout.js"></script>
+  </head>
+
+  <body>
+    <div id="loading-screen">
+      <div class="spinner-border text-primary" role="status"></div>
+      <h5 class="mt-3 text-secondary fw-bold">Preparando formulário...</h5>
+    </div>
+
+    <div class="container-fluid" id="main-panel" style="display: none">
+      <div class="row">
+        <div class="col-md-3 col-lg-2 p-0 sidebar position-fixed">
+          <div class="sidebar-header">
+            <img
+              src="../../assets/img/logo_ufj_branca.png"
+              alt="Logo UFJ"
+              class="img-fluid mb-3"
+              style="max-height: 55px"
+            />
+            <h6 class="mb-0 text-white fw-bold" id="badge-nivel">Painel</h6>
+          </div>
+          <nav class="nav flex-column flex-grow-1" id="sidebar-menu"></nav>
+          <a href="#" class="logout-btn" id="btn-logout"
+            ><i class="bi bi-box-arrow-left"></i> Sair</a
+          >
+        </div>
+
+        <div class="col-md-9 offset-md-3 col-lg-10 offset-lg-2 content-area">
+          <div
+            class="d-flex justify-content-between align-items-center mb-4 bg-white p-4 shadow-sm rounded-3 border-0"
+          >
+            <h4 class="mb-0 text-secondary fw-bold" id="page-title">
+              Notícias
+            </h4>
+            <div class="d-flex align-items-center">
+              <span class="me-3 fw-medium text-secondary" id="user-name"
+                >...</span
+              >
+              <i class="bi bi-person-circle fs-2 text-primary"></i>
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <a href="listar.html" class="btn btn-outline-secondary btn-sm">
+              <i class="bi bi-arrow-left me-1"></i> Voltar para a Lista
+            </a>
+          </div>
+
+          <div class="card p-4 shadow-sm border-0 rounded-4">
+            <h5 class="fw-bold mb-4 border-bottom pb-2" id="titulo-form">
+              Cadastrar Nova Notícia
+            </h5>
+
+            <form class="row g-3" id="form-noticia">
+              <div class="col-md-8">
+                <label class="form-label fw-medium">Título da Notícia *</label>
+                <input
+                  type="text"
+                  class="form-control"
+                  id="not-titulo"
+                  required
+                />
+              </div>
+
+              <div class="col-md-4">
+                <label class="form-label fw-medium">Categoria *</label>
+                <select class="form-select" id="not-categoria" required>
+                  <option value="" selected disabled>Selecione...</option>
+                  <option value="Tecnologia">Tecnologia</option>
+                  <option value="Eventos">Eventos</option>
+                  <option value="Mercado">Mercado</option>
+                  <option value="Educação">Educação</option>
+                  <option value="Geral">Geral</option>
+                </select>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-medium"
+                  >Autor * (Ex: Seu nome ou Equipe UFJ)</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="not-autor"
+                  required
+                />
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-medium"
+                  >Tempo de Leitura * (Ex: 3 min)</label
+                >
+                <input
+                  type="text"
+                  class="form-control"
+                  id="not-tempo"
+                  required
+                />
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-medium">Imagem Principal</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  id="not-img1"
+                  accept="image/*"
+                />
+                <small class="text-muted" id="hint-img1"
+                  >Obrigatório para novas notícias.</small
+                >
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-medium">Imagem Secundária</label>
+                <input
+                  type="file"
+                  class="form-control"
+                  id="not-img2"
+                  accept="image/*"
+                />
+                <small class="text-muted" id="hint-img2"
+                  >Obrigatório para novas notícias.</small
+                >
+              </div>
+
+              <div class="col-12">
+                <label class="form-label fw-medium"
+                  >Resumo * (Texto curto para o card)</label
+                >
+                <textarea
+                  class="form-control"
+                  id="not-resumo"
+                  rows="3"
+                  maxlength="200"
+                  required
+                ></textarea>
+              </div>
+
+              <div class="col-12">
+                <label class="form-label fw-medium"
+                  >Texto Completo * (Permitido uso de tags HTML como &lt;p&gt;
+                  ou &lt;h2&gt;)</label
+                >
+                <textarea
+                  class="form-control"
+                  id="not-texto"
+                  rows="10"
+                  required
+                ></textarea>
+              </div>
+
+              <div class="col-12 mt-4 text-end">
+                <button
+                  type="submit"
+                  class="btn btn-primary px-4 btn-lg"
+                  id="btn-salvar"
+                >
+                  <span
+                    class="spinner-border spinner-border-sm d-none"
+                    id="spinner-salvar"
+                    role="status"
+                    aria-hidden="true"
+                  ></span>
+                  <span id="texto-btn-salvar"
+                    ><i class="bi bi-check2-circle me-2"></i> Salvar
+                    Notícia</span
+                  >
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", async function () {
+        // Inicializa o layout de Admin
+        const context = await inicializarPainel('noticias', '..');
+        if (!context) return;
+
+        const supabase = context.supabase;
+        const session = context.session;
+
+        // Verifica se é Edição (se tem ?id= na URL)
+        const urlParams = new URLSearchParams(window.location.search);
+        const noticiaId = urlParams.get("id");
+        let noticiaAtual = null; // Guardará os dados se for edição
+
+        const form = document.getElementById("form-noticia");
+        const btnSalvar = document.getElementById("btn-salvar");
+        const spinner = document.getElementById("spinner-salvar");
+        const textoBtn = document.getElementById("texto-btn-salvar");
+        const img1Input = document.getElementById("not-img1");
+        const img2Input = document.getElementById("not-img2");
+
+        // SE FOR EDIÇÃO: Preenche o formulário
+        if (noticiaId) {
+          document.getElementById("titulo-form").innerText =
+            "Editar Notícia #" + noticiaId;
+          document.getElementById("hint-img1").innerText =
+            "Deixe em branco para manter a imagem atual.";
+          document.getElementById("hint-img2").innerText =
+            "Deixe em branco para manter a imagem atual.";
+
+          // Busca os dados no banco
+          const { data, error } = await supabase
+            .from("noticias")
+            .select("*")
+            .eq("id", noticiaId)
+            .single();
+
+          if (error || !data) {
+            alert("Notícia não encontrada!");
+            window.location.href = "listar.html";
+            return;
+          }
+
+          noticiaAtual = data;
+
+          // Preenche os campos
+          document.getElementById("not-titulo").value = data.titulo;
+          document.getElementById("not-categoria").value = data.categoria;
+          document.getElementById("not-autor").value = data.autor;
+          document.getElementById("not-tempo").value = data.tempo_leitura;
+          document.getElementById("not-resumo").value = data.resumo;
+          document.getElementById("not-texto").value = data.texto_body;
+        } else {
+          // SE FOR CADASTRO: Torna as imagens obrigatórias
+          img1Input.required = true;
+          img2Input.required = true;
+        }
+
+        // Função para Upload no Storage
+        async function uploadImagem(arquivoInput, prefixo) {
+          if (arquivoInput.files.length === 0) return null; // Se não selecionou, retorna nulo
+
+          const arquivo = arquivoInput.files[0];
+          const extensao = arquivo.name.split(".").pop();
+          const nomeUnico = `${Date.now()}_${prefixo}.${extensao}`;
+
+          const { error } = await supabase.storage
+            .from("noticias")
+            .upload(nomeUnico, arquivo);
+          if (error) throw error;
+
+          const { data: publicUrlData } = supabase.storage
+            .from("noticias")
+            .getPublicUrl(nomeUnico);
+          return publicUrlData.publicUrl;
+        }
+
+        // ENVIO DO FORMULÁRIO (CADASTRAR OU ATUALIZAR)
+        form.addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          btnSalvar.disabled = true;
+          spinner.classList.remove("d-none");
+          textoBtn.innerHTML = "Salvando dados...";
+
+          try {
+            // 1. Tenta fazer upload das imagens (se foram selecionadas)
+            let urlPrincipal = await uploadImagem(img1Input, "img1");
+            let urlSecundaria = await uploadImagem(img2Input, "img2");
+
+            // 2. Se for edição e não subiu foto nova, mantém a URL antiga do banco
+            if (noticiaId) {
+              if (!urlPrincipal) urlPrincipal = noticiaAtual.imagem_principal;
+              if (!urlSecundaria)
+                urlSecundaria = noticiaAtual.imagem_secundaria;
+            }
+
+            // 3. Monta o objeto final para o banco
+            const payload = {
+              titulo: document.getElementById("not-titulo").value,
+              categoria: document.getElementById("not-categoria").value,
+              autor: document.getElementById("not-autor").value,
+              tempo_leitura: document.getElementById("not-tempo").value,
+              resumo: document.getElementById("not-resumo").value,
+              texto_body: document.getElementById("not-texto").value,
+              imagem_principal: urlPrincipal,
+              imagem_secundaria: urlSecundaria,
+              usuario_id: session.user.id, // Vincula quem postou/editou
+            };
+
+            // 4. Executa a Ação (UPDATE ou INSERT)
+            if (noticiaId) {
+              const { error } = await supabase
+                .from("noticias")
+                .update(payload)
+                .eq("id", noticiaId);
+              if (error) throw error;
+              alert("Notícia atualizada com sucesso!");
+            } else {
+              const { error } = await supabase
+                .from("noticias")
+                .insert([payload]);
+              if (error) throw error;
+              alert("Notícia publicada com sucesso!");
+            }
+
+            // Voltar para a lista
+            window.location.href = "listar.html";
+          } catch (error) {
+            console.error("Erro ao salvar:", error);
+            alert("Ocorreu um erro ao salvar a notícia. Tente novamente.");
+          } finally {
+            btnSalvar.disabled = false;
+            spinner.classList.add("d-none");
+            textoBtn.innerHTML =
+              '<i class="bi bi-check2-circle me-2"></i> Salvar Notícia';
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
