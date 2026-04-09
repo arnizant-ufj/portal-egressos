@@ -51,12 +51,14 @@ async function inicializarPainel(paginaAtual, baseDir = ".") {
                 menuItems = [
                     { id: 'perfil', url: `${baseDir}/perfil/index.html`, icon: 'bi-person-fill', text: 'Meu Perfil' },
                     { id: 'vagas', url: `${baseDir}/vagas/listar.html`, icon: 'bi-briefcase-fill', text: 'Oportunidades' },
+                    { id: 'depoimentos', url: `${baseDir}/depoimentos/listar.html`, icon: 'bi-chat-quote-fill', text: 'Depoimentos' },
                 ];
             } else {
                 menuItems = [
                     { id: 'dashboard', url: `${baseDir}/painel.html`, icon: 'bi-grid-1x2-fill', text: 'Dashboard' },
                     { id: 'perfil', url: `${baseDir}/perfil/index.html`, icon: 'bi-person-fill', text: 'Meu Perfil' },
                     { id: 'vagas', url: `${baseDir}/vagas/listar.html`, icon: 'bi-briefcase-fill', text: 'Oportunidades' },
+                    { id: 'depoimentos', url: `${baseDir}/depoimentos/listar.html`, icon: 'bi-chat-quote-fill', text: 'Depoimentos' },
                     { id: 'noticias', url: `${baseDir}/noticias/listar.html`, icon: 'bi-newspaper', text: 'Notícias' },
                     { id: 'eventos', url: `${baseDir}/eventos/listar.html`, icon: 'bi-calendar-event-fill', text: 'Eventos' },
                 ];

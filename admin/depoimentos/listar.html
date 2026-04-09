@@ -3,7 +3,7 @@
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
-    <title>Oportunidades - Painel UFJ</title>
+    <title>Depoimentos - Painel UFJ</title>
     <link href="../../assets/img/prograd1.ico" rel="icon" />
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
@@ -11,7 +11,6 @@
       href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
       rel="stylesheet"
     />
-
     <link
       href="../../assets/vendor/bootstrap/css/bootstrap.min.css"
       rel="stylesheet"
@@ -22,15 +21,12 @@
     />
     <link href="../../assets/css/main.css" rel="stylesheet" />
     <link href="../../assets/css/painel.css" rel="stylesheet" />
-
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../../js/adminLayout.js"></script>
   </head>
-
   <body>
     <div id="loading-screen">
       <div class="spinner-border text-primary" role="status"></div>
-      <h5 class="mt-3 text-secondary fw-bold">Carregando módulo...</h5>
     </div>
 
     <div class="container-fluid" id="main-panel" style="display: none">
@@ -56,7 +52,7 @@
             class="d-flex justify-content-between align-items-center mb-5 bg-white p-4 shadow-sm rounded-3 border-0"
           >
             <h4 class="mb-0 text-secondary fw-bold" id="page-title">
-              Oportunidades
+              Depoimentos
             </h4>
             <div class="d-flex align-items-center">
               <span class="me-3 fw-medium text-secondary" id="user-name"
@@ -73,86 +69,69 @@
           </div>
 
           <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="fw-bold mb-0">Gerenciar Vagas</h5>
-            <a href="form.html" class="btn btn-primary">
-              <i class="bi bi-plus-lg me-2"></i>Nova Vaga
+            <h5 class="fw-bold mb-0">Gerenciar Depoimentos</h5>
+            <a href="form.html" class="btn btn-primary" id="btn-novo">
+              <i class="bi bi-plus-lg me-2"></i>Novo Depoimento
             </a>
           </div>
 
           <div class="card p-4 shadow-sm border-0 rounded-4">
-            <ul class="nav nav-tabs mb-4" id="vagasTabs" role="tablist">
-              <li class="nav-item" role="presentation">
+            <ul class="nav nav-tabs mb-4" role="tablist">
+              <li class="nav-item">
                 <button
                   class="nav-link active"
                   data-bs-toggle="tab"
-                  data-bs-target="#minhas-vagas"
-                  type="button"
-                  role="tab"
+                  data-bs-target="#meus-depoimentos"
                 >
-                  Minhas Vagas
+                  Meus Depoimentos
                 </button>
               </li>
-              <li
-                class="nav-item"
-                id="tab-pendentes-li"
-                style="display: none"
-                role="presentation"
-              >
+              <li class="nav-item" id="tab-pendentes-li" style="display: none">
                 <button
                   class="nav-link"
                   data-bs-toggle="tab"
-                  data-bs-target="#vagas-pendentes"
-                  type="button"
-                  role="tab"
+                  data-bs-target="#pendentes"
                 >
-                  Aprovações Pendentes
+                  Avaliar Depoimentos
                 </button>
               </li>
             </ul>
 
             <div class="tab-content">
-              <div
-                class="tab-pane fade show active"
-                id="minhas-vagas"
-                role="tabpanel"
-              >
+              <div class="tab-pane fade show active" id="meus-depoimentos">
                 <div class="table-responsive">
                   <table class="table table-hover align-middle">
                     <thead class="table-light">
                       <tr>
-                        <th>Título da Vaga</th>
-                        <th>Área de Atuação</th>
+                        <th>Trecho</th>
+                        <th>Avaliação</th>
                         <th>Status</th>
                         <th class="text-end">Ações</th>
                       </tr>
                     </thead>
-                    <tbody id="tbody-minhas-vagas">
+                    <tbody id="tbody-meus">
                       <tr>
-                        <td colspan="4" class="text-center py-4">
-                          Carregando vagas...
-                        </td>
+                        <td colspan="4" class="text-center">Carregando...</td>
                       </tr>
                     </tbody>
                   </table>
                 </div>
               </div>
 
-              <div class="tab-pane fade" id="vagas-pendentes" role="tabpanel">
+              <div class="tab-pane fade" id="pendentes">
                 <div class="table-responsive">
                   <table class="table table-hover align-middle">
                     <thead class="table-light">
                       <tr>
-                        <th>Título da Vaga</th>
-                        <th>Egresso</th>
-                        <th>Área</th>
+                        <th>Autor</th>
+                        <th>Curso</th>
+                        <th>Estrelas</th>
                         <th class="text-end">Ações</th>
                       </tr>
                     </thead>
                     <tbody id="tbody-pendentes">
                       <tr>
-                        <td colspan="4" class="text-center py-4">
-                          Carregando pendências...
-                        </td>
+                        <td colspan="4" class="text-center">Carregando...</td>
                       </tr>
                     </tbody>
                   </table>
@@ -165,104 +144,97 @@
     </div>
 
     <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
-
     <script>
-      document.addEventListener("DOMContentLoaded", async function () {
-        const context = await inicializarPainel("vagas", "..");
+      document.addEventListener("DOMContentLoaded", async () => {
+        const context = await inicializarPainel("depoimentos", "..");
         if (!context) return;
 
-        const supabase = context.supabase;
-        const perfil = context.perfil;
+        if (context.perfil.foto_perfil)
+          document.getElementById("top-avatar").src =
+            context.perfil.foto_perfil;
 
-        if (perfil.foto_perfil) {
-          document.getElementById("top-avatar").src = perfil.foto_perfil;
-        }
-
-        // Se for coordenação ou admin, mostra a aba de aprovações
-        if (perfil.nivel_acesso !== "egresso") {
+        if (context.perfil.nivel_acesso !== "egresso") {
           document.getElementById("tab-pendentes-li").style.display = "block";
+          // Staff geralmente não escreve depoimento, escondemos o botão de Novo
+          document.getElementById("btn-novo").style.display = "none";
           carregarPendentes();
         }
 
-        carregarMinhasVagas();
+        carregarMeusDepoimentos();
 
-        async function carregarMinhasVagas() {
-          const { data, error } = await supabase
-            .from("vagas")
+        // Função auxiliar para desenhar as estrelinhas
+        function renderStars(count) {
+          let starsHtml = "";
+          for (let i = 0; i < 5; i++) {
+            starsHtml +=
+              i < count
+                ? '<i class="bi bi-star-fill text-warning me-1"></i>'
+                : '<i class="bi bi-star text-muted me-1"></i>';
+          }
+          return starsHtml;
+        }
+
+        async function carregarMeusDepoimentos() {
+          const { data } = await context.supabase
+            .from("depoimentos")
             .select("*")
             .eq("usuario_id", context.session.user.id)
-            .order("data_cadastro", { ascending: false });
+            .order("data_criacao", { ascending: false });
 
-          const tbody = document.getElementById("tbody-minhas-vagas");
-
-          if (error || !data || data.length === 0) {
+          const tbody = document.getElementById("tbody-meus");
+          if (!data || data.length === 0) {
             tbody.innerHTML =
-              '<tr><td colspan="4" class="text-center text-secondary py-4">Nenhuma vaga cadastrada.</td></tr>';
+              '<tr><td colspan="4" class="text-center">Você ainda não deixou um depoimento.</td></tr>';
             return;
           }
 
           tbody.innerHTML = "";
-          data.forEach((v) => {
-            let badgeClass = "bg-warning text-dark";
-            let statusText = "Pendente";
-
-            if (v.status === "aprovado") {
-              badgeClass = "bg-success";
-              statusText = "Aprovado";
-            }
-            if (v.status === "reprovado") {
-              badgeClass = "bg-danger";
-              statusText = "Reprovado";
-            }
+          data.forEach((d) => {
+            let badge =
+              d.status === "aprovado"
+                ? "bg-success"
+                : d.status === "reprovado"
+                  ? "bg-danger"
+                  : "bg-warning text-dark";
+            // Pega só os primeiros 40 caracteres pra tabela não ficar gigante
+            let resumo =
+              d.descricao.length > 40
+                ? d.descricao.substring(0, 40) + "..."
+                : d.descricao;
 
             tbody.innerHTML += `
               <tr>
-                <td class="fw-bold text-primary">${v.titulo_vaga}</td>
-                <td>${v.area_atuacao}</td>
-                <td><span class="badge ${badgeClass}">${statusText}</span></td>
-                <td class="text-end">
-                  <a href="form.html?id=${v.id}" class="btn btn-sm btn-outline-primary" title="Editar / Ver">
-                    <i class="bi bi-pencil"></i>
-                  </a>
-                </td>
+                <td class="text-secondary">"${resumo}"</td>
+                <td>${renderStars(d.estrelas)}</td>
+                <td><span class="badge ${badge}">${d.status}</span></td>
+                <td class="text-end"><a href="form.html?id=${d.id}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a></td>
               </tr>
             `;
           });
         }
 
         async function carregarPendentes() {
-          let query = supabase
-            .from("vagas")
-            .select("*, perfis(nome)")
-            .eq("status", "pendente")
-            .order("data_cadastro", { ascending: false });
+          // Puxa o depoimento e os dados de quem escreveu (nome e curso)
+          const { data } = await context.supabase
+            .from("depoimentos")
+            .select("*, perfis(nome, curso)")
+            .eq("status", "pendente");
 
-          // Se for coordenação, filtra apenas pelas vagas do curso dele
-          if (perfil.nivel_acesso === "coordenacao") {
-            query = query.eq("area_atuacao", perfil.curso);
-          }
-
-          const { data, error } = await query;
           const tbody = document.getElementById("tbody-pendentes");
-
-          if (error || !data || data.length === 0) {
+          if (!data || data.length === 0) {
             tbody.innerHTML =
-              '<tr><td colspan="4" class="text-center text-secondary py-4">Tudo em dia! Nenhuma pendência de aprovação.</td></tr>';
+              '<tr><td colspan="4" class="text-center">Nenhum depoimento para avaliar.</td></tr>';
             return;
           }
 
           tbody.innerHTML = "";
-          data.forEach((v) => {
-            const nomeAutor =
-              v.perfis && v.perfis.nome ? v.perfis.nome : "Anônimo";
+          data.forEach((d) => {
             tbody.innerHTML += `
               <tr>
-                <td class="fw-bold text-primary">${v.titulo_vaga}</td>
-                <td>${nomeAutor}</td>
-                <td>${v.area_atuacao}</td>
-                <td class="text-end">
-                  <a href="form.html?id=${v.id}" class="btn btn-sm btn-primary">Avaliar Vaga</a>
-                </td>
+                <td class="fw-bold">${d.perfis?.nome || "Anônimo"}</td>
+                <td>${d.perfis?.curso || "Não informado"}</td>
+                <td>${renderStars(d.estrelas)}</td>
+                <td class="text-end"><a href="form.html?id=${d.id}" class="btn btn-sm btn-primary">Avaliar</a></td>
               </tr>
             `;
           });

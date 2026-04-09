@@ -33,6 +33,8 @@
     <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet" />
 
     <link href="assets/css/main.css" rel="stylesheet" />
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   </head>
 
   <body class="blog-page">
@@ -69,14 +71,24 @@
           <h1>Blog</h1>
         </div>
       </div>
+
       <div class="container">
         <div class="row">
           <div class="col-lg-8">
             <section id="blog-posts" class="blog-posts section">
               <div class="container" data-aos="fade-up" data-aos-delay="100">
-                <div class="row gy-4" id="blog-posts-container"></div>
+                <div class="row gy-4" id="blog-posts-container">
+                  <div class="text-center w-100 py-5">
+                    <div
+                      class="spinner-border text-primary"
+                      role="status"
+                    ></div>
+                    <p class="mt-2 text-muted">Carregando notícias...</p>
+                  </div>
+                </div>
               </div>
             </section>
+
             <section id="pagination-2" class="pagination-2 section">
               <div class="container">
                 <div class="d-flex justify-content-center">
@@ -85,11 +97,6 @@
                       <a href="#"><i class="bi bi-chevron-left"></i></a>
                     </li>
                     <li><a href="#" class="active">1</a></li>
-                    <li><a href="#">2</a></li>
-                    <li><a href="#">3</a></li>
-                    <li><a href="#">4</a></li>
-                    <li>...</li>
-                    <li><a href="#">10</a></li>
                     <li>
                       <a href="#"><i class="bi bi-chevron-right"></i></a>
                     </li>
@@ -114,54 +121,15 @@
                   </button>
                 </form>
               </div>
-              <div class="recent-posts-widget widget-item">
-                <h3 class="widget-title">Postagens Recentes</h3>
 
-                <div class="post-item">
-                  <img
-                    src="assets/img/blog/blog-post-square-1.webp"
-                    alt=""
-                    class="flex-shrink-0"
-                  />
-                  <div>
-                    <h4><a href="blog-details.html">Notícia 1</a></h4>
-                    <time datetime="2020-01-01">1 de Junho, 2025</time>
-                  </div>
-                </div>
-                <div class="post-item">
-                  <img
-                    src="assets/img/blog/blog-post-square-2.webp"
-                    alt=""
-                    class="flex-shrink-0"
-                  />
-                  <div>
-                    <h4><a href="blog-details.html">Notícia 2</a></h4>
-                    <time datetime="2020-01-01">1 de Junho, 2025</time>
-                  </div>
-                </div>
-                <div class="post-item">
-                  <img
-                    src="assets/img/blog/blog-post-square-3.webp"
-                    alt=""
-                    class="flex-shrink-0"
-                  />
-                  <div>
-                    <h4><a href="blog-details.html">Notícia 3</a></h4>
-                    <time datetime="2020-01-01">1 de Junho, 2025</time>
-                  </div>
-                </div>
-                <div class="post-item">
-                  <img
-                    src="assets/img/blog/blog-post-square-4.webp"
-                    alt=""
-                    class="flex-shrink-0"
-                  />
-                  <div>
-                    <h4><a href="blog-details.html">Notícia 4</a></h4>
-                    <time datetime="2020-01-01">1 de Junho, 2025</time>
-                  </div>
-                </div>
+              <div
+                class="recent-posts-widget widget-item"
+                id="sidebar-recent-posts"
+              >
+                <h3 class="widget-title">Postagens Recentes</h3>
+                <p class="text-muted small">Carregando...</p>
               </div>
+
               <div class="categories-widget widget-item">
                 <h3 class="widget-title">Categorias</h3>
                 <ul class="mt-3">
@@ -182,6 +150,7 @@
                   </li>
                 </ul>
               </div>
+
               <div class="tags-widget widget-item">
                 <h3 class="widget-title">Tags</h3>
                 <ul>
@@ -259,18 +228,19 @@
             <h4>Links Úteis</h4>
             <ul>
               <li>
-                <i class="bi bi-chevron-right"></i>
-                <a href="index.html">Home</a>
+                <i class="bi bi-chevron-right"></i><a href="index.html">Home</a>
               </li>
               <li>
-                <i class="bi bi-chevron-right"></i>
-                <a href="index.html#grafico">Acompanhamento de Egressos</a>
+                <i class="bi bi-chevron-right"></i
+                ><a href="index.html#grafico">Acompanhamento de Egressos</a>
               </li>
               <li>
-                <i class="bi bi-chevron-right"></i>
-                <a href="index.html#grafico">Dados e Indicadores</a>
+                <i class="bi bi-chevron-right"></i
+                ><a href="index.html#grafico">Dados e Indicadores</a>
               </li>
-              <li><i class="bi bi-chevron-right"></i> <a href="#">Blog</a></li>
+              <li>
+                <i class="bi bi-chevron-right"></i><a href="blog.html">Blog</a>
+              </li>
             </ul>
           </div>
 
@@ -320,109 +290,79 @@
 
     <script>
       document.addEventListener("DOMContentLoaded", () => {
+        // Inicialização do Supabase
+        const supabaseUrl = "https://gginfmhtmljrupzxqdic.supabase.co";
+        const supabaseKey =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdnaW5mbWh0bWxqcnVwenhxZGljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MzIyNTYsImV4cCI6MjA5MTAwODI1Nn0.bqtLxP8Wf65ulEx_WVHztSbS3Mwobb6-Klq0cfcFTyQ";
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        const mesesDoAno = [
+          "Janeiro",
+          "Fevereiro",
+          "Março",
+          "Abril",
+          "Maio",
+          "Junho",
+          "Julho",
+          "Agosto",
+          "Setembro",
+          "Outubro",
+          "Novembro",
+          "Dezembro",
+        ];
+
         async function carregarPaginaBlog() {
           try {
             const container = document.getElementById("blog-posts-container");
+            const sidebarRecentes = document.getElementById(
+              "sidebar-recent-posts",
+            );
             if (!container) return;
 
-            // MOCK TEMPORÁRIO
-            const dadosBanco = [
-              {
-                id: 1,
-                titulo: "Novo portal lançado",
-                autor: "Equipe UFJ",
-                categoria: "Tecnologia",
-                data: "12/12/2025",
-                comentarios: 12,
-                resumo:
-                  "O novo portal de egressos visa integrar a comunidade acadêmica e facilitar o networking entre ex-alunos e empresas do setor tecnológico e agro.",
-                imagem: "assets/img/blog/blog-post-1.webp",
-                link: "blog-details.html",
-              },
-              {
-                id: 2,
-                titulo: "Encontro de Egressos 2026",
-                autor: "Reitoria",
-                categoria: "Eventos",
-                data: "10/01/2026",
-                comentarios: 5,
-                resumo:
-                  "Prepare-se para o maior encontro de ex-alunos já realizado no campus. Teremos palestras, workshops e rodadas de negócios imperdíveis.",
-                imagem: "assets/img/blog/blog-post-2.webp",
-                link: "blog-details.html",
-              },
-              {
-                id: 3,
-                titulo: "Oportunidades no agronegócio",
-                autor: "Prof. Souza",
-                categoria: "Mercado",
-                data: "15/01/2026",
-                comentarios: 8,
-                resumo:
-                  "O mercado agro continua em expansão. Veja como as novas tecnologias de IoT e sistemas de gestão estão revolucionando a atuação dos egressos.",
-                imagem: "assets/img/blog/blog-post-3.webp",
-                link: "blog-details.html",
-              },
-              {
-                id: 4,
-                titulo: "Inovação em Sistemas Distribuídos",
-                autor: "Coordenação",
-                categoria: "Educação",
-                data: "20/01/2026",
-                comentarios: 2,
-                resumo:
-                  "Novos grupos de pesquisa estão sendo formados para atuar na resolução de conflitos em sistemas críticos. Inscreva-se para colaborar.",
-                imagem: "assets/img/blog/blog-post-4.webp",
-                link: "blog-details.html",
-              },
-              {
-                id: 5,
-                titulo: "Pesquisa de Demanda do Mercado",
-                autor: "Equipe UFJ",
-                categoria: "Mercado",
-                data: "25/01/2026",
-                comentarios: 15,
-                resumo:
-                  "Participe da nossa pesquisa anual sobre as principais habilidades exigidas pelo mercado de trabalho atual para recém-formados.",
-                imagem: "assets/img/blog/blog-post-1.webp",
-                link: "blog-details.html",
-              },
-              {
-                id: 6,
-                titulo: "Abertura de Vagas para Mentoria",
-                autor: "Coordenação",
-                categoria: "Educação",
-                data: "02/02/2026",
-                comentarios: 20,
-                resumo:
-                  "Estamos selecionando ex-alunos com experiência no mercado para serem mentores das turmas formandas deste semestre.",
-                imagem: "assets/img/blog/blog-post-2.webp",
-                link: "blog-details.html",
-              },
-            ];
+            // Busca as notícias no banco ordenadas pela mais recente
+            const { data: noticiasBanco, error } = await supabase
+              .from("noticias")
+              .select("*")
+              .order("created_at", { ascending: false });
 
-            // Renderiza todos os cards no padrão exato do template
-            dadosBanco.forEach((post) => {
+            if (error) throw error;
+
+            container.innerHTML = ""; // Limpa o "carregando"
+
+            if (noticiasBanco.length === 0) {
+              container.innerHTML =
+                '<div class="alert alert-info w-100 text-center">Nenhuma notícia publicada ainda.</div>';
+              sidebarRecentes.innerHTML =
+                '<h3 class="widget-title">Postagens Recentes</h3><p class="text-muted small">Nenhuma postagem.</p>';
+              return;
+            }
+
+            // 1. Renderiza os cards principais da página
+            noticiasBanco.forEach((post) => {
+              const dataObj = new Date(post.created_at);
+              const dataFormatada = `${dataObj.getDate()} de ${mesesDoAno[dataObj.getMonth()]}, ${dataObj.getFullYear()}`;
+
+              // No lugar de comentários, inserimos a Categoria para ficar mais útil
               const articleHTML = `
-              <div class="col-lg-6">
-                <article>
+              <div class="col-lg-6 d-flex align-items-stretch">
+                <article class="d-flex flex-column w-100">
                   <div class="post-img">
-                    <img src="${post.imagem}" alt="${post.titulo}" class="img-fluid">
+                    <img src="${post.imagem_principal}" alt="${post.titulo}" class="img-fluid" style="width: 100%; height: 240px; object-fit: cover;">
                   </div>
                   <h2 class="title">
-                    <a href="${post.link}?id=${post.id}">${post.titulo}</a>
+                    <a href="blog-details.html?id=${post.id}">${post.titulo}</a>
                   </h2>
                   <div class="meta-top">
                     <ul>
-                      <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a href="${post.link}?id=${post.id}">${post.autor}</a></li>
-                      <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="${post.link}?id=${post.id}"><time datetime="${post.data}">${post.data}</time></a></li>
-                      <li class="d-flex align-items-center"><i class="bi bi-chat-dots"></i> <a href="${post.link}?id=${post.id}">${post.comentarios} Comentários</a></li>
+                      <li class="d-flex align-items-center"><i class="bi bi-person"></i> <a href="blog-details.html?id=${post.id}">${post.autor}</a></li>
+                      <li class="d-flex align-items-center"><i class="bi bi-clock"></i> <a href="blog-details.html?id=${post.id}"><time datetime="${post.created_at}">${dataFormatada}</time></a></li>
+                      <li class="d-flex align-items-center"><i class="bi bi-folder2"></i> <a href="blog-details.html?id=${post.id}">${post.categoria}</a></li>
                     </ul>
                   </div>
-                  <div class="content">
+                  <div class="content mt-auto">
                     <p style="text-align: justify;">${post.resumo}</p>
-                    <div class="read-more">
-                      <a href="${post.link}?id=${post.id}">Saiba mais...</a>
+                    <div class="read-more mt-auto">
+                      <a href="blog-details.html?id=${post.id}">Saiba mais...</a>
                     </div>
                   </div>
                 </article>
@@ -430,10 +370,31 @@
             `;
               container.innerHTML += articleHTML;
             });
+
+            // 2. Renderiza a Sidebar lateral (Apenas as 3 últimas notícias)
+            if (sidebarRecentes) {
+              let sidebarHTML =
+                '<h3 class="widget-title">Postagens Recentes</h3>';
+              const top3 = noticiasBanco.slice(0, 3);
+
+              top3.forEach((post) => {
+                const d = new Date(post.created_at);
+                const dataSide = `${d.getDate()} de ${mesesDoAno[d.getMonth()]}, ${d.getFullYear()}`;
+                sidebarHTML += `
+                    <div class="post-item">
+                      <img src="${post.imagem_principal}" alt="" class="flex-shrink-0" style="object-fit: cover; width: 80px; height: 80px;">
+                      <div>
+                        <h4><a href="blog-details.html?id=${post.id}">${post.titulo}</a></h4>
+                        <time datetime="${post.created_at}">${dataSide}</time>
+                      </div>
+                    </div>`;
+              });
+              sidebarRecentes.innerHTML = sidebarHTML;
+            }
           } catch (error) {
             console.error("Erro ao carregar os posts do blog:", error);
             document.getElementById("blog-posts-container").innerHTML =
-              "<p>Não foi possível carregar as publicações no momento.</p>";
+              "<p class='alert alert-danger'>Não foi possível carregar as publicações no momento.</p>";
           }
         }
 

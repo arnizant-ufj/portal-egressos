@@ -38,6 +38,7 @@
     <!-- Main CSS File -->
     <link href="assets/css/main.css" rel="stylesheet" />
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/loadMenu.js"></script>
     <script
       src="assets/js/jquery-1.10.2.min.js"
@@ -69,11 +70,16 @@
               </p>
               <div class="d-flex">
                 <a
-                  href="https://www.youtube.com/watch?v=Y7f98aduVJ8"
-                  class="glightbox btn-watch-video d-flex align-items-center"
-                  ><i class="bi bi-play-circle"></i
-                  ><span>Assista ao vídeo!</span></a
+                  href="#"
+                  data-bs-toggle="modal"
+                  data-bs-target="#modalCronograma"
+                  class="btn-watch-video d-flex align-items-center"
                 >
+                  <i class="bi bi-calendar-event"></i>
+                  <span
+                    >Programação do CAE</span
+                  >
+                </a>
               </div>
             </div>
             <div
@@ -626,6 +632,201 @@
 
     <!-- Preloader -->
     <div id="preloader"></div>
+
+    <div
+      class="modal fade"
+      id="modalCronograma"
+      tabindex="-1"
+      aria-labelledby="modalCronogramaLabel"
+      aria-hidden="true"
+    >
+      <div
+        class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable"
+      >
+        <div class="modal-content text-dark">
+          <div class="modal-header bg-light">
+            <h5
+              class="modal-title fw-bold"
+              id="modalCronogramaLabel"
+              style="color: #37517e"
+            >
+              <i class="bi bi-calendar-check me-2"></i> Programação do Comitê de Acompanhamento de Egressos (2026)
+            </h5>
+            <button
+              type="button"
+              class="btn-close"
+              data-bs-dismiss="modal"
+              aria-label="Fechar"
+            ></button>
+          </div>
+          <div class="modal-body p-4">
+            <div class="table-responsive mb-4">
+              <table class="table table-bordered table-hover align-middle">
+                <thead class="table-primary text-center align-middle">
+                  <tr>
+                    <th scope="col" style="width: 40%">Ação</th>
+                    <th scope="col" style="width: 15%">Data Limite</th>
+                    <th scope="col" style="width: 20%">Publicação no Portal</th>
+                    <th scope="col" style="width: 25%">Responsáveis</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>Levantamento de dados de egressos de 2018 a 2025</td>
+                    <td class="text-center">27/02/2026</td>
+                    <td class="text-center">
+                      <span class="badge bg-secondary">Não</span>
+                    </td>
+                    <td>SeTI</td>
+                  </tr>
+                  <tr>
+                    <td>Elaboração do Formulário do Egresso para avaliação dos cursos pelos egressos</td>
+                    <td class="text-center">27/02/2026</td>
+                    <td class="text-center">
+                      <span class="badge bg-secondary">Não</span>
+                    </td>
+                    <td>CAE</td>
+                  </tr>
+                  <tr>
+                    <td>Divulgação do Portal de Egressos</td>
+                    <td class="text-center">16/03/2026</td>
+                    <td class="text-center">
+                      <span class="badge bg-success">Sim</span>
+                    </td>
+                    <td>Prograd</td>
+                  </tr>
+                  <tr>
+                    <td>Apreciação do Formulário do Egresso pelas Câmaras de Graduação e de Pós-Graduação</td>
+                    <td class="text-center">13/04/2026</td>
+                    <td class="text-center">
+                      <span class="badge bg-secondary">Não</span>
+                    </td>
+                    <td>Prograd/PRPG</td>
+                  </tr>
+                  <tr>
+                    <td>Extração do I diagnóstico da qualidade dos cursos a partir do Formulário do Egresso</td>
+                    <td class="text-center">24/07/2026</td>
+                    <td class="text-center">
+                      <span class="badge bg-secondary">Não</span>
+                    </td>
+                    <td>CAE</td>
+                  </tr>
+                  <tr>
+                    <td>Indicação de egressos a serem homenageados pelas unidades e coordenações</td>
+                    <td class="text-center">21/08/2026</td>
+                    <td class="text-center">
+                      <span class="badge bg-secondary">Não</span>
+                    </td>
+                    <td>CAE</td>
+                  </tr>
+                  <tr>
+                    <td>Socialização do I diagnóstico para as Coordenações de Graduação e de Pós-Graduação</td>
+                    <td class="text-center">01/09/2026</td>
+                    <td class="text-center">
+                      <span class="badge bg-success">Sim</span>
+                    </td>
+                    <td>Prograd/PRPG</td>
+                  </tr>
+                  <tr>
+                    <td>Discussão do I diagnóstico com as Coordenações de cursos de Graduação e de Pós-Graduação</td>
+                    <td class="text-center">26/09/2026</td>
+                    <td class="text-center">
+                      <span class="badge bg-secondary">Não</span>
+                    </td>
+                    <td>Prograd/PRPG</td>
+                  </tr>
+                  <tr>
+                    <td>Divulgação da Homenagem aos Egressos</td>
+                    <td class="text-center">12/11/2026</td>
+                    <td class="text-center">
+                      <span class="badge bg-success">Sim</span>
+                    </td>
+                    <td>Secom</td>
+                  </tr>
+                  <tr>
+                    <td>Evento de Homenagem aos Egressos</td>
+                    <td class="text-center">13/11/2026</td>
+                    <td class="text-center">
+                      <span class="badge bg-success">Sim</span>
+                    </td>
+                    <td>CAI</td>
+                  </tr>
+                  <tr>
+                    <td>Elaboração em conjunto com as Coordenações de cursos de Graduação e Pós-Graduação do Relatório</td>
+                    <td class="text-center">13/11/2026</td>
+                    <td class="text-center">
+                      <span class="badge bg-secondary">Não</span>
+                    </td>
+                    <td>CAE</td>
+                  </tr>
+                  <tr>
+                    <td>Divulgação do Relatório do I diagnóstico no Portal do Egresso</td>
+                    <td class="text-center">19/12/2025</td>
+                    <td class="text-center">
+                      <span class="badge bg-secondary">Não</span>
+                    </td>
+                    <td>Secom</td>
+                  </tr>
+                  <tr>
+                    <td>Recrutamento de prováveis formandos para inscrição no Portal do Egresso</td>
+                    <td class="text-center">Fluxo Contínuo</td>
+                    <td class="text-center">
+                      <span class="badge bg-secondary">Não</span>
+                    </td>
+                    <td>CGA</td>
+                  </tr>
+                  <tr>
+                    <td>Recrutamento de egressos para inscrição no Portal do Egresso</td>
+                    <td class="text-center">Fluxo Contínuo</td>
+                    <td class="text-center">
+                      <span class="badge bg-secondary">Não</span>
+                    </td>
+                    <td>Prograd/PRPG/Secom/SeTI/CGA</td>
+                  </tr>
+                  <tr>
+                    <td>Publicação de oportunidades de formação e empregos no Portal</td>
+                    <td class="text-center">Fluxo Contínuo</td>
+                    <td class="text-center">
+                      <span class="badge bg-secondary">Não</span>
+                    </td>
+                    <td>CAI</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+
+            <div
+              class="p-3 bg-light rounded border border-light-subtle shadow-sm"
+            >
+              <p class="mb-2 fw-bold" style="color: #37517e">
+                O Comitê de Acompanhamento de Egressos (CAE) da Universidade
+                Federal de Jataí tem como objetivos:
+              </p>
+              <p class="mb-1 text-secondary">
+                <strong>I -</strong> dar suporte à Política de Egressos da UFJ
+                (Resolução Cepepe/UFJ nº 023/2025);
+              </p>
+              <p class="mb-0 text-secondary">
+                <strong>II -</strong> orientar ações voltadas ao conhecimento,
+                avaliação, monitoramento e acompanhamento do egresso, a fim de
+                subsidiar o planejamento, a definição e a retroalimentação das
+                políticas de formação inicial e continuada no âmbito
+                institucional.
+              </p>
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button
+              type="button"
+              class="btn btn-secondary"
+              data-bs-dismiss="modal"
+            >
+              Fechar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Vendor JS Files -->
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>

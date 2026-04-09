@@ -31,8 +31,9 @@
       rel="stylesheet"
     />
     <link href="assets/vendor/swiper/swiper-bundle.min.css" rel="stylesheet" />
-
     <link href="assets/css/main.css" rel="stylesheet" />
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   </head>
 
   <body class="blog-details-page">
@@ -104,7 +105,6 @@
               </div>
               <div class="recent-posts-widget widget-item">
                 <h3 class="widget-title">Postagens Recentes</h3>
-
                 <div class="post-item">
                   <img
                     src="assets/img/blog/blog-post-square-1.webp"
@@ -293,7 +293,6 @@
       class="scroll-top d-flex align-items-center justify-content-center"
       ><i class="bi bi-arrow-up-short"></i
     ></a>
-
     <div id="preloader"></div>
 
     <script src="assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
@@ -301,136 +300,91 @@
     <script src="assets/vendor/aos/aos.js"></script>
     <script src="assets/vendor/glightbox/js/glightbox.min.js"></script>
     <script src="assets/vendor/swiper/swiper-bundle.min.js"></script>
-    <script src="assets/vendor/waypoints/noframework.waypoints.js"></script>
     <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
     <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
-
     <script src="assets/js/main.js"></script>
 
     <script>
       document.addEventListener("DOMContentLoaded", () => {
+        // Inicialização do Supabase
+        const supabaseUrl = "https://gginfmhtmljrupzxqdic.supabase.co";
+        const supabaseKey =
+          "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdnaW5mbWh0bWxqcnVwenhxZGljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MzIyNTYsImV4cCI6MjA5MTAwODI1Nn0.bqtLxP8Wf65ulEx_WVHztSbS3Mwobb6-Klq0cfcFTyQ";
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        const mesesDoAno = [
+          "Janeiro",
+          "Fevereiro",
+          "Março",
+          "Abril",
+          "Maio",
+          "Junho",
+          "Julho",
+          "Agosto",
+          "Setembro",
+          "Outubro",
+          "Novembro",
+          "Dezembro",
+        ];
+
         const urlParams = new URLSearchParams(window.location.search);
-        const noticiaId = parseInt(urlParams.get("id")) || 1;
+        const noticiaId = parseInt(urlParams.get("id"));
 
         async function carregarNoticiaCompleta() {
+          const container = document.getElementById("dynamic-article");
+
+          if (!noticiaId) {
+            container.innerHTML =
+              '<div class="alert alert-warning text-center">Nenhuma notícia selecionada.</div>';
+            return;
+          }
+
           try {
-            const container = document.getElementById("dynamic-article");
+            // Busca a notícia no Supabase
+            const { data: noticia, error } = await supabase
+              .from("noticias")
+              .select("*")
+              .eq("id", noticiaId)
+              .single();
 
-            const dadosBanco = [
-              {
-                id: 1,
-                titulo: "Novo portal lançado",
-                autor: "Equipe UFJ",
-                categoria: "Tecnologia",
-                data: "12 de Dezembro, 2025",
-                tempo_leitura: "3 min",
-                imagem_principal: "assets/img/blog/blog-post-1.webp",
-                imagem_secundaria: "assets/img/blog/blog-hero-2.webp",
-                resumo:
-                  "O novo portal de egressos visa integrar a comunidade acadêmica e facilitar o networking entre ex-alunos e empresas do setor tecnológico e agro.",
-                texto_body: `
-                <p>O desenvolvimento desta plataforma foi uma prioridade para estreitar os laços entre a universidade e o mercado de trabalho. Com funcionalidades que vão desde o acompanhamento de dados até a divulgação de oportunidades, o sistema foi projetado para ser intuitivo e responsivo.</p>
-                <h2>Uma nova era para os ex-alunos</h2>
-                <p>Além de notícias e eventos, o portal contará em breve com um painel administrativo completo. Onde coordenadores e egressos poderão interagir diretamente, postar vagas de emprego e compartilhar conquistas acadêmicas e profissionais.</p>
-              `,
-              },
-              {
-                id: 2,
-                titulo: "Encontro de Egressos 2026",
-                autor: "Reitoria",
-                categoria: "Eventos",
-                data: "10 de Janeiro, 2026",
-                tempo_leitura: "5 min",
-                imagem_principal: "assets/img/blog/blog-post-2.webp",
-                imagem_secundaria: "assets/img/blog/blog-hero-2.webp",
-                resumo:
-                  "Prepare-se para o maior encontro de ex-alunos já realizado no campus. Teremos palestras, workshops e rodadas de negócios imperdíveis.",
-                texto_body: `
-                <p>O evento acontecerá no pátio central da universidade e reunirá palestrantes de renome nacional. É a oportunidade perfeita para rever colegas, trocar experiências e atualizar o currículo com os minicursos que serão oferecidos.</p>
-              `,
-              },
-              {
-                id: 3,
-                titulo: "Oportunidades no agronegócio",
-                autor: "Prof. Souza",
-                categoria: "Mercado",
-                data: "15 de Janeiro, 2026",
-                tempo_leitura: "4 min",
-                imagem_principal: "assets/img/blog/blog-post-3.webp",
-                imagem_secundaria: "assets/img/blog/blog-hero-2.webp",
-                resumo:
-                  "O mercado agro continua em expansão. Veja como as novas tecnologias de IoT e sistemas de gestão estão revolucionando a atuação dos egressos.",
-                texto_body: `
-                <p>Com a digitalização do campo, profissionais da área de TI estão sendo cada vez mais requisitados. Sistemas de sincronização de dados e gerenciamento de frotas se tornaram fundamentais para o agronegócio moderno.</p>
-              `,
-              },
-              {
-                id: 4,
-                titulo: "Inovação em Sistemas Distribuídos",
-                autor: "Coordenação",
-                categoria: "Educação",
-                data: "20 de Janeiro, 2026",
-                tempo_leitura: "6 min",
-                imagem_principal: "assets/img/blog/blog-post-4.webp",
-                imagem_secundaria: "assets/img/blog/blog-hero-2.webp",
-                resumo:
-                  "Novos grupos de pesquisa estão sendo formados para atuar na resolução de conflitos em sistemas críticos. Inscreva-se para colaborar.",
-                texto_body: `
-                <p>A integração entre diferentes componentes de software em arquiteturas distribuídas sempre apresenta grandes desafios. Nossos grupos de trabalho focarão em padrões de tolerância a falhas e consistência de dados.</p>
-              `,
-              },
-              {
-                id: 5,
-                titulo: "Pesquisa de Demanda do Mercado",
-                autor: "Equipe UFJ",
-                categoria: "Mercado",
-                data: "25 de Janeiro, 2026",
-                tempo_leitura: "2 min",
-                imagem_principal: "assets/img/blog/blog-post-1.webp",
-                imagem_secundaria: "assets/img/blog/blog-hero-2.webp",
-                resumo:
-                  "Participe da nossa pesquisa anual sobre as principais habilidades exigidas pelo mercado de trabalho atual para recém-formados.",
-                texto_body: `
-                <p>O feedback de vocês é essencial para que possamos adaptar as ementas e oferecer minicursos de capacitação diretamente alinhados com as demandas reais das empresas parceiras.</p>
-              `,
-              },
-              {
-                id: 6,
-                titulo: "Abertura de Vagas para Mentoria",
-                autor: "Coordenação",
-                categoria: "Educação",
-                data: "02 de Fevereiro, 2026",
-                tempo_leitura: "4 min",
-                imagem_principal: "assets/img/blog/blog-post-2.webp",
-                imagem_secundaria: "assets/img/blog/blog-hero-2.webp",
-                resumo:
-                  "Estamos selecionando ex-alunos com experiência no mercado para serem mentores das turmas formandas deste semestre.",
-                texto_body: `
-                <p>O programa de mentoria visa criar uma ponte entre a academia e o mercado, ajudando os novos formandos a darem os primeiros passos em suas carreiras com o suporte de quem já passou pelos mesmos desafios.</p>
-              `,
-              },
-            ];
-
-            const noticia = dadosBanco.find((n) => n.id === noticiaId);
-
-            if (!noticia) {
+            if (error || !noticia) {
               container.innerHTML =
                 '<div class="alert alert-danger text-center">Notícia não encontrada.</div>';
+              document.getElementById("page-title-header").innerText =
+                "Notícia não encontrada";
               return;
             }
+
+            // Formatação de Data
+            const dataObj = new Date(noticia.created_at);
+            const dataFormatada = `${dataObj.getDate()} de ${mesesDoAno[dataObj.getMonth()]}, ${dataObj.getFullYear()}`;
+
+            // Cálculo dinâmico do tempo de leitura (200 palavras por minuto)
+            const qtdPalavras = noticia.texto_body
+              ? noticia.texto_body.split(" ").length
+              : 0;
+            const tempoLeitura =
+              Math.max(1, Math.ceil(qtdPalavras / 200)) + " min";
 
             document.title = `${noticia.titulo} - Portal de Egressos UFJ`;
             document.getElementById("page-title-header").innerText =
               noticia.titulo;
 
+            // Tratamento: Se a notícia não tiver imagem secundária, omite a tag HTML
+            const htmlImagemSecundaria = noticia.imagem_secundaria
+              ? `<div class="content-image right-aligned">
+                     <img src="${noticia.imagem_secundaria}" class="img-fluid" alt="Imagem relacionada" loading="lazy">
+                   </div>`
+              : "";
+
             const articleHTML = `
             <div class="hero-img" data-aos="zoom-in">
-              <img src="${noticia.imagem_principal}" alt="" class="img-fluid" loading="lazy">
+              <img src="${noticia.imagem_principal}" alt="" class="img-fluid" style="width: 100%; max-height: 500px; object-fit: cover;" loading="lazy">
               <div class="meta-overlay">
                 <div class="meta-categories">
                   <a href="#" class="category">${noticia.categoria}</a>
                   <span class="divider">•</span>
-                  <span class="reading-time"><i class="bi bi-clock"></i> ${noticia.tempo_leitura} de leitura</span>
+                  <span class="reading-time"><i class="bi bi-clock"></i> ${tempoLeitura} de leitura</span>
                 </div>
               </div>
             </div>
@@ -445,7 +399,7 @@
                     </div>
                   </div>
                   <div class="post-meta">
-                    <span class="date"><i class="bi bi-calendar3"></i> ${noticia.data}</span>
+                    <span class="date"><i class="bi bi-calendar3"></i> ${dataFormatada}</span>
                   </div>
                 </div>
               </div>
@@ -453,9 +407,7 @@
               <div class="content">
                 <p class="lead">${noticia.resumo}</p>
                 
-                <div class="content-image right-aligned">
-                  <img src="${noticia.imagem_secundaria}" class="img-fluid" alt="Imagem relacionada" loading="lazy">
-                </div>
+                ${htmlImagemSecundaria}
                 
                 ${noticia.texto_body}
               </div>
@@ -465,6 +417,8 @@
             container.innerHTML = articleHTML;
           } catch (error) {
             console.error("Erro ao carregar a notícia:", error);
+            container.innerHTML =
+              '<div class="alert alert-danger text-center">Ocorreu um erro ao carregar os dados.</div>';
           }
         }
 

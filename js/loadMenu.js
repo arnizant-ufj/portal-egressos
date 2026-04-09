@@ -1,68 +1,66 @@
 document.addEventListener("DOMContentLoaded", function () {
-    
-    // ==========================================
-    // 1. CARREGAMENTO DO MENU
-    // ==========================================
-    const menuPlaceholder = document.getElementById('menu-placeholder');
-    
-    if (menuPlaceholder) {
-        // Busca o menu.html na mesma pasta raiz do index.html
-        fetch('menu.html')
-            .then(response => {
-                if (!response.ok) throw new Error("Erro ao carregar o menu");
-                return response.text();
-            })
-            .then(data => {
-                // Injeta o HTML do menu na página
-                menuPlaceholder.innerHTML = data;
+  // ==========================================
+  // 0. CONFIGURAÇÃO GERAL
+  // ==========================================
+  const supabaseUrl = "https://gginfmhtmljrupzxqdic.supabase.co";
+  const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdnaW5mbWh0bWxqcnVwenhxZGljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MzIyNTYsImV4cCI6MjA5MTAwODI1Nn0.bqtLxP8Wf65ulEx_WVHztSbS3Mwobb6-Klq0cfcFTyQ";
+  const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
 
-                // Re-inicializa a lógica de abrir/fechar o menu no celular
-                const mobileNavToggleBtn = document.querySelector('.mobile-nav-toggle');
-                if (mobileNavToggleBtn) {
-                    mobileNavToggleBtn.addEventListener('click', function (e) {
-                        document.querySelector('body').classList.toggle('mobile-nav-active');
-                        this.classList.toggle('bi-list');
-                        this.classList.toggle('bi-x');
-                    });
-                }
+  const mesesDoAno = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
-                // Opcional: Se houver vídeos/imagens no menu, reinicia o GLightbox
-                if (typeof GLightbox !== 'undefined') {
-                    GLightbox({ selector: '.glightbox' });
-                }
-            })
-            .catch(error => {
-                console.error('Erro ao carregar o menu:', error);
-            });
-    }
+  // ==========================================
+  // 1. CARREGAMENTO DO MENU
+  // ==========================================
+  const menuPlaceholder = document.getElementById('menu-placeholder');
+  if (menuPlaceholder) {
+    fetch('menu.html')
+      .then(res => res.ok ? res.text() : Promise.reject("Erro ao carregar o menu"))
+      .then(data => {
+        menuPlaceholder.innerHTML = data;
+        const mobileNavToggleBtn = document.querySelector('.mobile-nav-toggle');
+        if (mobileNavToggleBtn) {
+          mobileNavToggleBtn.addEventListener('click', function () {
+            document.querySelector('body').classList.toggle('mobile-nav-active');
+            this.classList.toggle('bi-list');
+            this.classList.toggle('bi-x');
+          });
+        }
+        if (typeof GLightbox !== 'undefined') {
+          GLightbox({ selector: '.glightbox' });
+        }
+      })
+      .catch(err => console.error(err));
+  }
 
-    // ==========================================
-    // 2. CARREGAMENTO DAS NOTÍCIAS
-    // ==========================================
-    async function carregarNoticias() {
-        try {
-            const container = document.getElementById('noticias-container');
-            if (!container) return; // Se não achar a div, cancela a função
+  // ==========================================
+  // 2. CARREGAMENTO DAS NOTÍCIAS (DO BANCO)
+  // ==========================================
+  async function carregarNoticias() {
+    const container = document.getElementById('noticias-container');
+    if (!container) return;
 
-            // MOCK TEMPORÁRIO DE DADOS (Simulando um Banco de Dados)
-            const dadosBanco = [
-                { id: 1, titulo: "Novo portal lançado", autor: "Equipe UFJ", categoria: "Tecnologia", data: "12 de Dezembro", imagem: "assets/img/blog/blog-post-1.webp", link: "blog-details.html" },
-                { id: 2, titulo: "Encontro de Egressos 2026", autor: "Reitoria", categoria: "Eventos", data: "10 de Janeiro", imagem: "assets/img/blog/blog-post-2.webp", link: "blog-details.html" },
-                { id: 3, titulo: "Oportunidades no agronegócio", autor: "Prof. Souza", categoria: "Mercado", data: "15 de Janeiro", imagem: "assets/img/blog/blog-post-3.webp", link: "blog-details.html" },
-                { id: 4, titulo: "Notícia extra", autor: "Autor", categoria: "Geral", data: "20 de Janeiro", imagem: "assets/img/blog/blog-post-3.webp", link: "blog-details.html" }
-            ];
+    try {
+      const { data: noticiasBanco, error } = await supabase
+        .from('noticias')
+        .select('*')
+        .order('id', { ascending: false })
+        .limit(4);
 
-            // Pega apenas as 3 primeiras notícias para mostrar na home
-            const ultimasNoticias = dadosBanco.slice(0, 3);
+      if (error) throw error;
+      container.innerHTML = '';
 
-            // Monta o HTML dinamicamente e injeta no container
-            ultimasNoticias.forEach(noticia => {
-                const cardHTML = `
+      const ultimasNoticias = noticiasBanco.slice(0, 3);
+
+      ultimasNoticias.forEach(noticia => {
+        const dataObj = new Date(noticia.created_at);
+        const dataFormatada = `${dataObj.getDate()} de ${mesesDoAno[dataObj.getMonth()]}`;
+
+        const cardHTML = `
                   <div class="col-xl-4 col-md-6">
                     <div class="post-item position-relative h-100" data-aos="fade-up" data-aos-delay="100">
                       <div class="post-img position-relative overflow-hidden">
-                        <img src="${noticia.imagem}" class="img-fluid" alt="${noticia.titulo}">
-                        <span class="post-date">${noticia.data}</span>
+                        <img src="${noticia.imagem_principal}" class="img-fluid" alt="${noticia.titulo}" style="width: 100%; height: 250px; object-fit: cover;">
+                        <span class="post-date">${dataFormatada}</span>
                       </div>
                       <div class="post-content d-flex flex-column">
                         <h3 class="post-title">${noticia.titulo}</h3>
@@ -76,121 +74,122 @@ document.addEventListener("DOMContentLoaded", function () {
                           </div>
                         </div>
                         <hr />
-                        <a href="${noticia.link}?id=${noticia.id}" class="readmore stretched-link">
+                        <a href="blog-details.html?id=${noticia.id}" class="readmore stretched-link">
                           <span>Saiba mais</span><i class="bi bi-arrow-right"></i>
                         </a>
                       </div>
                     </div>
                   </div>
                 `;
-                container.innerHTML += cardHTML;
-            });
+        container.innerHTML += cardHTML;
+      });
 
-            // Exibe o botão de "Ver todas" se houver mais de 3 itens
-            if (dadosBanco.length > 3) {
-                const btnTodas = document.getElementById('btn-todas-noticias');
-                if (btnTodas) btnTodas.style.display = 'block';
-            }
-
-        } catch (error) {
-            console.error("Erro ao carregar notícias:", error);
-            document.getElementById('noticias-container').innerHTML = '<p>Não foi possível carregar as notícias no momento.</p>';
-        }
+      if (noticiasBanco.length > 3) {
+        const btnTodas = document.getElementById('btn-todas-noticias');
+        if (btnTodas) btnTodas.style.display = 'block';
+      }
+    } catch (error) {
+      console.error("Erro em Notícias:", error);
+      container.innerHTML = '<p class="text-center w-100">Nenhuma notícia disponível no momento.</p>';
     }
+  }
 
-    carregarNoticias();
+  // ==========================================
+  // 3. CARREGAMENTO DOS EVENTOS (DO BANCO)
+  // ==========================================
+  async function carregarEventos() {
+    const container = document.getElementById('eventos-container');
+    if (!container) return;
 
-    // ==========================================
-    // 3. CARREGAMENTO DOS EVENTOS
-    // ==========================================
-    async function carregarEventos() {
-        try {
-            const container = document.getElementById('eventos-container');
-            if (!container) return; // Cancela a função se não achar a div
+    try {
+      const hoje = new Date().toISOString().split('T')[0];
 
-            // QUANDO TIVER O BANCO DE DADOS, SUBSTITUA PELO FETCH REAL:
-            // const response = await fetch('URL_DO_BANCO/eventos?limit=5'); 
-            // const dadosBancoEventos = await response.json();
+      const { data: eventosBanco, error } = await supabase
+        .from('eventos')
+        .select('*')
+        .gte('data_inicio', hoje)
+        .order('data_inicio', { ascending: true })
+        .limit(5);
 
-            // MOCK TEMPORÁRIO DE DADOS
-            const dadosBancoEventos = [
-                { id: 1, titulo: "Semana de Engenharia de Software", descricao: "Apresentação de projetos finais e tendências em desenvolvimento ágil.", icone: "bi-laptop", link: "#" },
-                { id: 2, titulo: "Workshop: Ética e Segurança em IA", descricao: "Debate focado nos novos desafios de segurança e auditoria em sistemas.", icone: "bi-shield-lock", link: "#" },
-                { id: 3, titulo: "Hackathon de Computação Gráfica", descricao: "Maratona de desenvolvimento de soluções visuais interativas em 48 horas.", icone: "bi-palette", link: "#" },
-                { id: 4, titulo: "Encontro de Egressos de TI", descricao: "Networking com ex-alunos que atuam no mercado nacional e parceiros.", icone: "bi-people", link: "#" },
-                { id: 5, titulo: "Seminário de Sistemas Operacionais", descricao: "Estudos de caso e palestras sobre SO para sistemas críticos e IoT.", icone: "bi-cpu", link: "#" }
-            ];
+      if (error) throw error;
+      container.innerHTML = '';
 
-            // Pega apenas os 4 primeiros eventos para alinhar na home
-            const ultimosEventos = dadosBancoEventos.slice(0, 4);
+      const ultimosEventos = eventosBanco.slice(0, 4);
+      let animDelay = 100;
 
-            // Monta o HTML dinamicamente
-            let animDelay = 100; // Controle do atraso da animação AOS
-            
-            ultimosEventos.forEach(evento => {
-                const cardHTML = `
+      ultimosEventos.forEach(evento => {
+        // Formata a data de início
+        const dataInicioObj = new Date(evento.data_inicio + 'T00:00:00'); // T00:00:00 evita bugs de fuso horário
+        let dataExibicao = `${dataInicioObj.getDate()} de ${mesesDoAno[dataInicioObj.getMonth()]}`;
+
+        // Se o evento tiver data de fim, adiciona ao texto
+        if (evento.data_fim) {
+          const dataFimObj = new Date(evento.data_fim + 'T00:00:00');
+          dataExibicao += ` a ${dataFimObj.getDate()} de ${mesesDoAno[dataFimObj.getMonth()]}`;
+        }
+
+        const cardHTML = `
                   <div class="col-xl-3 col-md-6 d-flex" data-aos="fade-up" data-aos-delay="${animDelay}">
-                    <div class="service-item position-relative">
+                    <div class="service-item position-relative w-100">
                       <div class="icon">
-                        <i class="bi ${evento.icone} icon"></i>
+                        <i class="bi bi-calendar-event icon"></i>
                       </div>
-                      <h4><a href="${evento.link}?id=${evento.id}" class="stretched-link">${evento.titulo}</a></h4>
-                      <p>${evento.descricao}</p>
+                      <h4><a href="evento-details.html?id=${evento.id}" class="stretched-link">${evento.titulo}</a></h4>
+                      <p class="mt-3 text-secondary fw-medium">
+                        <i class="bi bi-clock me-1 text-primary"></i> ${dataExibicao}
+                      </p>
                     </div>
                   </div>
                 `;
-                container.innerHTML += cardHTML;
-                animDelay += 100; // Aumenta 100ms para o próximo card
-            });
+        container.innerHTML += cardHTML;
+        animDelay += 100;
+      });
 
-            // Exibe o botão de "Ver todos" se houver mais de 4 itens no banco
-            if (dadosBancoEventos.length > 4) {
-                const btnTodos = document.getElementById('btn-todos-eventos');
-                if (btnTodos) btnTodos.style.display = 'block';
-            }
+      if (eventosBanco.length === 0) {
+        container.innerHTML = '<p class="text-center w-100 text-muted">Nenhum evento futuro programado no momento.</p>';
+      }
 
-        } catch (error) {
-            console.error("Erro ao carregar eventos:", error);
-            document.getElementById('eventos-container').innerHTML = '<p>Não foi possível carregar os eventos no momento.</p>';
-        }
+      if (eventosBanco.length > 4) {
+        const btnTodos = document.getElementById('btn-todos-eventos');
+        if (btnTodos) btnTodos.style.display = 'block';
+      }
+    } catch (error) {
+      console.error("Erro em Eventos:", error);
+      container.innerHTML = '<p class="text-center w-100">Nenhum evento disponível no momento.</p>';
     }
+  }
 
-    // Executa a função
-    carregarEventos();
+  // ==========================================
+  // 4. CARREGAMENTO DOS DEPOIMENTOS (DADOS FICTÍCIOS)
+  // ==========================================
+  async function carregarDepoimentos() {
+    try {
+      const wrapper = document.getElementById('depoimentos-wrapper');
+      if (!wrapper) return;
 
-    // ==========================================
-    // 4. CARREGAMENTO DOS DEPOIMENTOS
-    // ==========================================
-    async function carregarDepoimentos() {
-        try {
-            const wrapper = document.getElementById('depoimentos-wrapper');
-            if (!wrapper) return;
+      // MOCK TEMPORÁRIO DE DADOS
+      const dadosBancoDepoimentos = [
+        { id: 1, nome: "Carlos Mendes", curso: "Ciência da Computação", texto: "Fui contratado pela Agrotechx graças às oportunidades divulgadas por ex-alunos aqui no portal. Uma rede de contatos fantástica!", imagem: "assets/img/person/person-m-9.webp", estrelas: 5 },
+        { id: 2, nome: "Ana Júlia", curso: "Engenharia de Software", texto: "A plataforma facilitou muito minha conexão com o mercado. Acompanhar os egressos inspira a continuar evoluindo na carreira técnica.", imagem: "assets/img/person/person-f-5.webp", estrelas: 5 },
+        { id: 3, nome: "Mariana Souza", curso: "Sistemas de Informação", texto: "Excelente iniciativa da universidade! Através do portal, consegui aplicar os conhecimentos em um projeto de impacto real na sociedade.", imagem: "assets/img/person/person-f-12.webp", estrelas: 5 },
+        { id: 4, nome: "Lucas Alves", curso: "Medicina Veterinária", texto: "Manter o vínculo com a universidade e com os colegas abre muitas portas. Recomendo que todos os formandos participem ativamente.", imagem: "assets/img/person/person-m-12.webp", estrelas: 4 }
+      ];
 
-            // QUANDO TIVER O BANCO DE DADOS, SUBSTITUA PELO FETCH REAL:
-            // const response = await fetch('URL_DO_BANCO/depoimentos'); 
-            // const dadosBancoDepoimentos = await response.json();
+      wrapper.innerHTML = ''; // Limpa o container antes de renderizar
 
-            // MOCK TEMPORÁRIO DE DADOS
-            const dadosBancoDepoimentos = [
-                { id: 1, nome: "Carlos Mendes", curso: "Ciência da Computação", texto: "Fui contratado pela Agrotechx graças às oportunidades divulgadas por ex-alunos aqui no portal. Uma rede de contatos fantástica!", imagem: "assets/img/person/person-m-9.webp", estrelas: 5 },
-                { id: 2, nome: "Ana Júlia", curso: "Engenharia de Software", texto: "A plataforma facilitou muito minha conexão com o mercado. Acompanhar os egressos inspira a continuar evoluindo na carreira técnica.", imagem: "assets/img/person/person-f-5.webp", estrelas: 5 },
-                { id: 3, nome: "Mariana Souza", curso: "Sistemas de Informação", texto: "Excelente iniciativa da universidade! Através do portal, consegui aplicar os conhecimentos em um projeto de impacto real na sociedade.", imagem: "assets/img/person/person-f-12.webp", estrelas: 5 },
-                { id: 4, nome: "Lucas Alves", curso: "Medicina Veterinária", texto: "Manter o vínculo com a universidade e com os colegas abre muitas portas. Recomendo que todos os formandos participem ativamente.", imagem: "assets/img/person/person-m-12.webp", estrelas: 4 }
-            ];
+      // Renderiza os slides dinamicamente
+      dadosBancoDepoimentos.forEach(depoimento => {
 
-            // Renderiza os slides dinamicamente
-            dadosBancoDepoimentos.forEach(depoimento => {
-                
-                // Lógica para montar as estrelas (de 1 a 5)
-                let estrelasHTML = '';
-                for (let i = 0; i < depoimento.estrelas; i++) {
-                    estrelasHTML += '<i class="bi bi-star-fill"></i>';
-                }
+        // Lógica para montar as estrelas (de 1 a 5)
+        let estrelasHTML = '';
+        for (let i = 0; i < depoimento.estrelas; i++) {
+          estrelasHTML += '<i class="bi bi-star-fill"></i>';
+        }
 
-                const slideHTML = `
+        const slideHTML = `
                   <div class="swiper-slide">
                     <div class="testimonial-item">
-                      <img src="${depoimento.imagem}" class="testimonial-img" alt="Foto de ${depoimento.nome}">
+                      <img src="${depoimento.imagem}" class="testimonial-img" alt="Foto de ${depoimento.nome}" style="width: 90px; height: 90px; object-fit: cover;">
                       <h3>${depoimento.nome}</h3>
                       <h4>${depoimento.curso}</h4>
                       <div class="stars">
@@ -204,23 +203,25 @@ document.addEventListener("DOMContentLoaded", function () {
                     </div>
                   </div>
                 `;
-                wrapper.innerHTML += slideHTML;
-            });
+        wrapper.innerHTML += slideHTML;
+      });
 
-            // ATENÇÃO: Como injetamos os slides dinamicamente, precisamos avisar a 
-            // biblioteca Swiper para recalcular o carrossel.
-            setTimeout(() => {
-                const swiperContainer = document.querySelector('.init-swiper');
-                if (swiperContainer && swiperContainer.swiper) {
-                    swiperContainer.swiper.update(); // Atualiza os slides e paginação
-                }
-            }, 100); // Um pequeno delay para garantir que o DOM renderizou o HTML
-
-        } catch (error) {
-            console.error("Erro ao carregar depoimentos:", error);
+      // ATENÇÃO: Como injetamos os slides dinamicamente, precisamos avisar a 
+      // biblioteca Swiper para recalcular o carrossel.
+      setTimeout(() => {
+        const swiperContainer = document.querySelector('.init-swiper');
+        if (swiperContainer && swiperContainer.swiper) {
+          swiperContainer.swiper.update(); // Atualiza os slides e paginação
         }
-    }
+      }, 100); // Um pequeno delay para garantir que o DOM renderizou o HTML
 
-    // Executa a função
-    carregarDepoimentos();
+    } catch (error) {
+      console.error("Erro ao carregar depoimentos:", error);
+    }
+  }
+
+  // Executa as funções simultaneamente para a página carregar mais rápido
+  carregarNoticias();
+  carregarEventos();
+  carregarDepoimentos();
 });

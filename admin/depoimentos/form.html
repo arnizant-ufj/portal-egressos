@@ -1,0 +1,303 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Gerenciar Depoimento - Painel UFJ</title>
+    <link href="../../assets/img/prograd1.ico" rel="icon" />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link
+      href="../../assets/vendor/bootstrap/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link href="../../assets/css/main.css" rel="stylesheet" />
+    <link href="../../assets/css/painel.css" rel="stylesheet" />
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../../js/adminLayout.js"></script>
+  </head>
+  <body>
+    <div id="loading-screen">
+      <div class="spinner-border text-primary" role="status"></div>
+    </div>
+
+    <div class="container-fluid" id="main-panel" style="display: none">
+      <div class="row">
+        <div class="col-md-3 col-lg-2 p-0 sidebar position-fixed">
+          <div class="sidebar-header">
+            <img
+              src="../../assets/img/logo-ufj-branca.png"
+              alt="Logo UFJ"
+              class="img-fluid mb-3"
+              style="max-height: 55px"
+            />
+            <h6 class="mb-0 text-white fw-bold" id="badge-nivel">Painel</h6>
+          </div>
+          <nav class="nav flex-column flex-grow-1" id="sidebar-menu"></nav>
+          <a href="#" class="logout-btn" id="btn-logout"
+            ><i class="bi bi-box-arrow-left"></i> Sair</a
+          >
+        </div>
+
+        <div class="col-md-9 offset-md-3 col-lg-10 offset-lg-2 content-area">
+          <div
+            class="d-flex justify-content-between align-items-center mb-4 bg-white p-4 shadow-sm rounded-3 border-0"
+          >
+            <h4 class="mb-0 text-secondary fw-bold" id="page-title">
+              Depoimentos
+            </h4>
+            <div class="d-flex align-items-center">
+              <span class="me-3 fw-medium text-secondary" id="user-name"
+                >...</span
+              >
+              <img
+                src="../../assets/img/person/person-m-9.webp"
+                id="top-avatar"
+                class="rounded-circle shadow-sm bg-light"
+                style="width: 45px; height: 45px; object-fit: cover"
+              />
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <a href="listar.html" class="btn btn-outline-secondary btn-sm"
+              ><i class="bi bi-arrow-left me-1"></i> Voltar</a
+            >
+          </div>
+
+          <div class="card p-4 shadow-sm border-0 rounded-4">
+            <h5 class="fw-bold mb-4 border-bottom pb-2" id="titulo-form">
+              Deixar um Depoimento
+            </h5>
+
+            <div
+              id="feedback-reprovacao"
+              class="alert alert-danger mb-4"
+              style="display: none"
+            >
+              <h6 class="fw-bold">Atenção: Seu depoimento não foi aprovado.</h6>
+              <p class="mb-0 small">
+                Por favor, ajuste o conteúdo para que possamos publicá-lo no
+                portal.
+              </p>
+            </div>
+
+            <form class="row g-3" id="form-depoimento">
+              <div class="col-12">
+                <label class="form-label fw-medium d-block"
+                  >Avaliação (1 a 5 estrelas) *</label
+                >
+                <div
+                  class="fs-2 text-warning"
+                  id="star-rating"
+                  style="cursor: pointer"
+                >
+                  <i class="bi bi-star-fill star-icon" data-val="1"></i>
+                  <i class="bi bi-star-fill star-icon" data-val="2"></i>
+                  <i class="bi bi-star-fill star-icon" data-val="3"></i>
+                  <i class="bi bi-star-fill star-icon" data-val="4"></i>
+                  <i class="bi bi-star-fill star-icon" data-val="5"></i>
+                </div>
+                <input type="hidden" id="estrelas" value="5" required />
+              </div>
+
+              <div class="col-12">
+                <label class="form-label fw-medium">Seu Depoimento *</label>
+                <textarea
+                  class="form-control"
+                  id="descricao"
+                  rows="4"
+                  placeholder="Conte-nos como a universidade ou o portal ajudou na sua jornada..."
+                  required
+                ></textarea>
+              </div>
+
+              <div
+                id="painel-coordenador"
+                class="col-12 mt-4 p-4 bg-light rounded-3 border"
+                style="display: none"
+              >
+                <h6 class="fw-bold text-primary mb-3">
+                  Avaliação da Coordenação
+                </h6>
+                <div class="d-flex justify-content-end gap-2">
+                  <button
+                    type="button"
+                    class="btn btn-outline-danger px-4"
+                    id="btn-reprovar"
+                  >
+                    Reprovar Depoimento
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-success px-4"
+                    id="btn-aprovar"
+                  >
+                    Aprovar Depoimento
+                  </button>
+                </div>
+              </div>
+
+              <div class="col-12 mt-4 text-end" id="acoes-egresso">
+                <button
+                  type="submit"
+                  class="btn btn-primary px-4 btn-lg"
+                  id="btn-salvar"
+                >
+                  <span
+                    class="spinner-border spinner-border-sm d-none"
+                    id="spinner-salvar"
+                    role="status"
+                  ></span>
+                  <span id="texto-btn-salvar"
+                    ><i class="bi bi-send me-2"></i> Enviar Depoimento</span
+                  >
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script>
+      document.addEventListener("DOMContentLoaded", async () => {
+        const context = await inicializarPainel("depoimentos", "..");
+        if (!context) return;
+
+        const { supabase, session, perfil } = context;
+        if (perfil.foto_perfil)
+          document.getElementById("top-avatar").src = perfil.foto_perfil;
+
+        const depId = new URLSearchParams(window.location.search).get("id");
+        let notaAtual = 5;
+
+        // Lógica de clicar nas estrelinhas
+        const stars = document.querySelectorAll(".star-icon");
+        stars.forEach((star) => {
+          star.addEventListener("click", function () {
+            // Se for coordenador avaliando, não deixa ele mudar as estrelas do aluno
+            if (perfil.nivel_acesso !== "egresso" && depId) return;
+
+            notaAtual = this.getAttribute("data-val");
+            document.getElementById("estrelas").value = notaAtual;
+
+            stars.forEach((s) => {
+              if (s.getAttribute("data-val") <= notaAtual) {
+                s.classList.remove("bi-star");
+                s.classList.add("bi-star-fill");
+              } else {
+                s.classList.remove("bi-star-fill");
+                s.classList.add("bi-star");
+              }
+            });
+          });
+        });
+
+        // Carrega dados se for edição
+        if (depId) {
+          document.getElementById("titulo-form").innerText =
+            "Avaliando Depoimento #" + depId;
+          const { data } = await supabase
+            .from("depoimentos")
+            .select("*")
+            .eq("id", depId)
+            .single();
+
+          if (data) {
+            document.getElementById("descricao").value = data.descricao;
+            document
+              .querySelector(`.star-icon[data-val="${data.estrelas}"]`)
+              .click(); // Clica na estrela certa
+
+            if (
+              data.status === "reprovado" &&
+              data.usuario_id === session.user.id
+            ) {
+              document.getElementById("feedback-reprovacao").style.display =
+                "block";
+            }
+
+            // Lógica de visibilidade
+            if (
+              perfil.nivel_acesso !== "egresso" &&
+              data.usuario_id !== session.user.id
+            ) {
+              document.getElementById("painel-coordenador").style.display =
+                "block";
+              document.getElementById("acoes-egresso").style.display = "none";
+              document.getElementById("descricao").disabled = true;
+              document.getElementById("star-rating").style.cursor = "default";
+            }
+          }
+        }
+
+        // Ação do Coordenador
+        async function avaliarDepoimento(novoStatus) {
+          const btn =
+            novoStatus === "aprovado"
+              ? document.getElementById("btn-aprovar")
+              : document.getElementById("btn-reprovar");
+          btn.disabled = true;
+          btn.innerText = "Processando...";
+
+          const { error } = await supabase
+            .from("depoimentos")
+            .update({ status: novoStatus })
+            .eq("id", depId);
+          if (!error) window.location.href = "listar.html";
+        }
+
+        document
+          .getElementById("btn-aprovar")
+          .addEventListener("click", () => avaliarDepoimento("aprovado"));
+        document
+          .getElementById("btn-reprovar")
+          .addEventListener("click", () => avaliarDepoimento("reprovado"));
+
+        // Ação do Egresso (Cadastrar / Editar)
+        document
+          .getElementById("form-depoimento")
+          .addEventListener("submit", async (e) => {
+            e.preventDefault();
+            const btnSalvar = document.getElementById("btn-salvar");
+            btnSalvar.disabled = true;
+            document
+              .getElementById("spinner-salvar")
+              .classList.remove("d-none");
+
+            const payload = {
+              descricao: document.getElementById("descricao").value,
+              estrelas: document.getElementById("estrelas").value,
+              usuario_id: session.user.id,
+              status: "pendente", // Volta para pendente após edição
+            };
+
+            const { error } = depId
+              ? await supabase
+                  .from("depoimentos")
+                  .update(payload)
+                  .eq("id", depId)
+              : await supabase.from("depoimentos").insert([payload]);
+
+            if (!error) {
+              alert("Depoimento salvo! Passará por aprovação.");
+              window.location.href = "listar.html";
+            } else {
+              btnSalvar.disabled = false;
+              document.getElementById("spinner-salvar").classList.add("d-none");
+            }
+          });
+      });
+    </script>
+  </body>
+</html>

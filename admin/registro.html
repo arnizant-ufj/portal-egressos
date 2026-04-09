@@ -1,0 +1,193 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Cadastro de Egresso - Portal UFJ</title>
+    <link href="../assets/img/prograd1.ico" rel="icon" />
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link href="../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
+    <link href="../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
+    
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+    <style>
+      body {
+        background-color: #f4f6f9;
+        font-family: "Poppins", sans-serif;
+        height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+      }
+      .login-card {
+        max-width: 500px;
+        width: 100%;
+        border-radius: 1rem;
+        box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+      }
+      .login-header {
+        background-color: #37517e;
+        border-radius: 1rem 1rem 0 0;
+        padding: 2rem;
+        text-align: center;
+      }
+      .login-header img {
+        max-height: 70px;
+      }
+      .login-body {
+        padding: 3rem 2rem;
+        background-color: white;
+        border-radius: 0 0 1rem 1rem;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <div class="row justify-content-center">
+        <div class="col-12 col-md-8 col-lg-6">
+          <div class="login-card mx-auto">
+            <div class="login-header">
+              <img src="../assets/img/logo_ufj_branca.png" alt="Logo UFJ" class="img-fluid" />
+              <h5 class="text-white mt-3 mb-0 fw-light">Portal de Egressos</h5>
+            </div>
+            
+            <div class="login-body">
+              <h4 class="fw-bold text-center mb-4" style="color: #37517e;">Crie sua Conta</h4>
+              
+              <div id="alert-msg" class="alert d-none" role="alert"></div>
+
+              <form id="form-registro">
+                <div class="mb-3">
+                  <label class="form-label fw-medium text-secondary">Nome Completo *</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="bi bi-person"></i></span>
+                    <input type="text" class="form-control" id="nome" required placeholder="Digite seu nome completo" />
+                  </div>
+                </div>
+
+                <div class="mb-3">
+                  <label class="form-label fw-medium text-secondary">E-mail *</label>
+                  <div class="input-group">
+                    <span class="input-group-text bg-light"><i class="bi bi-envelope"></i></span>
+                    <input type="email" class="form-control" id="email" required placeholder="seu@email.com" />
+                  </div>
+                </div>
+
+                <div class="row">
+                  <div class="col-md-6 mb-3">
+                    <label class="form-label fw-medium text-secondary">Senha *</label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-light"><i class="bi bi-lock"></i></span>
+                      <input type="password" class="form-control" id="senha" required placeholder="Mínimo 6 chars" minlength="6" />
+                    </div>
+                  </div>
+                  
+                  <div class="col-md-6 mb-4">
+                    <label class="form-label fw-medium text-secondary">Confirmar Senha *</label>
+                    <div class="input-group">
+                      <span class="input-group-text bg-light"><i class="bi bi-lock-fill"></i></span>
+                      <input type="password" class="form-control" id="confirma-senha" required placeholder="Repita a senha" minlength="6" />
+                    </div>
+                  </div>
+                </div>
+
+                <button type="submit" class="btn btn-primary w-100 py-2 fw-bold" id="btn-registrar" style="background-color: #47b2e4; border: none;">
+                  <span class="spinner-border spinner-border-sm d-none me-2" id="spinner"></span>
+                  Concluir Cadastro
+                </button>
+                
+                <div class="text-center mt-4">
+                  <p class="text-muted mb-0">Já possui uma conta?</p>
+                  <a href="login.html" class="text-decoration-none fw-bold" style="color: #47b2e4;">Voltar para o Login</a>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", () => {
+        // Inicialização do Supabase
+        const supabaseUrl = "https://gginfmhtmljrupzxqdic.supabase.co";
+        const supabaseKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdnaW5mbWh0bWxqcnVwenhxZGljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MzIyNTYsImV4cCI6MjA5MTAwODI1Nn0.bqtLxP8Wf65ulEx_WVHztSbS3Mwobb6-Klq0cfcFTyQ";
+        const supabase = window.supabase.createClient(supabaseUrl, supabaseKey);
+
+        const form = document.getElementById("form-registro");
+        const alertMsg = document.getElementById("alert-msg");
+        const btnRegistrar = document.getElementById("btn-registrar");
+        const spinner = document.getElementById("spinner");
+
+        function mostrarAlerta(mensagem, tipo) {
+          alertMsg.className = `alert alert-${tipo}`;
+          alertMsg.innerText = mensagem;
+        }
+
+        form.addEventListener("submit", async (e) => {
+          e.preventDefault();
+          
+          const nome = document.getElementById("nome").value.trim();
+          const email = document.getElementById("email").value.trim();
+          const senha = document.getElementById("senha").value;
+          const confirmaSenha = document.getElementById("confirma-senha").value;
+
+          // 1. Validação de Senhas
+          if (senha !== confirmaSenha) {
+            return mostrarAlerta("As senhas não coincidem. Tente novamente.", "danger");
+          }
+
+          // Bloqueia botão e mostra loading
+          btnRegistrar.disabled = true;
+          spinner.classList.remove("d-none");
+          alertMsg.classList.add("d-none");
+
+          try {
+            // 2. Cria o usuário no sistema de autenticação do Supabase
+            const { data: authData, error: authError } = await supabase.auth.signUp({
+              email: email,
+              password: senha,
+            });
+
+            if (authError) throw authError;
+
+            // Se a conta foi criada e o usuário logado com sucesso
+            if (authData.user) {
+              
+              // 3. Grava os dados complementares na tabela 'perfis'
+              const { error: profileError } = await supabase.from('perfis').insert([
+                { 
+                  id: authData.user.id, 
+                  nome: nome, 
+                  email: email, 
+                  nivel_acesso: 'egresso' 
+                }
+              ]);
+
+              if (profileError) throw profileError;
+
+              // Tudo certo! Redireciona o egresso direto para a tela de Perfil para ele preencher o resto
+              mostrarAlerta("Conta criada com sucesso! Redirecionando...", "success");
+              setTimeout(() => {
+                window.location.href = "perfil/index.html";
+              }, 1500);
+            }
+
+          } catch (error) {
+            console.error(error);
+            // Mensagens amigáveis para erros comuns
+            if (error.message.includes("already registered")) {
+              mostrarAlerta("Este e-mail já está cadastrado. Tente fazer login.", "warning");
+            } else {
+              mostrarAlerta("Erro ao criar conta: " + error.message, "danger");
+            }
+            btnRegistrar.disabled = false;
+            spinner.classList.add("d-none");
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
