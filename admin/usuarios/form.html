@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Gerenciar Usuário - Painel UFJ</title>
+    <link href="../assets/img/prograd1.ico" rel="icon" />
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="../../assets/vendor/bootstrap/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link href="../../assets/css/main.css" rel="stylesheet" />
+    <link href="../../assets/css/painel.css" rel="stylesheet" />
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="../../js/adminLayout.js"></script>
+  </head>
+
+  <body>
+    <div id="loading-screen">
+      <div class="spinner-border text-primary" role="status"></div>
+      <h5 class="mt-3 text-secondary fw-bold">Preparando formulário...</h5>
+    </div>
+
+    <div class="container-fluid" id="main-panel" style="display: none">
+      <div class="row">
+        <div class="col-md-3 col-lg-2 p-0 sidebar position-fixed">
+          <div class="sidebar-header">
+            <img
+              src="../../assets/img/logo_ufj_branca.png"
+              alt="Logo UFJ"
+              class="img-fluid mb-3"
+              style="max-height: 55px"
+            />
+            <h6 class="mb-0 text-white fw-bold" id="badge-nivel">Painel</h6>
+          </div>
+          <nav class="nav flex-column flex-grow-1" id="sidebar-menu"></nav>
+          <a href="#" class="logout-btn" id="btn-logout"
+            ><i class="bi bi-box-arrow-left"></i> Sair</a
+          >
+        </div>
+
+        <div class="col-md-9 offset-md-3 col-lg-10 offset-lg-2 content-area">
+          <div
+            class="d-flex justify-content-between align-items-center mb-4 bg-white p-4 shadow-sm rounded-3 border-0"
+          >
+            <h4 class="mb-0 text-secondary fw-bold" id="page-title">
+              Usuários
+            </h4>
+            <div class="d-flex align-items-center">
+              <span class="me-3 fw-medium text-secondary" id="user-name"
+                >...</span
+              >
+              <img
+                src="../../assets/img/person/person-m-9.webp"
+                id="top-avatar"
+                alt="Profile"
+                class="rounded-circle shadow-sm bg-light"
+                style="width: 45px; height: 45px; object-fit: cover"
+              />
+            </div>
+          </div>
+
+          <div class="mb-3">
+            <a href="listar.html" class="btn btn-outline-secondary btn-sm">
+              <i class="bi bi-arrow-left me-1"></i> Voltar para a Lista
+            </a>
+          </div>
+
+          <div class="card p-4 shadow-sm border-0 rounded-4">
+            <h5 class="fw-bold mb-4 border-bottom pb-2" id="titulo-form">
+              Cadastrar Novo Usuário
+            </h5>
+
+            <form class="row g-3" id="form-usuario">
+              <div class="col-md-6">
+                <label class="form-label fw-medium">Nome Completo *</label>
+                <input type="text" class="form-control" id="u-nome" required />
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-medium">E-mail *</label>
+                <input
+                  type="email"
+                  class="form-control"
+                  id="u-email"
+                  required
+                />
+                <small class="text-muted d-none" id="hint-email"
+                  >O e-mail não pode ser alterado após o cadastro.</small
+                >
+              </div>
+
+              <div class="col-md-6" id="container-senha">
+                <label class="form-label fw-medium"
+                  >Senha * (Mínimo 6 caracteres)</label
+                >
+                <input
+                  type="password"
+                  class="form-control"
+                  id="u-senha"
+                  minlength="6"
+                  required
+                />
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label fw-medium">Nível de Acesso *</label>
+                <select class="form-select" id="u-nivel" required>
+                  <option value="egresso">Egresso</option>
+                  <option value="coordenacao">Coordenação</option>
+                  <option value="administrador">Administrador</option>
+                </select>
+              </div>
+
+              <div class="col-md-6" id="container-curso" style="display: none">
+                <label class="form-label fw-medium"
+                  >Vincular a qual Curso? *</label
+                >
+                <select class="form-select" id="u-curso">
+                  <option value="" selected disabled>
+                    Selecione o curso...
+                  </option>
+                  <option value="Ciência da Computação">
+                    Ciência da Computação
+                  </option>
+                  <option value="Engenharia de Software">
+                    Engenharia de Software
+                  </option>
+                  <option value="Agronomia">Agronomia</option>
+                  <option value="Medicina">Medicina</option>
+                  <option value="Medicina Veterinária">
+                    Medicina Veterinária
+                  </option>
+                  <option value="Direito">Direito</option>
+                </select>
+              </div>
+
+              <div class="col-12 mt-4 text-end">
+                <button
+                  type="submit"
+                  class="btn btn-primary px-4 btn-lg"
+                  id="btn-salvar"
+                >
+                  <span
+                    class="spinner-border spinner-border-sm d-none"
+                    id="spinner-salvar"
+                    role="status"
+                  ></span>
+                  <span id="texto-btn-salvar"
+                    ><i class="bi bi-check2-circle me-2"></i> Salvar
+                    Usuário</span
+                  >
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", async function () {
+        const context = await inicializarPainel("usuarios", "..");
+        if (!context) return;
+
+        const supabase = context.supabase;
+        const perfil = context.perfil;
+
+        if (perfil.nivel_acesso !== "administrador") {
+          window.location.href = "../painel.html";
+          return;
+        }
+
+        if (perfil.foto_perfil) {
+          document.getElementById("top-avatar").src = perfil.foto_perfil;
+        }
+
+        const urlParams = new URLSearchParams(window.location.search);
+        const usuarioId = urlParams.get("id");
+
+        const form = document.getElementById("form-usuario");
+        const selectNivel = document.getElementById("u-nivel");
+        const containerCurso = document.getElementById("container-curso");
+        const inputCurso = document.getElementById("u-curso");
+
+        // Regra para mostrar o campo de curso
+        selectNivel.addEventListener("change", function () {
+          if (this.value === "coordenacao") {
+            containerCurso.style.display = "block";
+            inputCurso.required = true;
+          } else {
+            containerCurso.style.display = "none";
+            inputCurso.required = false;
+            inputCurso.value = "";
+          }
+        });
+
+        // PREENCHE FORMULÁRIO SE FOR EDIÇÃO
+        if (usuarioId) {
+          document.getElementById("titulo-form").innerText =
+            "Editar Perfil de Usuário";
+
+          // Trava campos sensíveis
+          document.getElementById("u-email").disabled = true;
+          document.getElementById("hint-email").classList.remove("d-none");
+          document.getElementById("container-senha").style.display = "none";
+          document.getElementById("u-senha").required = false; // Tira obrigatoriedade da senha
+
+          const { data, error } = await supabase
+            .from("perfis")
+            .select("*")
+            .eq("id", usuarioId)
+            .single();
+
+          if (error || !data) {
+            alert("Usuário não encontrado!");
+            window.location.href = "listar.html";
+            return;
+          }
+
+          document.getElementById("u-nome").value = data.nome;
+          document.getElementById("u-email").value = data.email;
+          document.getElementById("u-nivel").value = data.nivel_acesso;
+
+          if (data.curso) {
+            inputCurso.value = data.curso;
+          }
+
+          // Dispara o evento para exibir o campo curso se necessário
+          selectNivel.dispatchEvent(new Event("change"));
+        }
+
+        // ENVIO DO FORMULÁRIO
+        form.addEventListener("submit", async function (e) {
+          e.preventDefault();
+
+          const btnSalvar = document.getElementById("btn-salvar");
+          const spinner = document.getElementById("spinner-salvar");
+          const textoBtn = document.getElementById("texto-btn-salvar");
+
+          btnSalvar.disabled = true;
+          spinner.classList.remove("d-none");
+          textoBtn.innerHTML = "Salvando...";
+
+          try {
+            const nivelSelecionado = document.getElementById("u-nivel").value;
+            const cursoSelecionado = inputCurso.value;
+
+            // Lógica de Edição (Apenas atualiza o perfil)
+            if (usuarioId) {
+              const payload = {
+                nome: document.getElementById("u-nome").value,
+                nivel_acesso: nivelSelecionado,
+                curso:
+                  nivelSelecionado === "coordenacao" ? cursoSelecionado : null,
+              };
+
+              const { error } = await supabase
+                .from("perfis")
+                .update(payload)
+                .eq("id", usuarioId);
+              if (error) throw error;
+              alert("Perfil atualizado com sucesso!");
+              window.location.href = "listar.html";
+            }
+            // Lógica de Novo Cadastro
+            else {
+              const email = document.getElementById("u-email").value;
+              const senha = document.getElementById("u-senha").value;
+
+              // Truque: Cria um cliente secundário do Supabase que não guarda sessão.
+              // Isso impede que o administrador seja deslogado ao criar uma nova conta.
+              const supabaseUrl = "https://gginfmhtmljrupzxqdic.supabase.co";
+              const supabaseKey =
+                "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdnaW5mbWh0bWxqcnVwenhxZGljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MzIyNTYsImV4cCI6MjA5MTAwODI1Nn0.bqtLxP8Wf65ulEx_WVHztSbS3Mwobb6-Klq0cfcFTyQ";
+
+              const adminAuthClient = window.supabase.createClient(
+                supabaseUrl,
+                supabaseKey,
+                {
+                  auth: { persistSession: false, autoRefreshToken: false },
+                },
+              );
+
+              // 1. Cria a conta no Auth
+              const { data: authData, error: authError } =
+                await adminAuthClient.auth.signUp({
+                  email: email,
+                  password: senha,
+                });
+
+              if (authError) {
+                if (authError.message.includes("already registered")) {
+                  throw new Error("Este e-mail já está cadastrado no sistema.");
+                }
+                throw authError;
+              }
+
+              // 2. Grava o perfil associado ao novo ID
+              if (authData.user) {
+                const payload = {
+                  id: authData.user.id,
+                  nome: document.getElementById("u-nome").value,
+                  email: email,
+                  nivel_acesso: nivelSelecionado,
+                  curso:
+                    nivelSelecionado === "coordenacao"
+                      ? cursoSelecionado
+                      : null,
+                };
+
+                const { error: profileError } = await supabase
+                  .from("perfis")
+                  .insert([payload]);
+                if (profileError) throw profileError;
+
+                alert("Usuário cadastrado com sucesso!");
+                window.location.href = "listar.html";
+              }
+            }
+          } catch (error) {
+            console.error(error);
+            alert(
+              "Ocorreu um erro: " + (error.message || "Erro desconhecido."),
+            );
+          } finally {
+            btnSalvar.disabled = false;
+            spinner.classList.add("d-none");
+            textoBtn.innerHTML =
+              '<i class="bi bi-check2-circle me-2"></i> Salvar Usuário';
+          }
+        });
+      });
+    </script>
+  </body>
+</html>
