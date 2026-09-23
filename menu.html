@@ -1,35 +1,60 @@
-<header id="header" class="header d-flex align-items-center fixed-top">
-      <div
-        class="container-fluid container-xl position-relative d-flex align-items-center"
-      >
-        <a href="index.html" class="logo d-flex align-items-center me-auto">
-          <!-- Uncomment the line below if you also wish to use an image logo -->
-          <!-- <img src="assets/img/logo.webp" alt=""> -->
-          <h1 class="sitename">Portal</h1>
-        </a>
+<style>
+  /* MÁGICA DO MENU: Esconde os itens com a classe "esconder-no-blog" 
+     se o menu for carregado nas páginas de Blog */
+  .blog-page .esconder-no-blog,
+  .blog-details-page .esconder-no-blog {
+    display: none !important;
+  }
+</style>
 
-        <nav id="navmenu" class="navmenu">
+<header
+  id="header"
+  class="header d-flex align-items-center sticky-top shadow-sm"
+  style="background-color: #17428c"
+>
+  <div
+    class="container-fluid container-xl position-relative d-flex align-items-center"
+  >
+    <a href="index.html" class="logo d-flex align-items-center me-auto">
+      <h1 class="sitename">Portal</h1>
+    </a>
+
+    <nav id="navmenu" class="navmenu">
+      <ul>
+        <!-- HOME fica visível em todas as páginas -->
+        <li><a href="index.html" class="active">Home</a></li>
+
+        <!-- Os demais recebem a classe para sumir no Blog -->
+        <li class="esconder-no-blog">
+          <a href="index.html#noticias">Notícias</a>
+        </li>
+
+        <li class="dropdown esconder-no-blog">
+          <a href="#"
+            ><span>Egressos</span
+            ><i class="bi bi-chevron-down toggle-dropdown"></i
+          ></a>
           <ul>
-            <li><a href="#hero" class="active">Home</a></li>
-            <li><a href="#noticias">Notícias</a></li>
-            <li class="dropdown">
-              <a href="#"
-                ><span>Egressos</span>
-                <i class="bi bi-chevron-down toggle-dropdown"></i
-              ></a>
-              <ul>
-                <li><a href="#grafico">Acompanhamento de Egressos</a></li>
-                <li><a href="#work-process">Oportunidades</a></li>
-                <li><a href="#testimonials">Depoimentos</a></li>
-              </ul>
-            </li>
-            <li><a href="#eventos">Eventos</a></li>
-            <li><a href="blog.html">Blog</a></li>
-            <li><a href="#contact">Contato</a></li>
+            <li><a href="index.html#grafico">Acompanhamento de Egressos</a></li>
+            <li><a href="index.html#work-process">Oportunidades</a></li>
+            <li><a href="index.html#testimonials">Depoimentos</a></li>
           </ul>
-          <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
-        </nav>
+        </li>
 
-        <a class="btn-getstarted" href="admin/login.html"><i class="bi bi-person-circle"></i> Entrar</a>
-      </div>
-    </header>
+        <li class="esconder-no-blog">
+          <a href="index.html#eventos">Eventos</a>
+        </li>
+        <li class="esconder-no-blog"><a href="blog.html">Blog</a></li>
+        <li class="esconder-no-blog">
+          <a href="index.html#contact">Contato</a>
+        </li>
+      </ul>
+      <i class="mobile-nav-toggle d-xl-none bi bi-list"></i>
+    </nav>
+
+    <!-- O botão Entrar fica visível em todas as páginas -->
+    <a class="btn-getstarted" href="admin/login.html"
+      ><i class="bi bi-person-circle"></i> Entrar</a
+    >
+  </div>
+</header>

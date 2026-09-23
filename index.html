@@ -15,7 +15,7 @@
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,300;1,400;1,500;1,600;1,700;1,800&family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&family=Jost:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Red+Hat+Text:ital,wght@0,300..700;1,300..700&display=swap"
       rel="stylesheet"
     />
 
@@ -49,14 +49,71 @@
       type="text/javascript"
     ></script>
     <script src="assets/js/brazil.js" type="text/javascript"></script>
+
+    <!-- CSS do Gov.BR via CDN -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/@govbr-ds/core/dist/core.min.css"
+    />
+
+    <!-- FontAwesome para os ícones do Gov.BR -->
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
+    />
+    <!-- SCRIPT BASE DO GOV.BR (Precisa estar no head para o loadMenu.js conseguir achar ele) -->
+    <script src="https://cdn.jsdelivr.net/npm/@govbr-ds/core/dist/core.min.js"></script>
+    <style>
+      /* 1. Aniquila o gradiente (background-image) e a cor que o Gov.BR força nos links */
+      #menu-placeholder a:hover,
+      .main a:hover,
+      .footer a:hover,
+      #menu-placeholder span:hover,
+      .main span:hover,
+      .footer span:hover {
+        background: transparent !important;
+        background-color: transparent !important;
+        background-image: none !important; /* Mata o efeito cinza principal */
+        text-decoration: none !important;
+      }
+
+      /* 2. Esconde as camadas extras (::before) que o Gov.BR usa para sombreamento */
+      #menu-placeholder a:hover::before,
+      .main a:hover::before,
+      .footer a:hover::before,
+      #menu-placeholder span:hover::before,
+      .main span:hover::before,
+      .footer span:hover::before {
+        display: none !important;
+      }
+
+      /* 3. Garante que os Botões do Portal continuem funcionando com a cor institucional */
+      #menu-placeholder a.btn-getstarted:hover,
+      .main a.btn:hover,
+      .main button:hover,
+      .footer input[type="submit"]:hover {
+        background: #1b44c8 !important;
+        background-color: #1b44c8 !important;
+        background-image: none !important;
+        color: #ffffff !important;
+      }
+
+      /* 4. Devolve a cor original aos títulos dos cards (notícias e eventos) ao passar o mouse */
+      .main .services .service-item:hover h4 a,
+      .main .recent-blog-postst .post-item:hover .post-title,
+      .main .recent-blog-postst .post-item:hover .readmore {
+        color: #17428c !important;
+      }
+    </style>
   </head>
 
   <body class="index-page">
+    <div id="cabecalho-govbr"></div>
     <div id="menu-placeholder"></div>
 
     <main class="main">
       <!-- Hero Section -->
-      <section id="hero" class="hero section dark-background">
+      <section id="hero" class="hero section">
         <div class="container">
           <div class="row gy-4">
             <div
@@ -75,10 +132,8 @@
                   data-bs-target="#modalCronograma"
                   class="btn-watch-video d-flex align-items-center"
                 >
-                  <i class="bi bi-calendar-event"></i>
-                  <span
-                    >Programação do CAE</span
-                  >
+                  <i class="bi bi-calendar-event" style="color: #37517e"></i>
+                  <span>Programação do CAE</span>
                 </a>
               </div>
             </div>
@@ -88,7 +143,7 @@
               data-aos-delay="200"
             >
               <img
-                src="assets/img/hero-img.png"
+                src="assets/img/egresso_destaque.png"
                 class="img-fluid animated"
                 alt=""
               />
@@ -650,7 +705,8 @@
               id="modalCronogramaLabel"
               style="color: #37517e"
             >
-              <i class="bi bi-calendar-check me-2"></i> Programação do Comitê de Acompanhamento de Egressos (2026)
+              <i class="bi bi-calendar-check me-2"></i> Programação do Comitê de
+              Acompanhamento de Egressos (2026)
             </h5>
             <button
               type="button"
@@ -680,7 +736,10 @@
                     <td>SeTI</td>
                   </tr>
                   <tr>
-                    <td>Elaboração do Formulário do Egresso para avaliação dos cursos pelos egressos</td>
+                    <td>
+                      Elaboração do Formulário do Egresso para avaliação dos
+                      cursos pelos egressos
+                    </td>
                     <td class="text-center">27/02/2026</td>
                     <td class="text-center">
                       <span class="badge bg-secondary">Não</span>
@@ -696,7 +755,10 @@
                     <td>Prograd</td>
                   </tr>
                   <tr>
-                    <td>Apreciação do Formulário do Egresso pelas Câmaras de Graduação e de Pós-Graduação</td>
+                    <td>
+                      Apreciação do Formulário do Egresso pelas Câmaras de
+                      Graduação e de Pós-Graduação
+                    </td>
                     <td class="text-center">13/04/2026</td>
                     <td class="text-center">
                       <span class="badge bg-secondary">Não</span>
@@ -704,7 +766,10 @@
                     <td>Prograd/PRPG</td>
                   </tr>
                   <tr>
-                    <td>Extração do I diagnóstico da qualidade dos cursos a partir do Formulário do Egresso</td>
+                    <td>
+                      Extração do I diagnóstico da qualidade dos cursos a partir
+                      do Formulário do Egresso
+                    </td>
                     <td class="text-center">24/07/2026</td>
                     <td class="text-center">
                       <span class="badge bg-secondary">Não</span>
@@ -712,7 +777,10 @@
                     <td>CAE</td>
                   </tr>
                   <tr>
-                    <td>Indicação de egressos a serem homenageados pelas unidades e coordenações</td>
+                    <td>
+                      Indicação de egressos a serem homenageados pelas unidades
+                      e coordenações
+                    </td>
                     <td class="text-center">21/08/2026</td>
                     <td class="text-center">
                       <span class="badge bg-secondary">Não</span>
@@ -720,7 +788,10 @@
                     <td>CAE</td>
                   </tr>
                   <tr>
-                    <td>Socialização do I diagnóstico para as Coordenações de Graduação e de Pós-Graduação</td>
+                    <td>
+                      Socialização do I diagnóstico para as Coordenações de
+                      Graduação e de Pós-Graduação
+                    </td>
                     <td class="text-center">01/09/2026</td>
                     <td class="text-center">
                       <span class="badge bg-success">Sim</span>
@@ -728,7 +799,10 @@
                     <td>Prograd/PRPG</td>
                   </tr>
                   <tr>
-                    <td>Discussão do I diagnóstico com as Coordenações de cursos de Graduação e de Pós-Graduação</td>
+                    <td>
+                      Discussão do I diagnóstico com as Coordenações de cursos
+                      de Graduação e de Pós-Graduação
+                    </td>
                     <td class="text-center">26/09/2026</td>
                     <td class="text-center">
                       <span class="badge bg-secondary">Não</span>
@@ -752,7 +826,10 @@
                     <td>CAI</td>
                   </tr>
                   <tr>
-                    <td>Elaboração em conjunto com as Coordenações de cursos de Graduação e Pós-Graduação do Relatório</td>
+                    <td>
+                      Elaboração em conjunto com as Coordenações de cursos de
+                      Graduação e Pós-Graduação do Relatório
+                    </td>
                     <td class="text-center">13/11/2026</td>
                     <td class="text-center">
                       <span class="badge bg-secondary">Não</span>
@@ -760,7 +837,10 @@
                     <td>CAE</td>
                   </tr>
                   <tr>
-                    <td>Divulgação do Relatório do I diagnóstico no Portal do Egresso</td>
+                    <td>
+                      Divulgação do Relatório do I diagnóstico no Portal do
+                      Egresso
+                    </td>
                     <td class="text-center">19/12/2025</td>
                     <td class="text-center">
                       <span class="badge bg-secondary">Não</span>
@@ -768,7 +848,10 @@
                     <td>Secom</td>
                   </tr>
                   <tr>
-                    <td>Recrutamento de prováveis formandos para inscrição no Portal do Egresso</td>
+                    <td>
+                      Recrutamento de prováveis formandos para inscrição no
+                      Portal do Egresso
+                    </td>
                     <td class="text-center">Fluxo Contínuo</td>
                     <td class="text-center">
                       <span class="badge bg-secondary">Não</span>
@@ -776,7 +859,10 @@
                     <td>CGA</td>
                   </tr>
                   <tr>
-                    <td>Recrutamento de egressos para inscrição no Portal do Egresso</td>
+                    <td>
+                      Recrutamento de egressos para inscrição no Portal do
+                      Egresso
+                    </td>
                     <td class="text-center">Fluxo Contínuo</td>
                     <td class="text-center">
                       <span class="badge bg-secondary">Não</span>
@@ -784,7 +870,10 @@
                     <td>Prograd/PRPG/Secom/SeTI/CGA</td>
                   </tr>
                   <tr>
-                    <td>Publicação de oportunidades de formação e empregos no Portal</td>
+                    <td>
+                      Publicação de oportunidades de formação e empregos no
+                      Portal
+                    </td>
                     <td class="text-center">Fluxo Contínuo</td>
                     <td class="text-center">
                       <span class="badge bg-secondary">Não</span>

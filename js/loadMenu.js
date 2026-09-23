@@ -9,8 +9,29 @@ document.addEventListener("DOMContentLoaded", function () {
   const mesesDoAno = ["Janeiro", "Fevereiro", "Março", "Abril", "Maio", "Junho", "Julho", "Agosto", "Setembro", "Outubro", "Novembro", "Dezembro"];
 
   // ==========================================
-  // 1. CARREGAMENTO DO MENU
+  // 1. CARREGAMENTO DOS CABEÇALHOS (GOV.BR E MENU)
   // ==========================================
+
+  // 1.1. Carrega o Cabeçalho Gov.BR
+  const divGovBr = document.getElementById("cabecalho-govbr");
+  if (divGovBr) {
+    fetch("cabecalho_govbr.html")
+      .then(res => res.ok ? res.text() : Promise.reject("Erro ao carregar o cabeçalho Gov.BR"))
+      .then(data => {
+        divGovBr.innerHTML = data;
+
+        // Inicia o script do Gov.BR depois que o HTML foi injetado
+        if (typeof core !== 'undefined' && core.BRHeader) {
+          const brHeaders = divGovBr.querySelectorAll('.br-header');
+          for (const brHeader of brHeaders) {
+            new core.BRHeader('br-header', brHeader);
+          }
+        }
+      })
+      .catch(error => console.error(error));
+  }
+
+  // 1.2. Carrega o Menu Principal (Portal UFJ)
   const menuPlaceholder = document.getElementById('menu-placeholder');
   if (menuPlaceholder) {
     fetch('menu.html')

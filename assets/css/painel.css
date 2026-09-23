@@ -2,16 +2,63 @@
    ESTILOS DO PAINEL ADMINISTRATIVO (EGRESSOS E COORDENAÇÃO)
    ======================================================== */
 
+:root {
+  /* Cores Globais */
+  --text-primary: #333333;
+  --text-secondary: #838383;
+  --background: #f9f9f9;
+  --border: #e5e5e5;
+
+  /* Cores Institucionais */
+  --color-azul-riachuelo: #17428c;
+  --color-amarelo-abelha: #f7a70a;
+  --color-azul-perola: #1988c4;
+  --color-laranja-flor-de-cosmos: #eb6608;
+  --color-verde-corrego: #00704a;
+  --color-verde-jatoba: #79ac2b;
+
+  /* Fontes */
+  --font-red-hat-display: "Red Hat Display", sans-serif;
+  --font-red-hat-text: "Red Hat Text", sans-serif;
+}
+
 body {
-  background-color: #f4f6f9;
-  font-family: 'Poppins', sans-serif;
+  background-color: var(--background);
+  font-family: var(--font-red-hat-text);
+  color: var(--text-primary);
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-family: var(--font-red-hat-display);
+}
+
+/* Botões Padrão (Bootstrap overrides) */
+.btn-primary {
+  background-color: var(--color-azul-riachuelo) !important;
+  border-color: var(--color-azul-riachuelo) !important;
+  color: #ffffff !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus {
+  background-color: #1b44c8 !important;
+  border-color: #1b44c8 !important;
+  color: #ffffff !important;
 }
 
 /* Tela de Carregamento (Bloqueio de Sessão) */
 #loading-screen {
   position: fixed;
-  top: 0; left: 0; width: 100%; height: 100%;
-  background-color: #f4f6f9;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: var(--background);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -22,7 +69,7 @@ body {
 /* Menu Lateral */
 .sidebar {
   min-height: 100vh;
-  background-color: #37517e;
+  background-color: var(--color-azul-riachuelo);
   color: white;
   box-shadow: 4px 0 15px rgba(0, 0, 0, 0.1);
   z-index: 10;
@@ -46,6 +93,7 @@ body {
   margin: 4px 15px;
   border-radius: 8px;
   transition: all 0.3s ease;
+  font-family: var(--font-red-hat-text);
   font-weight: 500;
   font-size: 15px;
 }
@@ -62,9 +110,9 @@ body {
 }
 
 .sidebar a.active {
-  background-color: #47b2e4;
+  background-color: var(--color-azul-perola);
   color: #fff;
-  box-shadow: 0 4px 10px rgba(71, 178, 228, 0.3);
+  box-shadow: 0 4px 10px rgba(25, 136, 196, 0.3); /* Sombra baseada no azul-pérola */
 }
 
 /* Botão de Sair */
@@ -96,26 +144,33 @@ body {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* Estilo customizado para as Abas (Tabs) do Bootstrap */
 .nav-tabs .nav-link {
-  color: #444444;
+  color: var(--text-secondary);
   font-weight: 500;
   border: none;
   border-bottom: 3px solid transparent;
   padding: 12px 20px;
+  font-family: var(--font-red-hat-display);
 }
 
 .nav-tabs .nav-link:hover {
   border-color: transparent;
-  color: #47b2e4;
+  color: var(--color-azul-perola);
 }
 
 .nav-tabs .nav-link.active {
-  color: #47b2e4;
+  color: var(--color-azul-riachuelo);
   background-color: transparent;
-  border-bottom: 3px solid #47b2e4;
+  border-bottom: 3px solid var(--color-azul-riachuelo);
 }
