@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Red+Hat+Text:ital,wght@0,300..700;1,300..700&display=swap"
       rel="stylesheet"
     />
 
@@ -29,7 +29,11 @@
 
   <body>
     <div id="loading-screen">
-      <div class="spinner-border text-primary" role="status"></div>
+      <div
+        class="spinner-border"
+        style="color: var(--color-azul-riachuelo)"
+        role="status"
+      ></div>
       <h5 class="mt-3 text-secondary fw-bold">Carregando módulo...</h5>
     </div>
 
@@ -55,7 +59,11 @@
           <div
             class="d-flex justify-content-between align-items-center mb-5 bg-white p-4 shadow-sm rounded-3 border-0"
           >
-            <h4 class="mb-0 text-secondary fw-bold" id="page-title">
+            <h4
+              class="mb-0 fw-bold"
+              style="color: var(--color-azul-riachuelo)"
+              id="page-title"
+            >
               Oportunidades
             </h4>
             <div class="d-flex align-items-center">
@@ -73,17 +81,33 @@
           </div>
 
           <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="fw-bold mb-0">Gerenciar Vagas</h5>
-            <a href="form.html" class="btn btn-primary">
+            <h5 class="fw-bold mb-0 text-secondary">Gerenciar Vagas</h5>
+            <a
+              href="form.html"
+              class="btn btn-primary fw-bold shadow-sm"
+              id="btn-nova-vaga"
+            >
               <i class="bi bi-plus-lg me-2"></i>Nova Vaga
             </a>
           </div>
 
           <div class="card p-4 shadow-sm border-0 rounded-4">
             <ul class="nav nav-tabs mb-4" id="vagasTabs" role="tablist">
-              <li class="nav-item" role="presentation">
+              <!-- Nova Aba: Vagas Ofertadas -->
+              <li class="nav-item" role="presentation" id="tab-ofertadas-li">
                 <button
                   class="nav-link active"
+                  data-bs-toggle="tab"
+                  data-bs-target="#vagas-ofertadas"
+                  type="button"
+                  role="tab"
+                >
+                  Vagas Ofertadas
+                </button>
+              </li>
+              <li class="nav-item" role="presentation" id="tab-minhas-li">
+                <button
+                  class="nav-link"
                   data-bs-toggle="tab"
                   data-bs-target="#minhas-vagas"
                   type="button"
@@ -111,11 +135,35 @@
             </ul>
 
             <div class="tab-content">
+              <!-- Vagas Ofertadas (Público para Egressos verem as aprovadas) -->
               <div
                 class="tab-pane fade show active"
-                id="minhas-vagas"
+                id="vagas-ofertadas"
                 role="tabpanel"
               >
+                <div class="table-responsive">
+                  <table class="table table-hover align-middle">
+                    <thead class="table-light">
+                      <tr>
+                        <th>Título da Vaga</th>
+                        <th>Área de Atuação</th>
+                        <th>Contato / Inscrição</th>
+                        <th class="text-end">Visualizar</th>
+                      </tr>
+                    </thead>
+                    <tbody id="tbody-ofertadas">
+                      <tr>
+                        <td colspan="4" class="text-center py-4 text-muted">
+                          Carregando vagas ofertadas...
+                        </td>
+                      </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+
+              <!-- Minhas Vagas (Criadas pelo Egresso logado) -->
+              <div class="tab-pane fade" id="minhas-vagas" role="tabpanel">
                 <div class="table-responsive">
                   <table class="table table-hover align-middle">
                     <thead class="table-light">
@@ -128,8 +176,8 @@
                     </thead>
                     <tbody id="tbody-minhas-vagas">
                       <tr>
-                        <td colspan="4" class="text-center py-4">
-                          Carregando vagas...
+                        <td colspan="4" class="text-center py-4 text-muted">
+                          Carregando minhas vagas...
                         </td>
                       </tr>
                     </tbody>
@@ -137,6 +185,7 @@
                 </div>
               </div>
 
+              <!-- Pendentes (Staff) -->
               <div class="tab-pane fade" id="vagas-pendentes" role="tabpanel">
                 <div class="table-responsive">
                   <table class="table table-hover align-middle">
@@ -150,7 +199,7 @@
                     </thead>
                     <tbody id="tbody-pendentes">
                       <tr>
-                        <td colspan="4" class="text-center py-4">
+                        <td colspan="4" class="text-center py-4 text-muted">
                           Carregando pendências...
                         </td>
                       </tr>
@@ -159,6 +208,37 @@
                 </div>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Alerta -->
+    <div class="modal fade" id="modalAlertas" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header text-white" id="modal-alerta-header">
+            <h5 class="modal-title fw-bold" id="modalAlertasLabel">
+              <i class="bi" id="modal-alerta-icon"></i>
+              <span id="modal-alerta-titulo">Mensagem</span>
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body p-4 text-center">
+            <p class="fs-5 mb-0" id="modal-alerta-mensagem"></p>
+          </div>
+          <div class="modal-footer bg-light border-0 justify-content-center">
+            <button
+              type="button"
+              class="btn btn-secondary px-4 fw-bold"
+              data-bs-dismiss="modal"
+            >
+              Fechar
+            </button>
           </div>
         </div>
       </div>
@@ -174,55 +254,94 @@
         const supabase = context.supabase;
         const perfil = context.perfil;
 
+        let modalAlertasInstance = new bootstrap.Modal(
+          document.getElementById("modalAlertas"),
+        );
+
+        window.exibirAlerta = function (titulo, mensagem, tipo) {
+          const header = document.getElementById("modal-alerta-header");
+          const icon = document.getElementById("modal-alerta-icon");
+
+          document.getElementById("modal-alerta-titulo").innerText = titulo;
+          document.getElementById("modal-alerta-mensagem").innerText = mensagem;
+          header.className = "modal-header text-white";
+          icon.className = "bi me-2";
+
+          if (tipo === "sucesso") {
+            header.style.backgroundColor = "var(--color-verde-corrego)";
+            icon.classList.add("bi-check-circle-fill");
+          } else if (tipo === "erro") {
+            header.style.backgroundColor = "#dc3545";
+            icon.classList.add("bi-exclamation-triangle-fill");
+          } else {
+            header.style.backgroundColor = "var(--color-azul-riachuelo)";
+            icon.classList.add("bi-info-circle-fill");
+          }
+          modalAlertasInstance.show();
+        };
+
         if (perfil.foto_perfil) {
           document.getElementById("top-avatar").src = perfil.foto_perfil;
         }
 
-        // Se for coordenação ou admin, mostra a aba de aprovações
+        // Configuração Visual das Abas baseada no Perfil
         if (perfil.nivel_acesso !== "egresso") {
+          // Coordenador/Admin: Vê Pendentes e Ofertadas. Não cria nem tem "Minhas".
           document.getElementById("tab-pendentes-li").style.display = "block";
+          document.getElementById("tab-minhas-li").style.display = "none";
+          document.getElementById("btn-nova-vaga").style.display = "none";
+
+          document
+            .querySelector('[data-bs-target="#vagas-ofertadas"]')
+            .classList.remove("active");
+          document
+            .querySelector('[data-bs-target="#vagas-pendentes"]')
+            .classList.add("active");
+          document
+            .getElementById("vagas-ofertadas")
+            .classList.remove("show", "active");
+          document
+            .getElementById("vagas-pendentes")
+            .classList.add("show", "active");
+
           carregarPendentes();
+        } else {
+          // Egresso: Vê Ofertadas e Minhas
+          carregarMinhasVagas();
         }
 
-        carregarMinhasVagas();
+        // Egressos e Staff podem ver as vagas ofertadas e aprovadas
+        carregarVagasOfertadas();
 
-        async function carregarMinhasVagas() {
+        async function carregarVagasOfertadas() {
           const { data, error } = await supabase
             .from("vagas")
             .select("*")
-            .eq("usuario_id", context.session.user.id)
-            .order("data_cadastro", { ascending: false });
+            .eq("status", "aprovado")
+            .order("id", { ascending: false });
 
-          const tbody = document.getElementById("tbody-minhas-vagas");
+          const tbody = document.getElementById("tbody-ofertadas");
 
           if (error || !data || data.length === 0) {
             tbody.innerHTML =
-              '<tr><td colspan="4" class="text-center text-secondary py-4">Nenhuma vaga cadastrada.</td></tr>';
+              '<tr><td colspan="4" class="text-center text-secondary py-4">Nenhuma vaga ativa no momento.</td></tr>';
             return;
           }
 
           tbody.innerHTML = "";
           data.forEach((v) => {
-            let badgeClass = "bg-warning text-dark";
-            let statusText = "Pendente";
-
-            if (v.status === "aprovado") {
-              badgeClass = "bg-success";
-              statusText = "Aprovado";
-            }
-            if (v.status === "reprovado") {
-              badgeClass = "bg-danger";
-              statusText = "Reprovado";
-            }
+            let linkAcao = v.informacoes_contato.includes("@")
+              ? `<a href="mailto:${v.informacoes_contato}" class="text-decoration-none fw-bold" style="color: var(--color-laranja-flor-de-cosmos);"><i class="bi bi-envelope me-1"></i>${v.informacoes_contato}</a>`
+              : `<a href="${v.informacoes_contato.startsWith("http") ? v.informacoes_contato : "https://" + v.informacoes_contato}" target="_blank" class="text-decoration-none fw-bold" style="color: var(--color-laranja-flor-de-cosmos);"><i class="bi bi-link-45deg me-1"></i>Acessar Link</a>`;
 
             tbody.innerHTML += `
               <tr>
-                <td class="fw-bold text-primary">${v.titulo_vaga}</td>
-                <td>${v.area_atuacao}</td>
-                <td><span class="badge ${badgeClass}">${statusText}</span></td>
+                <td class="fw-bold text-dark">${v.titulo_vaga}</td>
+                <td class="text-secondary">${v.area_atuacao}</td>
+                <td>${linkAcao}</td>
                 <td class="text-end">
-                  <a href="form.html?id=${v.id}" class="btn btn-sm btn-outline-primary" title="Editar / Ver">
-                    <i class="bi bi-pencil"></i>
+                  <a href="form.html?id=${v.id}" class="btn btn-sm btn-outline-primary" style="border-color: var(--color-azul-riachuelo); color: var(--color-azul-riachuelo);" title="Ver Detalhes">
+                    <i class="bi bi-eye"></i>
                   </a>
                 </td>
               </tr>
@@ -230,43 +349,159 @@
           });
         }
 
-        async function carregarPendentes() {
-          let query = supabase
+        async function carregarMinhasVagas() {
+          const { data, error } = await supabase
             .from("vagas")
-            .select("*, perfis(nome)")
-            .eq("status", "pendente")
-            .order("data_cadastro", { ascending: false });
+            .select("*")
+            .eq("usuario_id", context.session.user.id)
+            .order("id", { ascending: false });
 
-          // Se for coordenação, filtra apenas pelas vagas do curso dele
-          if (perfil.nivel_acesso === "coordenacao") {
-            query = query.eq("area_atuacao", perfil.curso);
-          }
-
-          const { data, error } = await query;
-          const tbody = document.getElementById("tbody-pendentes");
+          const tbody = document.getElementById("tbody-minhas-vagas");
 
           if (error || !data || data.length === 0) {
             tbody.innerHTML =
-              '<tr><td colspan="4" class="text-center text-secondary py-4">Tudo em dia! Nenhuma pendência de aprovação.</td></tr>';
+              '<tr><td colspan="4" class="text-center text-secondary py-4">Você ainda não cadastrou nenhuma vaga.</td></tr>';
             return;
           }
 
           tbody.innerHTML = "";
           data.forEach((v) => {
-            const nomeAutor =
-              v.perfis && v.perfis.nome ? v.perfis.nome : "Anônimo";
+            let badgeClass = "var(--color-azul-perola)";
+            let statusText = "Pendente";
+            let btnFinalizar = "";
+
+            if (v.status === "aprovado") {
+              badgeClass = "var(--color-verde-corrego)";
+              statusText = "Aprovado (Ativa)";
+              // Botão para finalizar a vaga aprovada
+              btnFinalizar = `
+                <button onclick="finalizarVaga('${v.id}')" class="btn btn-sm text-white ms-1" style="background-color: var(--color-verde-jatoba);" title="Marcar como Preenchida">
+                  <i class="bi bi-check-all"></i>
+                </button>
+              `;
+            } else if (v.status === "reprovado") {
+              badgeClass = "#dc3545";
+              statusText = "Reprovado";
+            } else if (v.status === "preenchida") {
+              badgeClass = "#6c757d"; // Cinza
+              statusText = "Preenchida / Finalizada";
+            }
+
             tbody.innerHTML += `
               <tr>
-                <td class="fw-bold text-primary">${v.titulo_vaga}</td>
-                <td>${nomeAutor}</td>
-                <td>${v.area_atuacao}</td>
+                <td class="fw-bold text-dark">${v.titulo_vaga}</td>
+                <td class="text-secondary">${v.area_atuacao}</td>
+                <td><span class="badge" style="background-color: ${badgeClass}; font-family: var(--font-red-hat-text);">${statusText}</span></td>
                 <td class="text-end">
-                  <a href="form.html?id=${v.id}" class="btn btn-sm btn-primary">Avaliar Vaga</a>
+                  <a href="form.html?id=${v.id}" class="btn btn-sm btn-outline-primary" style="border-color: var(--color-azul-riachuelo); color: var(--color-azul-riachuelo);" title="Editar / Ver">
+                    <i class="bi bi-pencil"></i>
+                  </a>
+                  ${btnFinalizar}
                 </td>
               </tr>
             `;
           });
         }
+
+        async function carregarPendentes() {
+          try {
+            // Busca usando a ordenação genérica pelo ID para evitar erros de coluna
+            const { data: vagas, error: errorVagas } = await supabase
+              .from("vagas")
+              .select("*")
+              .eq("status", "pendente")
+              .order("id", { ascending: false });
+
+            if (errorVagas) throw errorVagas;
+
+            let dadosFiltrados = vagas;
+
+            if (perfil.nivel_acesso === "coordenacao") {
+              if (!perfil.curso_ufj) {
+                console.warn("Coordenador sem curso vinculado.");
+                dadosFiltrados = [];
+              } else {
+                const cursoCoordenador = perfil.curso_ufj.trim().toLowerCase();
+                dadosFiltrados = dadosFiltrados.filter(
+                  (v) =>
+                    v.area_atuacao &&
+                    v.area_atuacao.trim().toLowerCase() === cursoCoordenador,
+                );
+              }
+            }
+
+            const tbody = document.getElementById("tbody-pendentes");
+
+            if (!dadosFiltrados || dadosFiltrados.length === 0) {
+              tbody.innerHTML =
+                '<tr><td colspan="4" class="text-center text-secondary py-4">Tudo em dia! Nenhuma pendência de aprovação para seu curso.</td></tr>';
+              return;
+            }
+
+            // Busca nomes dos Egressos em tempo real com JavaScript
+            const usuariosIds = [
+              ...new Set(dadosFiltrados.map((v) => v.usuario_id)),
+            ];
+            const { data: perfis, error: errorPerf } = await supabase
+              .from("perfis")
+              .select("id, nome")
+              .in("id", usuariosIds);
+
+            if (errorPerf) throw errorPerf;
+
+            tbody.innerHTML = "";
+            dadosFiltrados.forEach((v) => {
+              const perfilAutor = perfis.find((p) => p.id === v.usuario_id);
+              const nomeAutor = perfilAutor ? perfilAutor.nome : "Anônimo";
+
+              tbody.innerHTML += `
+                <tr>
+                  <td class="fw-bold text-dark">${v.titulo_vaga}</td>
+                  <td class="text-secondary">${nomeAutor}</td>
+                  <td class="text-secondary">${v.area_atuacao}</td>
+                  <td class="text-end">
+                    <a href="form.html?id=${v.id}" class="btn btn-sm btn-primary fw-bold">Avaliar Vaga</a>
+                  </td>
+                </tr>
+              `;
+            });
+          } catch (err) {
+            console.error("Erro ao carregar pendentes:", err);
+            document.getElementById("tbody-pendentes").innerHTML =
+              '<tr><td colspan="4" class="text-center text-danger py-4">Erro de conexão ao buscar vagas.</td></tr>';
+          }
+        }
+
+        // Função Global para o Botão "Finalizar Vaga"
+        window.finalizarVaga = async function (id) {
+          if (
+            !confirm(
+              "Deseja realmente marcar esta vaga como preenchida? Ela não aparecerá mais para os outros egressos.",
+            )
+          )
+            return;
+
+          const { error } = await supabase
+            .from("vagas")
+            .update({ status: "preenchida" })
+            .eq("id", id);
+
+          if (error) {
+            exibirAlerta(
+              "Erro",
+              "Erro ao finalizar a vaga. Tente novamente.",
+              "erro",
+            );
+          } else {
+            exibirAlerta(
+              "Sucesso",
+              "A vaga foi marcada como preenchida com sucesso!",
+              "sucesso",
+            );
+            carregarMinhasVagas();
+            carregarVagasOfertadas();
+          }
+        };
       });
     </script>
   </body>

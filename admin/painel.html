@@ -74,14 +74,16 @@
               >
               <img
                 src="../assets/img/person/user.png"
+                id="top-avatar"
                 alt="Profile"
-                class="rounded-circle shadow-sm"
+                class="rounded-circle shadow-sm bg-light"
                 style="width: 45px; height: 45px; object-fit: cover"
               />
             </div>
           </div>
 
           <div class="row g-4 mb-5">
+            <!-- Card Egressos -->
             <div class="col-md-4">
               <div
                 class="card text-white shadow border-0 rounded-4 h-100"
@@ -91,14 +93,25 @@
                   class="card-body p-4 d-flex justify-content-between align-items-center"
                 >
                   <div>
-                    <h6 class="text-white-50 mb-1">Egressos Cadastrados</h6>
-                    <h2 class="mb-0 fw-bold">142</h2>
+                    <h6 class="text-white mb-1" id="card-egressos-title">
+                      Egressos Cadastrados
+                    </h6>
+                    <h2
+                      class="text-white mb-0 fw-bold"
+                      id="card-egressos-count"
+                    >
+                      <span
+                        class="spinner-border spinner-border-sm"
+                        role="status"
+                      ></span>
+                    </h2>
                   </div>
-                  <i class="bi bi-people fs-1 text-white-50"></i>
+                  <i class="bi bi-people fs-1 text-white"></i>
                 </div>
               </div>
             </div>
 
+            <!-- Card Vagas -->
             <div class="col-md-4">
               <div
                 class="card text-white shadow border-0 rounded-4 h-100"
@@ -108,14 +121,20 @@
                   class="card-body p-4 d-flex justify-content-between align-items-center"
                 >
                   <div>
-                    <h6 class="text-white-50 mb-1">Vagas Pendentes</h6>
-                    <h2 class="mb-0 fw-bold">5</h2>
+                    <h6 class="text-white mb-1">Vagas de Emprego</h6>
+                    <h2 class="text-white mb-0 fw-bold" id="card-vagas-count">
+                      <span
+                        class="spinner-border spinner-border-sm"
+                        role="status"
+                      ></span>
+                    </h2>
                   </div>
-                  <i class="bi bi-briefcase fs-1 text-white-50"></i>
+                  <i class="bi bi-briefcase fs-1 text-white"></i>
                 </div>
               </div>
             </div>
 
+            <!-- Card Notícias -->
             <div class="col-md-4">
               <div
                 class="card text-white shadow border-0 rounded-4 h-100"
@@ -125,10 +144,18 @@
                   class="card-body p-4 d-flex justify-content-between align-items-center"
                 >
                   <div>
-                    <h6 class="text-white-50 mb-1">Notícias Publicadas</h6>
-                    <h2 class="mb-0 fw-bold">12</h2>
+                    <h6 class="text-white mb-1">Notícias Cadastradas</h6>
+                    <h2
+                      class="text-white mb-0 fw-bold"
+                      id="card-noticias-count"
+                    >
+                      <span
+                        class="spinner-border spinner-border-sm"
+                        role="status"
+                      ></span>
+                    </h2>
                   </div>
-                  <i class="bi bi-newspaper fs-1 text-white-50"></i>
+                  <i class="bi bi-newspaper fs-1 text-white"></i>
                 </div>
               </div>
             </div>
@@ -158,6 +185,57 @@
     <script>
       document.addEventListener("DOMContentLoaded", async function () {
         const context = await inicializarPainel("dashboard", ".");
+        if (!context) return;
+
+        const { supabase, perfil } = context;
+
+        // Atualiza a foto do topo caso o usuário já tenha enviado
+        if (perfil.foto_perfil) {
+          document.getElementById("top-avatar").src = perfil.foto_perfil;
+        }
+
+        const titleEgressos = document.getElementById("card-egressos-title");
+        const countEgressos = document.getElementById("card-egressos-count");
+        const countVagas = document.getElementById("card-vagas-count");
+        const countNoticias = document.getElementById("card-noticias-count");
+
+        // 1. Configurar o título do Card de Egressos dependendo do nível
+        if (perfil.nivel_acesso === "administrador") {
+          titleEgressos.innerText = "Egressos Cadastrados (Geral)";
+        } else if (perfil.nivel_acesso === "coordenacao") {
+          titleEgressos.innerText = `Egressos (${perfil.curso_ufj || "Sem Curso Vinculado"})`;
+        }
+
+        try {
+          // 2. Prepara a query de Egressos com o filtro adequado
+          let queryEgressos = supabase
+            .from("perfis")
+            .select("id", { count: "exact", head: true })
+            .eq("nivel_acesso", "egresso");
+
+          if (perfil.nivel_acesso === "coordenacao" && perfil.curso_ufj) {
+            queryEgressos = queryEgressos.eq("curso_ufj", perfil.curso_ufj);
+          }
+
+          // 3. Executa as três buscas simultaneamente para não travar a tela
+          const [resEgressos, resVagas, resNoticias] = await Promise.all([
+            queryEgressos,
+            supabase.from("vagas").select("id", { count: "exact", head: true }),
+            supabase
+              .from("noticias")
+              .select("id", { count: "exact", head: true }),
+          ]);
+
+          // 4. Injeta os resultados no HTML
+          countEgressos.innerText = resEgressos.error ? "0" : resEgressos.count;
+          countVagas.innerText = resVagas.error ? "0" : resVagas.count;
+          countNoticias.innerText = resNoticias.error ? "0" : resNoticias.count;
+        } catch (error) {
+          console.error("Erro ao buscar contagens:", error);
+          countEgressos.innerText = "-";
+          countVagas.innerText = "-";
+          countNoticias.innerText = "-";
+        }
       });
     </script>
   </body>

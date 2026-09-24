@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="en">
+<html lang="pt-BR">
   <head>
     <meta charset="utf-8" />
     <meta content="width=device-width, initial-scale=1.0" name="viewport" />
@@ -38,6 +38,7 @@
     <!-- Main CSS File -->
     <link href="assets/css/main.css" rel="stylesheet" />
 
+    <!-- Bibliotecas Externas -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/loadMenu.js"></script>
     <script
@@ -55,14 +56,14 @@
       rel="stylesheet"
       href="https://cdn.jsdelivr.net/npm/@govbr-ds/core/dist/core.min.css"
     />
-
     <!-- FontAwesome para os ícones do Gov.BR -->
     <link
       rel="stylesheet"
       href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css"
     />
-    <!-- SCRIPT BASE DO GOV.BR (Precisa estar no head para o loadMenu.js conseguir achar ele) -->
+    <!-- SCRIPT BASE DO GOV.BR -->
     <script src="https://cdn.jsdelivr.net/npm/@govbr-ds/core/dist/core.min.js"></script>
+
     <style>
       /* 1. Aniquila o gradiente (background-image) e a cor que o Gov.BR força nos links */
       #menu-placeholder a:hover,
@@ -73,10 +74,9 @@
       .footer span:hover {
         background: transparent !important;
         background-color: transparent !important;
-        background-image: none !important; /* Mata o efeito cinza principal */
+        background-image: none !important;
         text-decoration: none !important;
       }
-
       /* 2. Esconde as camadas extras (::before) que o Gov.BR usa para sombreamento */
       #menu-placeholder a:hover::before,
       .main a:hover::before,
@@ -86,7 +86,6 @@
       .footer span:hover::before {
         display: none !important;
       }
-
       /* 3. Garante que os Botões do Portal continuem funcionando com a cor institucional */
       #menu-placeholder a.btn-getstarted:hover,
       .main a.btn:hover,
@@ -97,7 +96,6 @@
         background-image: none !important;
         color: #ffffff !important;
       }
-
       /* 4. Devolve a cor original aos títulos dos cards (notícias e eventos) ao passar o mouse */
       .main .services .service-item:hover h4 a,
       .main .recent-blog-postst .post-item:hover .post-title,
@@ -151,22 +149,18 @@
           </div>
         </div>
       </section>
-      <!-- /Hero Section -->
 
+      <!-- Notícias Section -->
       <section
         id="noticias"
         class="recent-blog-postst section light-background"
       >
-        <!-- Section Title -->
         <div class="container section-title" data-aos="fade-up">
           <h2>Notícias</h2>
           <p>Confira as últimas notícias...</p>
         </div>
-        <!-- End Section Title -->
-
         <div class="container">
           <div class="row gy-5" id="noticias-container"></div>
-
           <div class="row mt-5" id="btn-todas-noticias" style="display: none">
             <div class="col-12 text-center">
               <a href="blog.html" class="btn btn-outline-primary"
@@ -176,100 +170,85 @@
           </div>
         </div>
       </section>
-      <!-- /Recent Blog Postst Section -->
 
-      <!-- Skills Section -->
+      <!-- Skills Section (MAPA E ESTATÍSTICAS REAIS) -->
       <section id="grafico" class="skills section">
         <div class="container" data-aos="fade-up" data-aos-delay="100">
           <div class="row">
             <div class="col-lg-7 d-flex align-items-center">
-              <!-- <img
-                src="assets/img/illustration/illustration-10.webp"
-                class="img-fluid"
-                alt=""
-              /> -->
-              <!-- <div id="hovered-region">LAST HOVERED REGION: <span>??</span></div> -->
               <div id="brazil-map"></div>
             </div>
 
             <div class="col-lg-5 pt-4 pt-lg-0 content" id="clicked-region">
               <h3>Acompanhamento de Egressos</h3>
-              <p class="fst-italic">Dados e indicadores dos egressos da UFJ</p>
+              <p class="fst-italic">
+                Distribuição geográfica dos egressos da UFJ
+              </p>
 
-              <div class="skills-content skills-animation">
+              <div class="skills-content skills-animation" id="stats-container">
+                <!-- Barra Jataí -->
                 <div class="progress">
                   <span class="skill"
-                    ><span>Jataí - GO</span> <i class="val">100%</i></span
+                    ><span>Jataí - GO</span>
+                    <i class="val" id="val-jatai">0% (0)</i></span
                   >
                   <div class="progress-bar-wrap">
                     <div
                       class="progress-bar"
+                      id="bar-jatai"
                       role="progressbar"
-                      aria-valuenow="100"
+                      aria-valuenow="0"
                       aria-valuemin="0"
                       aria-valuemax="100"
+                      style="width: 0%"
                     ></div>
                   </div>
                 </div>
-                <!-- End Skills Item -->
 
+                <!-- Barra Outras Cidades GO -->
                 <div class="progress">
                   <span class="skill"
                     ><span>Outras cidades (GO)</span>
-                    <i class="val">90%</i></span
+                    <i class="val" id="val-goias">0% (0)</i></span
                   >
                   <div class="progress-bar-wrap">
                     <div
                       class="progress-bar"
+                      id="bar-goias"
                       role="progressbar"
-                      aria-valuenow="90"
+                      aria-valuenow="0"
                       aria-valuemin="0"
                       aria-valuemax="100"
+                      style="width: 0%"
                     ></div>
                   </div>
                 </div>
-                <!-- End Skills Item -->
 
+                <!-- Barra Outros Estados -->
                 <div class="progress">
                   <span class="skill"
-                    ><span>Outras cidades (exceto GO)</span>
-                    <i class="val">75%</i></span
+                    ><span>Outros Estados</span>
+                    <i class="val" id="val-outros">0% (0)</i></span
                   >
                   <div class="progress-bar-wrap">
                     <div
                       class="progress-bar"
+                      id="bar-outros"
                       role="progressbar"
-                      aria-valuenow="75"
+                      aria-valuenow="0"
                       aria-valuemin="0"
                       aria-valuemax="100"
+                      style="width: 0%"
                     ></div>
                   </div>
                 </div>
-                <!-- End Skills Item -->
-
-                <div class="progress">
-                  <span class="skill"
-                    ><span>Fora do país</span> <i class="val">55%</i></span
-                  >
-                  <div class="progress-bar-wrap">
-                    <div
-                      class="progress-bar"
-                      role="progressbar"
-                      aria-valuenow="55"
-                      aria-valuemin="0"
-                      aria-valuemax="100"
-                    ></div>
-                  </div>
-                </div>
-                <!-- End Skills Item -->
               </div>
             </div>
           </div>
         </div>
       </section>
-      <!-- /Skills Section -->
 
-      <!-- Services Section -->
+      <!-- Eventos Section -->
       <section id="eventos" class="services section light-background">
         <div class="container section-title" data-aos="fade-up">
           <h2>Eventos</h2>
@@ -277,7 +256,6 @@
         </div>
         <div class="container">
           <div class="row gy-4" id="eventos-container"></div>
-
           <div class="row mt-5" id="btn-todos-eventos" style="display: none">
             <div class="col-12 text-center">
               <a href="eventos.html" class="btn btn-outline-primary"
@@ -287,17 +265,13 @@
           </div>
         </div>
       </section>
-      <!-- /Services Section -->
 
       <!-- Work Process Section -->
       <section id="work-process" class="work-process section">
-        <!-- Section Title -->
         <div class="container section-title" data-aos="fade-up">
           <h2>Oportunidades e Recursos</h2>
-          <p>Compartilhe as oportunidades disponíveis e ajude a</p>
+          <p>Compartilhe as oportunidades disponíveis e ajude a divulgar</p>
         </div>
-        <!-- End Section Title -->
-
         <div class="container" data-aos="fade-up" data-aos-delay="100">
           <div class="row gy-5">
             <div class="col-lg-4" data-aos="fade-up" data-aos-delay="200">
@@ -313,28 +287,25 @@
                 <div class="steps-content">
                   <div class="steps-number">01</div>
                   <h3>Divulgue &amp; Contrate</h3>
-                  <!-- <h3>Research &amp; Analysis</h3> -->
                   <p>
                     Divulgue as oportunidades da sua empresa e contrate pessoas
                     qualificadas.
                   </p>
                   <div class="steps-features">
                     <div class="feature-item">
-                      <i class="bi bi-check-circle"></i>
-                      <span>Pesquisa de mercado</span>
+                      <i class="bi bi-check-circle"></i
+                      ><span>Pesquisa de mercado</span>
                     </div>
                     <div class="feature-item">
-                      <i class="bi bi-check-circle"></i>
-                      <span>Análise de currículos</span>
+                      <i class="bi bi-check-circle"></i
+                      ><span>Análise de currículos</span>
                     </div>
                     <div class="feature-item">
-                      <i class="bi bi-check-circle"></i>
-                      <span>Entrevistas</span>
+                      <i class="bi bi-check-circle"></i><span>Entrevistas</span>
                     </div>
                   </div>
                 </div>
               </div>
-              <!-- End Steps Item -->
             </div>
 
             <div class="col-lg-4" data-aos="fade-up" data-aos-delay="300">
@@ -356,21 +327,19 @@
                   </p>
                   <div class="steps-features">
                     <div class="feature-item">
-                      <i class="bi bi-check-circle"></i>
-                      <span>Estágios</span>
+                      <i class="bi bi-check-circle"></i><span>Estágios</span>
                     </div>
                     <div class="feature-item">
-                      <i class="bi bi-check-circle"></i>
-                      <span>Vagas de emprego</span>
+                      <i class="bi bi-check-circle"></i
+                      ><span>Vagas de emprego</span>
                     </div>
                     <div class="feature-item">
-                      <i class="bi bi-check-circle"></i>
-                      <span>Colaboração técnica</span>
+                      <i class="bi bi-check-circle"></i
+                      ><span>Colaboração técnica</span>
                     </div>
                   </div>
                 </div>
               </div>
-              <!-- End Steps Item -->
             </div>
 
             <div class="col-lg-4" data-aos="fade-up" data-aos-delay="400">
@@ -389,26 +358,24 @@
                   <p>Sua empresa em lugar de destaque no mundo dos negócios.</p>
                   <div class="steps-features">
                     <div class="feature-item">
-                      <i class="bi bi-check-circle"></i>
-                      <span>Mão de obra qualificada</span>
+                      <i class="bi bi-check-circle"></i
+                      ><span>Mão de obra qualificada</span>
                     </div>
                     <div class="feature-item">
-                      <i class="bi bi-check-circle"></i>
-                      <span>Resultados expressivos</span>
+                      <i class="bi bi-check-circle"></i
+                      ><span>Resultados expressivos</span>
                     </div>
                     <div class="feature-item">
-                      <i class="bi bi-check-circle"></i>
-                      <span>Sua empresa em primeiro lugar</span>
+                      <i class="bi bi-check-circle"></i
+                      ><span>Sua empresa em primeiro lugar</span>
                     </div>
                   </div>
                 </div>
               </div>
-              <!-- End Steps Item -->
             </div>
           </div>
         </div>
       </section>
-      <!-- /Work Process Section -->
 
       <!-- Testimonials Section -->
       <section id="testimonials" class="testimonials section">
@@ -422,9 +389,7 @@
               {
                 "loop": true,
                 "speed": 600,
-                "autoplay": {
-                  "delay": 5000
-                },
+                "autoplay": { "delay": 5000 },
                 "slidesPerView": "auto",
                 "pagination": {
                   "el": ".swiper-pagination",
@@ -433,24 +398,18 @@
                 }
               }
             </script>
-
             <div class="swiper-wrapper" id="depoimentos-wrapper"></div>
-
             <div class="swiper-pagination"></div>
           </div>
         </div>
       </section>
-      <!-- /Testimonials Section -->
 
       <!-- Contact Section -->
       <section id="contact" class="contact section">
-        <!-- Section Title -->
         <div class="container section-title" data-aos="fade-up">
           <h2>Contato</h2>
           <p>Entre em contato conosco!</p>
         </div>
-        <!-- End Section Title -->
-
         <div class="container" data-aos="fade-up" data-aos-delay="100">
           <div class="row gy-4">
             <div class="col-lg-5">
@@ -469,8 +428,6 @@
                     </p>
                   </div>
                 </div>
-                <!-- End Info Item -->
-
                 <div
                   class="info-item d-flex"
                   data-aos="fade-up"
@@ -482,8 +439,6 @@
                     <p>+55 (64) 3606-8202</p>
                   </div>
                 </div>
-                <!-- End Info Item -->
-
                 <div
                   class="info-item d-flex"
                   data-aos="fade-up"
@@ -495,16 +450,12 @@
                     <p>portalegressos@ufj.edu.br</p>
                   </div>
                 </div>
-                <!-- End Info Item -->
-
                 <iframe
                   style="border: 0; width: 100%; height: 270px"
                   loading="lazy"
                   allowfullscreen
-                  referrerpolicy="no-referrer-when-downgrade"
                   src="https://www.google.com/maps?q=UFJ%20-%20Campus%20Jatob%C3%A1%20(Cidade%20Universit%C3%A1ria%20Jos%C3%A9%20Cruciano%20de%20Ara%C3%BAjo)%2C%20BR%20364%20km%20195%20-%20Setor%20Parque%20Industrial%2C%20Jata%C3%AD%20-%20GO%2C%2075801-615&output=embed"
-                >
-                </iframe>
+                ></iframe>
               </div>
             </div>
 
@@ -527,7 +478,6 @@
                       required=""
                     />
                   </div>
-
                   <div class="col-md-6">
                     <label for="email-field" class="pb-2">E-mail:</label>
                     <input
@@ -538,7 +488,6 @@
                       required=""
                     />
                   </div>
-
                   <div class="col-md-12">
                     <label for="subject-field" class="pb-2">Assunto:</label>
                     <input
@@ -549,7 +498,6 @@
                       required=""
                     />
                   </div>
-
                   <div class="col-md-12">
                     <label for="message-field" class="pb-2">Mensagem:</label>
                     <textarea
@@ -560,24 +508,20 @@
                       required=""
                     ></textarea>
                   </div>
-
                   <div class="col-md-12 text-center">
                     <div class="loading">Loading</div>
                     <div class="error-message"></div>
                     <div class="sent-message">
                       Sua mensagem foi enviada. Obrigado!
                     </div>
-
                     <button type="submit">Enviar</button>
                   </div>
                 </div>
               </form>
             </div>
-            <!-- End Contact Form -->
           </div>
         </div>
       </section>
-      <!-- /Contact Section -->
     </main>
 
     <footer id="footer" class="footer">
@@ -668,26 +612,20 @@
           <span>Todos os direitos reservados.</span>
         </p>
         <div class="credits">
-          <!-- All the links in the footer should remain intact. -->
-          <!-- You can delete the links only if you've purchased the pro version. -->
-          <!-- Licensing information: https://bootstrapmade.com/license/ -->
-          <!-- Purchase the pro version with working PHP/AJAX contact form: [buy-url] -->
           Designed by <a href="https://cograd.jatai.ufg.br/">Prograd - UFJ</a>
         </div>
       </div>
     </footer>
 
-    <!-- Scroll Top -->
     <a
       href="#"
       id="scroll-top"
       class="scroll-top d-flex align-items-center justify-content-center"
       ><i class="bi bi-arrow-up-short"></i
     ></a>
-
-    <!-- Preloader -->
     <div id="preloader"></div>
 
+    <!-- Modal Cronograma -->
     <div
       class="modal fade"
       id="modalCronograma"
@@ -927,14 +865,13 @@
     <script src="assets/vendor/imagesloaded/imagesloaded.pkgd.min.js"></script>
     <script src="assets/vendor/isotope-layout/isotope.pkgd.min.js"></script>
 
-    <!-- Mapa JS -->
-
+    <!-- Script Mapa Interativo Integrado com Supabase -->
     <script type="text/javascript">
       $(function () {
         let activePopover = null;
 
-        // 1. Função para renderizar o mapa (lógica visual)
-        function renderizarMapa(dadosEgressos) {
+        function renderizarMapa(mapData) {
+          $("#brazil-map").empty(); // Limpa antes de renderizar
           $("#brazil-map").vectorMap({
             map: "brazil",
             backgroundColor: "#fff",
@@ -953,7 +890,7 @@
               const clickedRegion = $(event.target);
               if (activePopover) activePopover.popover("dispose");
 
-              const estado = dadosEgressos[code];
+              const estado = mapData[code];
               if (estado) {
                 activePopover = clickedRegion;
                 activePopover
@@ -970,55 +907,110 @@
           });
         }
 
-        // 2. Função assíncrona para buscar dados da API
         async function carregarDadosMapa() {
           try {
-            // QUANDO A API ESTIVER PRONTA, DESCOMENTE AS LINHAS ABAIXO E APAGUE O MOCK:
-            // const response = await fetch('URL_DA_SUA_API/egressos/estados');
-            // const dadosEgressos = await response.json();
+            // Inicializa conexão pública com o Supabase
+            const supabaseUrl = "https://gginfmhtmljrupzxqdic.supabase.co";
+            const supabaseKey =
+              "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdnaW5mbWh0bWxqcnVwenhxZGljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MzIyNTYsImV4cCI6MjA5MTAwODI1Nn0.bqtLxP8Wf65ulEx_WVHztSbS3Mwobb6-Klq0cfcFTyQ";
+            const supabasePublic = window.supabase.createClient(
+              supabaseUrl,
+              supabaseKey,
+            );
 
-            // MOCK TEMPORÁRIO (mantém o layout funcionando enquanto não há API)
-            const dadosEgressos = {
-              ac: { name: "Acre", count: 15 },
-              al: { name: "Alagoas", count: 22 },
-              ap: { name: "Amapá", count: 18 },
-              am: { name: "Amazonas", count: 45 },
-              ba: { name: "Bahia", count: 110 },
-              ce: { name: "Ceará", count: 95 },
-              df: { name: "Distrito Federal", count: 250 },
-              es: { name: "Espírito Santo", count: 60 },
-              go: { name: "Goiás", count: 320 },
-              ma: { name: "Maranhão", count: 40 },
-              mt: { name: "Mato Grosso", count: 77 },
-              ms: { name: "Mato Grosso do Sul", count: 55 },
-              mg: { name: "Minas Gerais", count: 280 },
-              pa: { name: "Pará", count: 88 },
-              pb: { name: "Paraíba", count: 41 },
-              pr: { name: "Paraná", count: 180 },
-              pe: { name: "Pernambuco", count: 130 },
-              pi: { name: "Piauí", count: 35 },
-              rj: { name: "Rio de Janeiro", count: 350 },
-              rn: { name: "Rio Grande do Norte", count: 52 },
-              rs: { name: "Rio Grande do Sul", count: 190 },
-              ro: { name: "Rondônia", count: 38 },
-              rr: { name: "Roraima", count: 12 },
-              sc: { name: "Santa Catarina", count: 160 },
-              sp: { name: "São Paulo", count: 750 },
-              se: { name: "Sergipe", count: 33 },
-              to: { name: "Tocantins", count: 48 },
+            // Chama a função (RPC) que permite acesso público seguro
+            const { data, error } =
+              await supabasePublic.rpc("get_mapa_egressos");
+            if (error) throw error;
+
+            let countJatai = 0;
+            let countGoias = 0;
+            let countOutros = 0;
+
+            const mapData = {
+              ac: { name: "Acre", count: 0 },
+              al: { name: "Alagoas", count: 0 },
+              ap: { name: "Amapá", count: 0 },
+              am: { name: "Amazonas", count: 0 },
+              ba: { name: "Bahia", count: 0 },
+              ce: { name: "Ceará", count: 0 },
+              df: { name: "Distrito Federal", count: 0 },
+              es: { name: "Espírito Santo", count: 0 },
+              go: { name: "Goiás", count: 0 },
+              ma: { name: "Maranhão", count: 0 },
+              mt: { name: "Mato Grosso", count: 0 },
+              ms: { name: "Mato Grosso do Sul", count: 0 },
+              mg: { name: "Minas Gerais", count: 0 },
+              pa: { name: "Pará", count: 0 },
+              pb: { name: "Paraíba", count: 0 },
+              pr: { name: "Paraná", count: 0 },
+              pe: { name: "Pernambuco", count: 0 },
+              pi: { name: "Piauí", count: 0 },
+              rj: { name: "Rio de Janeiro", count: 0 },
+              rn: { name: "Rio Grande do Norte", count: 0 },
+              rs: { name: "Rio Grande do Sul", count: 0 },
+              ro: { name: "Rondônia", count: 0 },
+              rr: { name: "Roraima", count: 0 },
+              sc: { name: "Santa Catarina", count: 0 },
+              sp: { name: "São Paulo", count: 0 },
+              se: { name: "Sergipe", count: 0 },
+              to: { name: "Tocantins", count: 0 },
             };
 
-            renderizarMapa(dadosEgressos);
+            if (data) {
+              data.forEach((egresso) => {
+                if (!egresso.estado) return;
+
+                const estadoStr = egresso.estado.trim().toUpperCase();
+                const cidadeStr = egresso.cidade
+                  ? egresso.cidade.trim().toUpperCase()
+                  : "";
+
+                // Lógica das Barras Laterais
+                if (estadoStr === "GO") {
+                  if (cidadeStr === "JATAÍ" || cidadeStr === "JATAI") {
+                    countJatai++;
+                  } else {
+                    countGoias++;
+                  }
+                } else {
+                  countOutros++;
+                }
+
+                // Lógica do Mapa Vector (siglas em minúsculo)
+                const siglaMap = estadoStr.toLowerCase();
+                if (mapData[siglaMap]) {
+                  mapData[siglaMap].count++;
+                }
+              });
+            }
+
+            // Atualiza o HTML das barras de progresso
+            const total = countJatai + countGoias + countOutros;
+            function updateBar(idVal, idBar, count, tot) {
+              const perc = tot > 0 ? Math.round((count / tot) * 100) : 0;
+              document.getElementById(idVal).innerText = `${perc}% (${count})`;
+              document.getElementById(idBar).style.width = `${perc}%`;
+              document
+                .getElementById(idBar)
+                .setAttribute("aria-valuenow", perc);
+            }
+
+            updateBar("val-jatai", "bar-jatai", countJatai, total);
+            updateBar("val-goias", "bar-goias", countGoias, total);
+            updateBar("val-outros", "bar-outros", countOutros, total);
+
+            // Inicia o mapa interativo com os dados populados
+            renderizarMapa(mapData);
           } catch (error) {
             console.error("Erro ao carregar dados do mapa:", error);
-            // Opcional: Renderizar mapa vazio ou mostrar alerta de erro
+            // Renderiza o mapa vazio em caso de erro para não quebrar o layout
+            renderizarMapa({});
           }
         }
 
-        // 3. Inicializa o processo
         carregarDadosMapa();
 
-        // Fecha o balão se clicar fora
         $(document).on("click", function (e) {
           if (activePopover && !$(e.target).closest("#brazil-map").length) {
             activePopover.popover("dispose");
