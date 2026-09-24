@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Red+Hat+Text:ital,wght@0,300..700;1,300..700&display=swap"
       rel="stylesheet"
     />
 
@@ -29,7 +29,11 @@
 
   <body>
     <div id="loading-screen">
-      <div class="spinner-border text-primary" role="status"></div>
+      <div
+        class="spinner-border"
+        style="color: var(--color-azul-riachuelo)"
+        role="status"
+      ></div>
       <h5 class="mt-3 text-secondary fw-bold">Preparando formulário...</h5>
     </div>
 
@@ -55,7 +59,11 @@
           <div
             class="d-flex justify-content-between align-items-center mb-4 bg-white p-4 shadow-sm rounded-3 border-0"
           >
-            <h4 class="mb-0 text-secondary fw-bold" id="page-title">
+            <h4
+              class="mb-0 fw-bold"
+              style="color: var(--color-azul-riachuelo)"
+              id="page-title"
+            >
               Usuários
             </h4>
             <div class="d-flex align-items-center">
@@ -63,7 +71,7 @@
                 >...</span
               >
               <img
-                src="../../assets/img/person/person-m-9.webp"
+                src="../../assets/img/person/user.png"
                 id="top-avatar"
                 alt="Profile"
                 class="rounded-circle shadow-sm bg-light"
@@ -73,24 +81,35 @@
           </div>
 
           <div class="mb-3">
-            <a href="listar.html" class="btn btn-outline-secondary btn-sm">
+            <a
+              href="listar.html"
+              class="btn btn-outline-secondary btn-sm fw-bold"
+            >
               <i class="bi bi-arrow-left me-1"></i> Voltar para a Lista
             </a>
           </div>
 
           <div class="card p-4 shadow-sm border-0 rounded-4">
-            <h5 class="fw-bold mb-4 border-bottom pb-2" id="titulo-form">
+            <h5
+              class="fw-bold mb-4 border-bottom pb-2"
+              style="color: var(--color-azul-riachuelo)"
+              id="titulo-form"
+            >
               Cadastrar Novo Usuário
             </h5>
 
             <form class="row g-3" id="form-usuario">
               <div class="col-md-6">
-                <label class="form-label fw-medium">Nome Completo *</label>
+                <label class="form-label fw-medium text-secondary"
+                  >Nome Completo *</label
+                >
                 <input type="text" class="form-control" id="u-nome" required />
               </div>
 
               <div class="col-md-6">
-                <label class="form-label fw-medium">E-mail *</label>
+                <label class="form-label fw-medium text-secondary"
+                  >E-mail *</label
+                >
                 <input
                   type="email"
                   class="form-control"
@@ -103,7 +122,7 @@
               </div>
 
               <div class="col-md-6" id="container-senha">
-                <label class="form-label fw-medium"
+                <label class="form-label fw-medium text-secondary"
                   >Senha * (Mínimo 6 caracteres)</label
                 >
                 <input
@@ -116,7 +135,9 @@
               </div>
 
               <div class="col-md-6">
-                <label class="form-label fw-medium">Nível de Acesso *</label>
+                <label class="form-label fw-medium text-secondary"
+                  >Nível de Acesso *</label
+                >
                 <select class="form-select" id="u-nivel" required>
                   <option value="egresso">Egresso</option>
                   <option value="coordenacao">Coordenação</option>
@@ -125,25 +146,69 @@
               </div>
 
               <div class="col-md-6" id="container-curso" style="display: none">
-                <label class="form-label fw-medium"
+                <label class="form-label fw-medium text-secondary"
                   >Vincular a qual Curso? *</label
                 >
                 <select class="form-select" id="u-curso">
                   <option value="" selected disabled>
                     Selecione o curso...
                   </option>
+                  <option value="Agronomia">Agronomia</option>
+                  <option value="Biomedicina">Biomedicina</option>
+                  <option value="Ciências Biológicas - Bacharelado">
+                    Ciências Biológicas - Bacharelado
+                  </option>
+                  <option value="Ciências Biológicas - Licenciatura">
+                    Ciências Biológicas - Licenciatura
+                  </option>
                   <option value="Ciência da Computação">
                     Ciência da Computação
                   </option>
-                  <option value="Engenharia de Software">
-                    Engenharia de Software
+                  <option value="Direito">Direito</option>
+                  <option value="Educação Física - Bacharelado">
+                    Educação Física - Bacharelado
                   </option>
-                  <option value="Agronomia">Agronomia</option>
+                  <option value="Educação Física - Licenciatura">
+                    Educação Física - Licenciatura
+                  </option>
+                  <option value="Enfermagem">Enfermagem</option>
+                  <option value="Engenharia Florestal">
+                    Engenharia Florestal
+                  </option>
+                  <option value="Física - Licenciatura">
+                    Física - Licenciatura
+                  </option>
+                  <option value="Fisioterapia">Fisioterapia</option>
+                  <option value="Geografia - Bacharelado">
+                    Geografia - Bacharelado
+                  </option>
+                  <option value="Geografia - Licenciatura">
+                    Geografia - Licenciatura
+                  </option>
+                  <option value="História - Licenciatura">
+                    História - Licenciatura
+                  </option>
+                  <option value="Inteligência Artificial">
+                    Inteligência Artificial
+                  </option>
+                  <option value="Letras - Inglês">Letras - Inglês</option>
+                  <option value="Letras - Português">Letras - Português</option>
+                  <option value="Matemática - Licenciatura">
+                    Matemática - Licenciatura
+                  </option>
                   <option value="Medicina">Medicina</option>
                   <option value="Medicina Veterinária">
                     Medicina Veterinária
                   </option>
-                  <option value="Direito">Direito</option>
+                  <option value="Pedagogia">Pedagogia</option>
+                  <option value="Psicologia">Psicologia</option>
+                  <option value="Química - Bacharelado">
+                    Química - Bacharelado
+                  </option>
+                  <option value="Química - Licenciatura">
+                    Química - Licenciatura
+                  </option>
+                  <option value="Zootecnia">Zootecnia</option>
                 </select>
               </div>
 
@@ -158,13 +223,52 @@
                     id="spinner-salvar"
                     role="status"
                   ></span>
-                  <span id="texto-btn-salvar"
+                  <span id="texto-btn-salvar" class="fw-bold"
                     ><i class="bi bi-check2-circle me-2"></i> Salvar
                     Usuário</span
                   >
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal de Alertas -->
+    <div
+      class="modal fade"
+      id="modalAlertas"
+      tabindex="-1"
+      aria-labelledby="modalAlertasLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header text-white" id="modal-alerta-header">
+            <h5 class="modal-title fw-bold" id="modalAlertasLabel">
+              <i class="bi" id="modal-alerta-icon"></i>
+              <span id="modal-alerta-titulo">Mensagem</span>
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Fechar"
+            ></button>
+          </div>
+          <div class="modal-body p-4 text-center">
+            <p class="fs-5 mb-0" id="modal-alerta-mensagem"></p>
+          </div>
+          <div class="modal-footer bg-light border-0 justify-content-center">
+            <button
+              type="button"
+              class="btn btn-secondary px-4 fw-bold"
+              data-bs-dismiss="modal"
+              id="btn-fechar-modal"
+            >
+              Fechar
+            </button>
           </div>
         </div>
       </div>
@@ -188,6 +292,45 @@
         if (perfil.foto_perfil) {
           document.getElementById("top-avatar").src = perfil.foto_perfil;
         }
+
+        let modalAlertasInstance = new bootstrap.Modal(
+          document.getElementById("modalAlertas"),
+        );
+        let redirectUrl = null;
+
+        function exibirAlerta(titulo, mensagem, tipo, redUrl = null) {
+          const header = document.getElementById("modal-alerta-header");
+          const icon = document.getElementById("modal-alerta-icon");
+          redirectUrl = redUrl;
+
+          document.getElementById("modal-alerta-titulo").innerText = titulo;
+          document.getElementById("modal-alerta-mensagem").innerText = mensagem;
+
+          header.className = "modal-header text-white";
+          icon.className = "bi me-2";
+
+          if (tipo === "sucesso") {
+            header.style.backgroundColor = "var(--background)";
+            icon.classList.add("bi-check-circle-fill");
+          } else if (tipo === "erro") {
+            header.style.backgroundColor = "#dc3545";
+            icon.classList.add("bi-exclamation-triangle-fill");
+          } else {
+            header.style.backgroundColor = "var(--color-azul-riachuelo)";
+            icon.classList.add("bi-info-circle-fill");
+          }
+
+          modalAlertasInstance.show();
+        }
+
+        // Lidar com o fechamento do modal para redirecionar
+        document
+          .getElementById("modalAlertas")
+          .addEventListener("hidden.bs.modal", function () {
+            if (redirectUrl) {
+              window.location.href = redirectUrl;
+            }
+          });
 
         const urlParams = new URLSearchParams(window.location.search);
         const usuarioId = urlParams.get("id");
@@ -218,7 +361,7 @@
           document.getElementById("u-email").disabled = true;
           document.getElementById("hint-email").classList.remove("d-none");
           document.getElementById("container-senha").style.display = "none";
-          document.getElementById("u-senha").required = false; // Tira obrigatoriedade da senha
+          document.getElementById("u-senha").required = false;
 
           const { data, error } = await supabase
             .from("perfis")
@@ -227,8 +370,12 @@
             .single();
 
           if (error || !data) {
-            alert("Usuário não encontrado!");
-            window.location.href = "listar.html";
+            exibirAlerta(
+              "Erro!",
+              "Usuário não encontrado!",
+              "erro",
+              "listar.html",
+            );
             return;
           }
 
@@ -236,8 +383,8 @@
           document.getElementById("u-email").value = data.email;
           document.getElementById("u-nivel").value = data.nivel_acesso;
 
-          if (data.curso) {
-            inputCurso.value = data.curso;
+          if (data.curso_ufj) {
+            inputCurso.value = data.curso_ufj;
           }
 
           // Dispara o evento para exibir o campo curso se necessário
@@ -265,7 +412,7 @@
               const payload = {
                 nome: document.getElementById("u-nome").value,
                 nivel_acesso: nivelSelecionado,
-                curso:
+                curso_ufj:
                   nivelSelecionado === "coordenacao" ? cursoSelecionado : null,
               };
 
@@ -273,17 +420,20 @@
                 .from("perfis")
                 .update(payload)
                 .eq("id", usuarioId);
+
               if (error) throw error;
-              alert("Perfil atualizado com sucesso!");
-              window.location.href = "listar.html";
+              exibirAlerta(
+                "Sucesso",
+                "Perfil atualizado com sucesso!",
+                "sucesso",
+                "listar.html",
+              );
             }
             // Lógica de Novo Cadastro
             else {
               const email = document.getElementById("u-email").value;
               const senha = document.getElementById("u-senha").value;
 
-              // Truque: Cria um cliente secundário do Supabase que não guarda sessão.
-              // Isso impede que o administrador seja deslogado ao criar uma nova conta.
               const supabaseUrl = "https://gginfmhtmljrupzxqdic.supabase.co";
               const supabaseKey =
                 "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdnaW5mbWh0bWxqcnVwenhxZGljIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0MzIyNTYsImV4cCI6MjA5MTAwODI1Nn0.bqtLxP8Wf65ulEx_WVHztSbS3Mwobb6-Klq0cfcFTyQ";
@@ -317,7 +467,7 @@
                   nome: document.getElementById("u-nome").value,
                   email: email,
                   nivel_acesso: nivelSelecionado,
-                  curso:
+                  curso_ufj:
                     nivelSelecionado === "coordenacao"
                       ? cursoSelecionado
                       : null,
@@ -328,14 +478,20 @@
                   .insert([payload]);
                 if (profileError) throw profileError;
 
-                alert("Usuário cadastrado com sucesso!");
-                window.location.href = "listar.html";
+                exibirAlerta(
+                  "Sucesso",
+                  "Usuário cadastrado com sucesso!",
+                  "sucesso",
+                  "listar.html",
+                );
               }
             }
           } catch (error) {
             console.error(error);
-            alert(
+            exibirAlerta(
+              "Ops!",
               "Ocorreu um erro: " + (error.message || "Erro desconhecido."),
+              "erro",
             );
           } finally {
             btnSalvar.disabled = false;

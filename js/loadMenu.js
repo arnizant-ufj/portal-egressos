@@ -181,60 +181,74 @@ document.addEventListener("DOMContentLoaded", function () {
   }
 
   // ==========================================
-  // 4. CARREGAMENTO DOS DEPOIMENTOS (DADOS FICTÍCIOS)
+  // 4. CARREGAMENTO DOS DEPOIMENTOS (DADOS REAIS DA HOME)
   // ==========================================
   async function carregarDepoimentos() {
     try {
       const wrapper = document.getElementById('depoimentos-wrapper');
       if (!wrapper) return;
 
-      // MOCK TEMPORÁRIO DE DADOS
-      const dadosBancoDepoimentos = [
-        { id: 1, nome: "Carlos Mendes", curso: "Ciência da Computação", texto: "Fui contratado pela Agrotechx graças às oportunidades divulgadas por ex-alunos aqui no portal. Uma rede de contatos fantástica!", imagem: "assets/img/person/person-m-9.webp", estrelas: 5 },
-        { id: 2, nome: "Ana Júlia", curso: "Engenharia de Software", texto: "A plataforma facilitou muito minha conexão com o mercado. Acompanhar os egressos inspira a continuar evoluindo na carreira técnica.", imagem: "assets/img/person/person-f-5.webp", estrelas: 5 },
-        { id: 3, nome: "Mariana Souza", curso: "Sistemas de Informação", texto: "Excelente iniciativa da universidade! Através do portal, consegui aplicar os conhecimentos em um projeto de impacto real na sociedade.", imagem: "assets/img/person/person-f-12.webp", estrelas: 5 },
-        { id: 4, nome: "Lucas Alves", curso: "Medicina Veterinária", texto: "Manter o vínculo com a universidade e com os colegas abre muitas portas. Recomendo que todos os formandos participem ativamente.", imagem: "assets/img/person/person-m-12.webp", estrelas: 4 }
-      ];
+      // Chama a função segura no Supabase que dribla o bloqueio de segurança 
+      // de forma controlada, trazendo APENAS os depoimentos aprovados e dados não-sensíveis.
+      const { data: depoimentosBanco, error } = await supabase.rpc('get_depoimentos_aprovados');
 
-      wrapper.innerHTML = ''; // Limpa o container antes de renderizar
+      if (error) throw error;
+      wrapper.innerHTML = '';
 
-      // Renderiza os slides dinamicamente
-      dadosBancoDepoimentos.forEach(depoimento => {
+      if (!depoimentosBanco || depoimentosBanco.length === 0) {
+        wrapper.innerHTML = '<div class="text-center w-100 text-muted p-4">Ainda não há depoimentos avaliados.</div>';
+        return;
+      }
 
-        // Lógica para montar as estrelas (de 1 a 5)
+      // Função de Embaralhamento (Fisher-Yates Shuffle) para aleatoriedade
+      let dados = depoimentosBanco;
+      for (let i = dados.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [dados[i], dados[j]] = [dados[j], dados[i]];
+      }
+
+      // Limita a exibição aos 6 depoimentos (aleatórios)
+      const exibicao = dados.slice(0, 6);
+
+      exibicao.forEach(depoimento => {
         let estrelasHTML = '';
-        for (let i = 0; i < depoimento.estrelas; i++) {
-          estrelasHTML += '<i class="bi bi-star-fill"></i>';
+        for (let i = 0; i < 5; i++) {
+          estrelasHTML += i < depoimento.estrelas
+            ? '<i class="bi bi-star-fill text-warning me-1"></i>'
+            : '<i class="bi bi-star text-muted me-1"></i>';
         }
 
+        const foto = depoimento.foto_perfil || "assets/img/person/person-m-9.webp";
+        const nome = depoimento.nome;
+        const curso = depoimento.curso_ufj || 'Egresso UFJ';
+
         const slideHTML = `
-                  <div class="swiper-slide">
-                    <div class="testimonial-item">
-                      <img src="${depoimento.imagem}" class="testimonial-img" alt="Foto de ${depoimento.nome}" style="width: 90px; height: 90px; object-fit: cover;">
-                      <h3>${depoimento.nome}</h3>
-                      <h4>${depoimento.curso}</h4>
-                      <div class="stars">
-                        ${estrelasHTML}
-                      </div>
-                      <p>
-                        <i class="bi bi-quote quote-icon-left"></i>
-                        <span>${depoimento.texto}</span>
-                        <i class="bi bi-quote quote-icon-right"></i>
-                      </p>
-                    </div>
-                  </div>
-                `;
+          <div class="swiper-slide">
+            <div class="testimonial-item">
+              <img src="${foto}" class="testimonial-img" alt="Foto de ${nome}" style="width: 90px; height: 90px; object-fit: cover;">
+              <h3>${nome}</h3>
+              <h4>${curso}</h4>
+              <div class="stars">
+                ${estrelasHTML}
+              </div>
+              <p>
+                <i class="bi bi-quote quote-icon-left"></i>
+                <span>${depoimento.descricao}</span>
+                <i class="bi bi-quote quote-icon-right"></i>
+              </p>
+            </div>
+          </div>
+        `;
         wrapper.innerHTML += slideHTML;
       });
 
-      // ATENÇÃO: Como injetamos os slides dinamicamente, precisamos avisar a 
-      // biblioteca Swiper para recalcular o carrossel.
+      // Atualiza o componente visual do Carrossel (Swiper)
       setTimeout(() => {
         const swiperContainer = document.querySelector('.init-swiper');
         if (swiperContainer && swiperContainer.swiper) {
-          swiperContainer.swiper.update(); // Atualiza os slides e paginação
+          swiperContainer.swiper.update();
         }
-      }, 100); // Um pequeno delay para garantir que o DOM renderizou o HTML
+      }, 100);
 
     } catch (error) {
       console.error("Erro ao carregar depoimentos:", error);

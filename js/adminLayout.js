@@ -50,6 +50,7 @@ async function inicializarPainel(paginaAtual, baseDir = ".") {
             if (perfil.nivel_acesso === "egresso") {
                 menuItems = [
                     { id: 'perfil', url: `${baseDir}/perfil/index.html`, icon: 'bi-person-fill', text: 'Meu Perfil' },
+                    { id: 'avaliacao', url: `${baseDir}/avaliacao/index.html`, icon: 'bi-ui-checks', text: 'Avaliação de Curso' },
                     { id: 'vagas', url: `${baseDir}/vagas/listar.html`, icon: 'bi-briefcase-fill', text: 'Oportunidades' },
                     { id: 'depoimentos', url: `${baseDir}/depoimentos/listar.html`, icon: 'bi-chat-quote-fill', text: 'Depoimentos' },
                 ];
@@ -57,6 +58,7 @@ async function inicializarPainel(paginaAtual, baseDir = ".") {
                 menuItems = [
                     { id: 'dashboard', url: `${baseDir}/painel.html`, icon: 'bi-grid-1x2-fill', text: 'Dashboard' },
                     { id: 'perfil', url: `${baseDir}/perfil/index.html`, icon: 'bi-person-fill', text: 'Meu Perfil' },
+                    { id: 'avaliacao', url: `${baseDir}/avaliacao/index.html`, icon: 'bi-bar-chart-fill', text: 'Avaliação de Curso' },
                     { id: 'vagas', url: `${baseDir}/vagas/listar.html`, icon: 'bi-briefcase-fill', text: 'Oportunidades' },
                     { id: 'depoimentos', url: `${baseDir}/depoimentos/listar.html`, icon: 'bi-chat-quote-fill', text: 'Depoimentos' },
                     { id: 'noticias', url: `${baseDir}/noticias/listar.html`, icon: 'bi-newspaper', text: 'Notícias' },

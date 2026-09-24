@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Red+Hat+Text:ital,wght@0,300..700;1,300..700&display=swap"
       rel="stylesheet"
     />
 
@@ -30,11 +30,13 @@
   <body>
     <div id="loading-screen">
       <div
-        class="spinner-border text-primary"
+        class="spinner-border"
         role="status"
-        style="width: 3rem; height: 3rem"
+        style="width: 3rem; height: 3rem; color: var(--color-azul-riachuelo)"
       ></div>
-      <h5 class="mt-3 text-secondary fw-bold">Carregando seu perfil...</h5>
+      <h5 class="mt-3 fw-bold" style="color: var(--text-secondary)">
+        Carregando seu perfil...
+      </h5>
     </div>
 
     <div class="container-fluid" id="main-panel" style="display: none">
@@ -59,7 +61,11 @@
           <div
             class="d-flex justify-content-between align-items-center mb-4 bg-white p-4 shadow-sm rounded-3 border-0"
           >
-            <h4 class="mb-0 text-secondary fw-bold" id="page-title">
+            <h4
+              class="mb-0 fw-bold"
+              style="color: var(--color-azul-riachuelo)"
+              id="page-title"
+            >
               Meu Perfil
             </h4>
             <div class="d-flex align-items-center">
@@ -67,7 +73,7 @@
                 >...</span
               >
               <img
-                src="../../assets/img/person/person-m-9.webp"
+                src="../../assets/img/person/user.png"
                 id="top-avatar"
                 alt="Profile"
                 class="rounded-circle shadow-sm bg-light"
@@ -130,7 +136,7 @@
                   <form class="row g-3" id="form-pessoais">
                     <div class="col-12 mb-3 d-flex align-items-center">
                       <img
-                        src="../../assets/img/person/person-m-9.webp"
+                        src="../../assets/img/person/user.png"
                         id="preview-avatar"
                         class="rounded-circle me-3 border"
                         style="width: 80px; height: 80px; object-fit: cover"
@@ -248,18 +254,64 @@
                         <option value="" selected disabled>
                           Selecione seu curso...
                         </option>
+                        <option value="Agronomia">Agronomia</option>
+                        <option value="Biomedicina">Biomedicina</option>
+                        <option value="Ciências Biológicas - Bacharelado">
+                          Ciências Biológicas - Bacharelado
+                        </option>
+                        <option value="Ciências Biológicas - Licenciatura">
+                          Ciências Biológicas - Licenciatura
+                        </option>
                         <option value="Ciência da Computação">
                           Ciência da Computação
                         </option>
-                        <option value="Engenharia de Software">
-                          Engenharia de Software
+                        <option value="Direito">Direito</option>
+                        <option value="Educação Física - Bacharelado">
+                          Educação Física - Bacharelado
+                        </option>
+                        <option value="Educação Física - Licenciatura">
+                          Educação Física - Licenciatura
+                        </option>
+                        <option value="Enfermagem">Enfermagem</option>
+                        <option value="Engenharia Florestal">
+                          Engenharia Florestal
+                        </option>
+                        <option value="Física - Licenciatura">
+                          Física - Licenciatura
+                        </option>
+                        <option value="Fisioterapia">Fisioterapia</option>
+                        <option value="Geografia - Bacharelado">
+                          Geografia - Bacharelado
+                        </option>
+                        <option value="Geografia - Licenciatura">
+                          Geografia - Licenciatura
+                        </option>
+                        <option value="História - Licenciatura">
+                          História - Licenciatura
+                        </option>
+                        <option value="Inteligência Artificial">
+                          Inteligência Artificial
+                        </option>
+                        <option value="Letras - Inglês">Letras - Inglês</option>
+                        <option value="Letras - Português">
+                          Letras - Português
+                        </option>
+                        <option value="Matemática - Licenciatura">
+                          Matemática - Licenciatura
                         </option>
                         <option value="Medicina">Medicina</option>
-                        <option value="Agronomia">Agronomia</option>
                         <option value="Medicina Veterinária">
                           Medicina Veterinária
                         </option>
-                        <option value="Direito">Direito</option>
+                        <option value="Pedagogia">Pedagogia</option>
+                        <option value="Psicologia">Psicologia</option>
+                        <option value="Química - Bacharelado">
+                          Química - Bacharelado
+                        </option>
+                        <option value="Química - Licenciatura">
+                          Química - Licenciatura
+                        </option>
+                        <option value="Zootecnia">Zootecnia</option>
                       </select>
                     </div>
                     <div class="col-md-4">
@@ -376,9 +428,10 @@
                       <label class="form-label fw-medium">Telefone Fixo</label>
                       <input
                         type="text"
-                        class="form-control"
+                        class="form-control mascara-telefone"
                         id="eg-tel-fixo"
                         placeholder="(00) 0000-0000"
+                        maxlength="15"
                       />
                     </div>
                     <div class="col-md-3">
@@ -387,9 +440,10 @@
                       >
                       <input
                         type="text"
-                        class="form-control"
+                        class="form-control mascara-telefone"
                         id="eg-celular"
                         placeholder="(00) 90000-0000"
+                        maxlength="15"
                       />
                     </div>
                     <div class="col-12 mt-4 text-end">
@@ -435,9 +489,10 @@
                   >
                   <input
                     type="text"
-                    class="form-control"
+                    class="form-control mascara-telefone"
                     id="staff-telefone"
                     placeholder="(00) 00000-0000"
+                    maxlength="15"
                   />
                 </div>
 
@@ -470,6 +525,44 @@
       </div>
     </div>
 
+    <!-- Modal de Alertas -->
+    <div
+      class="modal fade"
+      id="modalAlertas"
+      tabindex="-1"
+      aria-labelledby="modalAlertasLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header text-white" id="modal-alerta-header">
+            <h5 class="modal-title fw-bold" id="modalAlertasLabel">
+              <i class="bi" id="modal-alerta-icon"></i>
+              <span id="modal-alerta-titulo">Mensagem</span>
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Fechar"
+            ></button>
+          </div>
+          <div class="modal-body p-4 text-center">
+            <p class="fs-5 mb-0" id="modal-alerta-mensagem"></p>
+          </div>
+          <div class="modal-footer bg-light border-0 justify-content-center">
+            <button
+              type="button"
+              class="btn btn-secondary px-4 fw-bold"
+              data-bs-dismiss="modal"
+            >
+              Fechar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <script>
@@ -482,6 +575,45 @@
         const perfil = context.perfil;
         const session = context.session;
         const userId = session.user.id;
+
+        let modalAlertasInstance = new bootstrap.Modal(
+          document.getElementById("modalAlertas"),
+        );
+
+        function exibirAlerta(titulo, mensagem, tipo) {
+          const header = document.getElementById("modal-alerta-header");
+          const icon = document.getElementById("modal-alerta-icon");
+
+          document.getElementById("modal-alerta-titulo").innerText = titulo;
+          document.getElementById("modal-alerta-mensagem").innerText = mensagem;
+
+          // Remove classes anteriores
+          header.className = "modal-header text-white";
+          icon.className = "bi me-2";
+
+          if (tipo === "sucesso") {
+            header.style.backgroundColor = "var(--background)";
+            icon.classList.add("bi-check-circle-fill");
+          } else if (tipo === "erro") {
+            header.style.backgroundColor = "#dc3545"; // Bootstrap Danger
+            icon.classList.add("bi-exclamation-triangle-fill");
+          } else {
+            header.style.backgroundColor = "var(--color-azul-riachuelo)";
+            icon.classList.add("bi-info-circle-fill");
+          }
+
+          modalAlertasInstance.show();
+        }
+
+        // Aplica a máscara de telefone dinamicamente
+        document.querySelectorAll(".mascara-telefone").forEach((input) => {
+          input.addEventListener("input", function (e) {
+            let value = e.target.value.replace(/\D/g, ""); // Remove não-números
+            value = value.replace(/^(\d{2})(\d)/g, "($1) $2"); // Coloca parênteses
+            value = value.replace(/(\d)(\d{4})$/, "$1-$2"); // Coloca hífen
+            e.target.value = value;
+          });
+        });
 
         // Atualiza a foto do topo se existir
         if (perfil.foto_perfil) {
@@ -629,10 +761,18 @@
             btn.disabled = false;
 
             if (error) {
-              alert("Erro ao salvar dados.");
               console.error(error);
+              exibirAlerta(
+                "Ops!",
+                "Erro ao salvar os dados. Tente novamente.",
+                "erro",
+              );
             } else {
-              alert("Dados salvos com sucesso!");
+              exibirAlerta(
+                "Sucesso",
+                "Dados atualizados com sucesso!",
+                "sucesso",
+              );
             }
           }
 
@@ -642,14 +782,15 @@
             .addEventListener("submit", async function (e) {
               e.preventDefault();
               const btn = document.getElementById("btn-salvar-pessoais");
+              const textoOriginal = btn.innerText;
               btn.disabled = true;
-              btn.innerText = "Salvando foto...";
 
               let urlFoto = perfil.foto_perfil;
               const fileInput = document.getElementById("eg-foto");
 
               // Se escolheu uma foto nova, sobe pro Storage
               if (fileInput.files.length > 0) {
+                btn.innerText = "Salvando foto...";
                 const arquivo = fileInput.files[0];
                 const extensao = arquivo.name.split(".").pop();
                 const nomeUnico = `${userId}_avatar.${extensao}`;
@@ -657,6 +798,7 @@
                 const { error: uploadError } = await supabase.storage
                   .from("avatares")
                   .upload(nomeUnico, arquivo, { upsert: true });
+
                 if (!uploadError) {
                   const { data: publicUrlData } = supabase.storage
                     .from("avatares")
@@ -666,6 +808,10 @@
                   document.getElementById("top-avatar").src = urlFoto;
                 }
               }
+
+              // Retorna o texto original para a função genérica poder assumir com "Salvando..."
+              btn.innerText = textoOriginal;
+              btn.disabled = false;
 
               // Atualiza no banco
               await atualizarTabelaPerfil(
@@ -683,6 +829,10 @@
                 },
                 "btn-salvar-pessoais",
               );
+
+              // Atualiza o nome de exibição no topo
+              document.getElementById("user-name").innerText =
+                document.getElementById("eg-nome").value;
             });
 
           // SALVAR ABA: ACADÊMICAS
@@ -735,7 +885,11 @@
 
               btn.innerText = "Salvar Acadêmicas";
               btn.disabled = false;
-              alert("Dados acadêmicos salvos com sucesso!");
+              exibirAlerta(
+                "Sucesso",
+                "Dados acadêmicos salvos com sucesso!",
+                "sucesso",
+              );
             });
 
           // SALVAR ABA: PROFISSIONAIS
@@ -807,12 +961,16 @@
                   if (error) throw error;
                 }
 
-                alert("Perfil atualizado com sucesso!");
+                exibirAlerta(
+                  "Sucesso",
+                  "Perfil atualizado com sucesso!",
+                  "sucesso",
+                );
                 document.getElementById("user-name").innerText = novoNome;
                 document.getElementById("staff-senha").value = "";
               } catch (error) {
-                alert("Erro ao atualizar o perfil.");
                 console.error(error);
+                exibirAlerta("Ops!", "Erro ao atualizar o perfil.", "erro");
               } finally {
                 btn.disabled = false;
                 btn.innerText = "Atualizar Perfil";

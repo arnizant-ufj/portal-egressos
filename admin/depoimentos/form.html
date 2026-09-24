@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Red+Hat+Text:ital,wght@0,300..700;1,300..700&display=swap"
       rel="stylesheet"
     />
     <link
@@ -23,10 +23,23 @@
     <link href="../../assets/css/painel.css" rel="stylesheet" />
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="../../js/adminLayout.js"></script>
+    <style>
+      .star-icon {
+        cursor: pointer;
+        transition: transform 0.2s;
+      }
+      .star-icon:hover {
+        transform: scale(1.2);
+      }
+    </style>
   </head>
   <body>
     <div id="loading-screen">
-      <div class="spinner-border text-primary" role="status"></div>
+      <div
+        class="spinner-border"
+        style="color: var(--color-azul-riachuelo)"
+        role="status"
+      ></div>
     </div>
 
     <div class="container-fluid" id="main-panel" style="display: none">
@@ -34,7 +47,7 @@
         <div class="col-md-3 col-lg-2 p-0 sidebar position-fixed">
           <div class="sidebar-header">
             <img
-              src="../../assets/img/logo-ufj-branca.png"
+              src="../../assets/img/logo_ufj_branca.png"
               alt="Logo UFJ"
               class="img-fluid mb-3"
               style="max-height: 55px"
@@ -51,7 +64,11 @@
           <div
             class="d-flex justify-content-between align-items-center mb-4 bg-white p-4 shadow-sm rounded-3 border-0"
           >
-            <h4 class="mb-0 text-secondary fw-bold" id="page-title">
+            <h4
+              class="mb-0 fw-bold"
+              style="color: var(--color-azul-riachuelo)"
+              id="page-title"
+            >
               Depoimentos
             </h4>
             <div class="d-flex align-items-center">
@@ -59,7 +76,7 @@
                 >...</span
               >
               <img
-                src="../../assets/img/person/person-m-9.webp"
+                src="../../assets/img/person/user.png"
                 id="top-avatar"
                 class="rounded-circle shadow-sm bg-light"
                 style="width: 45px; height: 45px; object-fit: cover"
@@ -68,22 +85,31 @@
           </div>
 
           <div class="mb-3">
-            <a href="listar.html" class="btn btn-outline-secondary btn-sm"
+            <a
+              href="listar.html"
+              class="btn btn-outline-secondary btn-sm fw-bold"
               ><i class="bi bi-arrow-left me-1"></i> Voltar</a
             >
           </div>
 
           <div class="card p-4 shadow-sm border-0 rounded-4">
-            <h5 class="fw-bold mb-4 border-bottom pb-2" id="titulo-form">
+            <h5
+              class="fw-bold mb-4 border-bottom pb-2"
+              style="color: var(--color-azul-riachuelo)"
+              id="titulo-form"
+            >
               Deixar um Depoimento
             </h5>
 
             <div
               id="feedback-reprovacao"
-              class="alert alert-danger mb-4"
-              style="display: none"
+              class="alert mb-4 text-white shadow-sm"
+              style="display: none; background-color: #dc3545"
             >
-              <h6 class="fw-bold">Atenção: Seu depoimento não foi aprovado.</h6>
+              <h6 class="fw-bold">
+                <i class="bi bi-exclamation-triangle-fill me-2"></i>Atenção: Seu
+                depoimento não foi aprovado.
+              </h6>
               <p class="mb-0 small">
                 Por favor, ajuste o conteúdo para que possamos publicá-lo no
                 portal.
@@ -92,25 +118,43 @@
 
             <form class="row g-3" id="form-depoimento">
               <div class="col-12">
-                <label class="form-label fw-medium d-block"
+                <label class="form-label fw-medium d-block text-secondary"
                   >Avaliação (1 a 5 estrelas) *</label
                 >
-                <div
-                  class="fs-2 text-warning"
-                  id="star-rating"
-                  style="cursor: pointer"
-                >
-                  <i class="bi bi-star-fill star-icon" data-val="1"></i>
-                  <i class="bi bi-star-fill star-icon" data-val="2"></i>
-                  <i class="bi bi-star-fill star-icon" data-val="3"></i>
-                  <i class="bi bi-star-fill star-icon" data-val="4"></i>
-                  <i class="bi bi-star-fill star-icon" data-val="5"></i>
+                <div class="fs-2 text-warning" id="star-rating">
+                  <i
+                    class="bi bi-star-fill star-icon"
+                    data-val="1"
+                    style="color: var(--color-amarelo-abelha)"
+                  ></i>
+                  <i
+                    class="bi bi-star-fill star-icon"
+                    data-val="2"
+                    style="color: var(--color-amarelo-abelha)"
+                  ></i>
+                  <i
+                    class="bi bi-star-fill star-icon"
+                    data-val="3"
+                    style="color: var(--color-amarelo-abelha)"
+                  ></i>
+                  <i
+                    class="bi bi-star-fill star-icon"
+                    data-val="4"
+                    style="color: var(--color-amarelo-abelha)"
+                  ></i>
+                  <i
+                    class="bi bi-star-fill star-icon"
+                    data-val="5"
+                    style="color: var(--color-amarelo-abelha)"
+                  ></i>
                 </div>
                 <input type="hidden" id="estrelas" value="5" required />
               </div>
 
               <div class="col-12">
-                <label class="form-label fw-medium">Seu Depoimento *</label>
+                <label class="form-label fw-medium text-secondary"
+                  >Seu Depoimento *</label
+                >
                 <textarea
                   class="form-control"
                   id="descricao"
@@ -122,24 +166,31 @@
 
               <div
                 id="painel-coordenador"
-                class="col-12 mt-4 p-4 bg-light rounded-3 border"
-                style="display: none"
+                class="col-12 mt-4 p-4 rounded-3 border"
+                style="display: none; background-color: rgba(23, 66, 140, 0.05)"
               >
-                <h6 class="fw-bold text-primary mb-3">
+                <h6
+                  class="fw-bold mb-3"
+                  style="color: var(--color-azul-riachuelo)"
+                >
                   Avaliação da Coordenação
                 </h6>
                 <div class="d-flex justify-content-end gap-2">
                   <button
                     type="button"
-                    class="btn btn-outline-danger px-4"
+                    class="btn btn-outline-danger px-4 fw-bold"
                     id="btn-reprovar"
                   >
                     Reprovar Depoimento
                   </button>
                   <button
                     type="button"
-                    class="btn btn-success px-4"
+                    class="btn px-4 fw-bold text-white"
                     id="btn-aprovar"
+                    style="
+                      background-color: var(--color-verde-corrego);
+                      border: none;
+                    "
                   >
                     Aprovar Depoimento
                   </button>
@@ -157,12 +208,44 @@
                     id="spinner-salvar"
                     role="status"
                   ></span>
-                  <span id="texto-btn-salvar"
+                  <span id="texto-btn-salvar" class="fw-bold"
                     ><i class="bi bi-send me-2"></i> Enviar Depoimento</span
                   >
                 </button>
               </div>
             </form>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Alerta -->
+    <div class="modal fade" id="modalAlertas" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header text-white" id="modal-alerta-header">
+            <h5 class="modal-title fw-bold" id="modalAlertasLabel">
+              <i class="bi" id="modal-alerta-icon"></i>
+              <span id="modal-alerta-titulo">Mensagem</span>
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body p-4 text-center">
+            <p class="fs-5 mb-0" id="modal-alerta-mensagem"></p>
+          </div>
+          <div class="modal-footer bg-light border-0 justify-content-center">
+            <button
+              type="button"
+              class="btn btn-secondary px-4 fw-bold"
+              data-bs-dismiss="modal"
+              id="btn-fechar-modal"
+            >
+              Fechar
+            </button>
           </div>
         </div>
       </div>
@@ -178,6 +261,44 @@
         if (perfil.foto_perfil)
           document.getElementById("top-avatar").src = perfil.foto_perfil;
 
+        let modalAlertasInstance = new bootstrap.Modal(
+          document.getElementById("modalAlertas"),
+        );
+        let redirectUrl = null;
+
+        function exibirAlerta(titulo, mensagem, tipo, redUrl = null) {
+          const header = document.getElementById("modal-alerta-header");
+          const icon = document.getElementById("modal-alerta-icon");
+          redirectUrl = redUrl;
+
+          document.getElementById("modal-alerta-titulo").innerText = titulo;
+          document.getElementById("modal-alerta-mensagem").innerText = mensagem;
+
+          header.className = "modal-header text-white";
+          icon.className = "bi me-2";
+
+          if (tipo === "sucesso") {
+            header.style.backgroundColor = "var(--color-verde-corrego)";
+            icon.classList.add("bi-check-circle-fill");
+          } else if (tipo === "erro") {
+            header.style.backgroundColor = "#dc3545";
+            icon.classList.add("bi-exclamation-triangle-fill");
+          } else {
+            header.style.backgroundColor = "var(--color-azul-riachuelo)";
+            icon.classList.add("bi-info-circle-fill");
+          }
+
+          modalAlertasInstance.show();
+        }
+
+        document
+          .getElementById("modalAlertas")
+          .addEventListener("hidden.bs.modal", function () {
+            if (redirectUrl) {
+              window.location.href = redirectUrl;
+            }
+          });
+
         const depId = new URLSearchParams(window.location.search).get("id");
         let notaAtual = 5;
 
@@ -185,7 +306,7 @@
         const stars = document.querySelectorAll(".star-icon");
         stars.forEach((star) => {
           star.addEventListener("click", function () {
-            // Se for coordenador avaliando, não deixa ele mudar as estrelas do aluno
+            // Se for coordenador/admin avaliando, não deixa ele mudar as estrelas do aluno
             if (perfil.nivel_acesso !== "egresso" && depId) return;
 
             notaAtual = this.getAttribute("data-val");
@@ -217,7 +338,7 @@
             document.getElementById("descricao").value = data.descricao;
             document
               .querySelector(`.star-icon[data-val="${data.estrelas}"]`)
-              .click(); // Clica na estrela certa
+              .click();
 
             if (
               data.status === "reprovado" &&
@@ -241,12 +362,13 @@
           }
         }
 
-        // Ação do Coordenador
+        // Ação do Coordenador / Admin
         async function avaliarDepoimento(novoStatus) {
           const btn =
             novoStatus === "aprovado"
               ? document.getElementById("btn-aprovar")
               : document.getElementById("btn-reprovar");
+          const originalText = btn.innerText;
           btn.disabled = true;
           btn.innerText = "Processando...";
 
@@ -254,7 +376,23 @@
             .from("depoimentos")
             .update({ status: novoStatus })
             .eq("id", depId);
-          if (!error) window.location.href = "listar.html";
+
+          if (!error) {
+            exibirAlerta(
+              "Sucesso",
+              `Depoimento ${novoStatus} com sucesso!`,
+              "sucesso",
+              "listar.html",
+            );
+          } else {
+            exibirAlerta(
+              "Erro",
+              "Não foi possível avaliar o depoimento.",
+              "erro",
+            );
+            btn.disabled = false;
+            btn.innerText = originalText;
+          }
         }
 
         document
@@ -290,9 +428,14 @@
               : await supabase.from("depoimentos").insert([payload]);
 
             if (!error) {
-              alert("Depoimento salvo! Passará por aprovação.");
-              window.location.href = "listar.html";
+              exibirAlerta(
+                "Sucesso",
+                "Depoimento salvo! Ele passará por aprovação antes de ser exibido.",
+                "sucesso",
+                "listar.html",
+              );
             } else {
+              exibirAlerta("Erro", "Erro ao salvar depoimento.", "erro");
               btnSalvar.disabled = false;
               document.getElementById("spinner-salvar").classList.add("d-none");
             }

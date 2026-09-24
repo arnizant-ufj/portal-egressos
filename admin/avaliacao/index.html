@@ -1,0 +1,1068 @@
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+    <title>Avaliação de Curso - Painel UFJ</title>
+    <link href="../../assets/img/prograd1.ico" rel="icon" />
+
+    <link href="https://fonts.googleapis.com" rel="preconnect" />
+    <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Red+Hat+Text:ital,wght@0,300..700;1,300..700&display=swap"
+      rel="stylesheet"
+    />
+
+    <link
+      href="../../assets/vendor/bootstrap/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <link href="../../assets/css/main.css" rel="stylesheet" />
+    <link href="../../assets/css/painel.css" rel="stylesheet" />
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="../../js/adminLayout.js"></script>
+
+    <style>
+      /* Estilos específicos para o Wizard do Formulário */
+      .wizard-step {
+        display: none;
+        animation: fadeIn 0.4s;
+      }
+      .wizard-step.active {
+        display: block;
+      }
+      .likert-scale {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        background: var(--background-color);
+        padding: 10px 20px;
+        border-radius: 50px;
+        border: 1px solid var(--border-color);
+      }
+      .likert-option {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        cursor: pointer;
+        text-align: center;
+        font-size: 0.85rem;
+        width: 18%;
+      }
+      .likert-option input[type="radio"] {
+        margin-bottom: 5px;
+        transform: scale(1.3);
+        cursor: pointer;
+      }
+      .likert-row {
+        margin-bottom: 25px;
+      }
+      .question-text {
+        font-weight: 600;
+        color: var(--color-azul-riachuelo);
+        margin-bottom: 10px;
+        font-size: 1.1rem;
+      }
+
+      /* Estilos do Dashboard Staff */
+      .stat-card {
+        transition: transform 0.3s;
+      }
+      .stat-card:hover {
+        transform: translateY(-5px);
+      }
+    </style>
+  </head>
+
+  <body>
+    <div id="loading-screen">
+      <div
+        class="spinner-border"
+        style="color: var(--color-azul-riachuelo)"
+        role="status"
+      ></div>
+      <h5 class="mt-3 text-secondary fw-bold">Carregando módulo...</h5>
+    </div>
+
+    <div class="container-fluid" id="main-panel" style="display: none">
+      <div class="row">
+        <div class="col-md-3 col-lg-2 p-0 sidebar position-fixed">
+          <div class="sidebar-header">
+            <img
+              src="../../assets/img/logo_ufj_branca.png"
+              alt="Logo UFJ"
+              class="img-fluid mb-3"
+              style="max-height: 55px"
+            />
+            <h6 class="mb-0 text-white fw-bold" id="badge-nivel">Painel</h6>
+          </div>
+          <nav class="nav flex-column flex-grow-1" id="sidebar-menu"></nav>
+          <a href="#" class="logout-btn" id="btn-logout"
+            ><i class="bi bi-box-arrow-left"></i> Sair</a
+          >
+        </div>
+
+        <div class="col-md-9 offset-md-3 col-lg-10 offset-lg-2 content-area">
+          <div
+            class="d-flex justify-content-between align-items-center mb-4 bg-white p-4 shadow-sm rounded-3 border-0"
+          >
+            <div>
+              <h4
+                class="mb-0 fw-bold"
+                style="color: var(--color-azul-riachuelo)"
+                id="page-title"
+              >
+                Avaliação Institucional
+              </h4>
+              <p class="text-muted mb-0 small" id="page-subtitle">
+                Carregando...
+              </p>
+            </div>
+            <div class="d-flex align-items-center">
+              <span class="me-3 fw-medium text-secondary" id="user-name"
+                >...</span
+              >
+              <img
+                src="../../assets/img/person/user.png"
+                id="top-avatar"
+                alt="Profile"
+                class="rounded-circle shadow-sm bg-light"
+                style="width: 45px; height: 45px; object-fit: cover"
+              />
+            </div>
+          </div>
+
+          <!-- ========================================== -->
+          <!-- VISÃO 1: EGRESSO (WIZARD DE AVALIAÇÃO) -->
+          <!-- ========================================== -->
+          <div id="view-egresso" style="display: none">
+            <div
+              class="card p-4 shadow-sm border-0 rounded-4 mb-4"
+              id="card-pesquisa"
+            >
+              <!-- Barra de Progresso -->
+              <div class="progress mb-4" style="height: 10px">
+                <div
+                  class="progress-bar"
+                  id="form-progress"
+                  role="progressbar"
+                  style="
+                    width: 0%;
+                    background-color: var(--color-azul-riachuelo);
+                  "
+                ></div>
+              </div>
+              <h6 class="text-end text-muted small mb-4" id="step-counter">
+                Passo 1 de X
+              </h6>
+
+              <form id="form-avaliacao">
+                <!-- Passo 1: Apresentação -->
+                <div class="wizard-step active" id="step-1">
+                  <h4
+                    class="fw-bold mb-3"
+                    style="color: var(--color-azul-riachuelo)"
+                  >
+                    EGRESSOS(AS) UFJ: GRADUAÇÃO
+                  </h4>
+                  <div
+                    class="p-4 rounded"
+                    style="
+                      background-color: rgba(23, 66, 140, 0.05);
+                      font-size: 1.05rem;
+                      line-height: 1.7;
+                    "
+                  >
+                    <p>Prezado(a) egresso(a),</p>
+                    <p>
+                      A Universidade Federal de Jataí (UFJ) está realizando uma
+                      pesquisa com seus egressos dos cursos de graduação, com o
+                      objetivo de conhecer sua trajetória acadêmica e
+                      profissional, bem como avaliar aspectos da formação
+                      recebida na universidade.
+                    </p>
+                    <p>
+                      Sua participação é muito importante, pois as informações
+                      coletadas contribuirão para o aprimoramento contínuo dos
+                      cursos, especialmente no que se refere à organização
+                      didático-pedagógica, ao corpo docente e à infraestrutura,
+                      dimensões fundamentais para a qualidade da formação
+                      oferecida.
+                    </p>
+                    <p>
+                      O questionário contém, em sua maioria, perguntas fechadas
+                      em escala de concordância, o que facilitará a análise das
+                      respostas e permitirá identificar pontos fortes e
+                      oportunidades de melhoria.
+                    </p>
+                    <p>
+                      Em conformidade com a Lei Geral de Proteção de Dados
+                      Pessoais (LGPD), Lei nº 13.709/2018, suas respostas serão
+                      tratadas de forma sigilosa e utilizadas exclusivamente
+                      para fins institucionais e de melhoria dos cursos.
+                    </p>
+                    <p>
+                      Não há respostas certas ou erradas. Pedimos apenas que
+                      você responda com sinceridade, com base em sua experiência
+                      como estudante da UFJ (ou do então Campus/Regional Jataí
+                      da Universidade Federal de Goiás - UFG) e em sua
+                      trajetória após a conclusão do curso.
+                    </p>
+                    <p class="fw-bold text-dark">
+                      Agradecemos sua colaboração e o tempo dedicado a esta
+                      avaliação.<br />Equipe UFJ.
+                    </p>
+                  </div>
+                </div>
+
+                <!-- Containers Dinâmicos para as próximas etapas -->
+                <div class="wizard-step" id="step-2">
+                  <h4
+                    class="fw-bold mb-4 border-bottom pb-2"
+                    style="color: var(--color-azul-riachuelo)"
+                  >
+                    1. Identificação e Inserção Profissional
+                  </h4>
+                  <div id="questions-part-1"></div>
+                </div>
+
+                <div class="wizard-step" id="step-3">
+                  <h4
+                    class="fw-bold mb-4 border-bottom pb-2"
+                    style="color: var(--color-azul-riachuelo)"
+                  >
+                    2. Organização Didático-Pedagógica
+                  </h4>
+                  <p class="text-muted mb-4">
+                    <i class="bi bi-info-circle me-1"></i> Avalie as afirmações
+                    de 1 (Discordo totalmente) a 5 (Concordo totalmente).
+                  </p>
+                  <div id="questions-part-2"></div>
+                </div>
+
+                <div class="wizard-step" id="step-4">
+                  <h4
+                    class="fw-bold mb-4 border-bottom pb-2"
+                    style="color: var(--color-azul-riachuelo)"
+                  >
+                    3. Corpo Docente
+                  </h4>
+                  <p class="text-muted mb-4">
+                    <i class="bi bi-info-circle me-1"></i> Avalie as afirmações
+                    de 1 (Discordo totalmente) a 5 (Concordo totalmente).
+                  </p>
+                  <div id="questions-part-3"></div>
+                </div>
+
+                <div class="wizard-step" id="step-5">
+                  <h4
+                    class="fw-bold mb-4 border-bottom pb-2"
+                    style="color: var(--color-azul-riachuelo)"
+                  >
+                    4. Infraestrutura
+                  </h4>
+                  <p class="text-muted mb-4">
+                    <i class="bi bi-info-circle me-1"></i> Avalie as afirmações
+                    de 1 (Discordo totalmente) a 5 (Concordo totalmente).
+                  </p>
+                  <div id="questions-part-4"></div>
+                </div>
+
+                <div class="wizard-step" id="step-6">
+                  <h4
+                    class="fw-bold mb-4 border-bottom pb-2"
+                    style="color: var(--color-azul-riachuelo)"
+                  >
+                    5. Considerações Finais
+                  </h4>
+                  <div id="questions-part-5"></div>
+                </div>
+
+                <!-- Botões de Navegação -->
+                <div
+                  class="d-flex justify-content-between mt-5 border-top pt-4"
+                >
+                  <button
+                    type="button"
+                    class="btn btn-outline-secondary px-4 fw-bold d-none"
+                    id="btn-prev"
+                  >
+                    <i class="bi bi-arrow-left me-2"></i>Anterior
+                  </button>
+                  <button
+                    type="button"
+                    class="btn btn-primary px-4 fw-bold ms-auto"
+                    id="btn-next"
+                  >
+                    Próxima<i class="bi bi-arrow-right ms-2"></i>
+                  </button>
+                  <button
+                    type="submit"
+                    class="btn btn-success px-4 fw-bold d-none"
+                    id="btn-submit"
+                    style="
+                      background-color: var(--color-verde-corrego);
+                      border: none;
+                    "
+                  >
+                    <i class="bi bi-check-circle me-2"></i>Finalizar e Enviar
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Tela de Sucesso (se já respondeu) -->
+            <div
+              class="card p-5 shadow-sm border-0 rounded-4 text-center d-none"
+              id="card-sucesso"
+            >
+              <i
+                class="bi bi-check-circle-fill"
+                style="font-size: 4rem; color: var(--color-verde-corrego)"
+              ></i>
+              <h3
+                class="fw-bold mt-3"
+                style="color: var(--color-azul-riachuelo)"
+              >
+                Avaliação Concluída!
+              </h3>
+              <p class="text-muted fs-5">
+                Você já respondeu a avaliação institucional. Agradecemos muito a
+                sua contribuição para a melhoria contínua da UFJ!
+              </p>
+            </div>
+          </div>
+
+          <!-- ========================================== -->
+          <!-- VISÃO 2: STAFF (COORDENAÇÃO / ADMIN) -->
+          <!-- ========================================== -->
+          <div id="view-staff" style="display: none">
+            <!-- KPIs -->
+            <div class="row g-4 mb-4">
+              <div class="col-md-6 col-lg-4">
+                <div
+                  class="card stat-card text-white shadow-sm border-0 rounded-4 h-100"
+                  style="background-color: var(--color-azul-riachuelo)"
+                >
+                  <div
+                    class="card-body p-4 d-flex justify-content-between align-items-center"
+                  >
+                    <div>
+                      <h6 class="text-white-50 mb-1">Total de Respostas</h6>
+                      <h2 class="mb-0 fw-bold" id="kpi-total">0</h2>
+                    </div>
+                    <i class="bi bi-ui-checks fs-1 text-white-50"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-6 col-lg-4">
+                <div
+                  class="card stat-card text-white shadow-sm border-0 rounded-4 h-100"
+                  style="background-color: var(--color-verde-jatoba)"
+                >
+                  <div
+                    class="card-body p-4 d-flex justify-content-between align-items-center"
+                  >
+                    <div>
+                      <h6 class="text-white-50 mb-1">
+                        Adesão (Últimos 30 dias)
+                      </h6>
+                      <h2 class="mb-0 fw-bold" id="kpi-recentes">0</h2>
+                    </div>
+                    <i class="bi bi-graph-up-arrow fs-1 text-white-50"></i>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-12 col-lg-4 d-flex align-items-stretch">
+                <div
+                  class="card stat-card bg-white shadow-sm border-0 rounded-4 w-100 d-flex flex-column justify-content-center p-4"
+                >
+                  <button
+                    class="btn btn-primary fw-bold py-3 w-100 mb-2"
+                    onclick="exportarCSV()"
+                    style="
+                      background-color: var(--color-azul-perola);
+                      border: none;
+                    "
+                  >
+                    <i class="bi bi-file-earmark-spreadsheet-fill me-2"></i>
+                    Exportar Dados (CSV)
+                  </button>
+                  <small class="text-muted text-center" id="export-hint"
+                    >Exporta todas as respostas permitidas para o seu nível de
+                    acesso.</small
+                  >
+                </div>
+              </div>
+            </div>
+
+            <!-- Gráfico (Apenas Admin) -->
+            <div class="row mb-4" id="container-grafico" style="display: none">
+              <div class="col-12">
+                <div class="card shadow-sm border-0 rounded-4 p-4">
+                  <h5
+                    class="fw-bold mb-4"
+                    style="color: var(--color-azul-riachuelo)"
+                  >
+                    Respostas por Curso
+                  </h5>
+                  <canvas id="chartCursos" height="80"></canvas>
+                </div>
+              </div>
+            </div>
+
+            <!-- Tabela de Últimas Respostas -->
+            <div class="card shadow-sm border-0 rounded-4 p-4">
+              <h5
+                class="fw-bold mb-4"
+                style="color: var(--color-azul-riachuelo)"
+              >
+                Últimos Egressos a Responderem
+              </h5>
+              <div class="table-responsive">
+                <table class="table table-hover align-middle">
+                  <thead class="table-light">
+                    <tr>
+                      <th>Egresso</th>
+                      <th>Curso</th>
+                      <th>Data da Resposta</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tabela-respostas">
+                    <tr>
+                      <td colspan="3" class="text-center py-4">
+                        Buscando dados...
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Alerta -->
+    <div class="modal fade" id="modalAlertas" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div
+            class="modal-header text-white bg-success"
+            id="modal-alerta-header"
+          >
+            <h5 class="modal-title fw-bold">
+              <i class="bi bi-check-circle-fill me-2"></i>Aviso
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body p-4 text-center">
+            <p class="fs-5 mb-0" id="modal-alerta-mensagem">
+              Salvo com sucesso!
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+      // DADOS DAS PERGUNTAS
+      const perguntasLikertPedagogica = [
+        "A estrutura curricular do curso foi coerente com a formação proposta.",
+        "Os conteúdos das disciplinas/articulações formativas eram atualizados.",
+        "Houve boa articulação entre teoria e prática.",
+        "As atividades complementares contribuíram para minha formação.",
+        "O estágio supervisionado, quando previsto, foi bem organizado.",
+        "O Trabalho de Conclusão de Curso, quando previsto, contribuiu para minha formação.",
+        "A formação contemplou temas relevantes como ética, diversidade, direitos humanos e sustentabilidade.",
+        "Houve estímulo à interdisciplinaridade e à resolução de problemas reais.",
+        "As metodologias de ensino favoreceram minha aprendizagem.",
+        "Os(as) docentes utilizaram estratégias variadas de ensino.",
+        "Houve uso adequado de recursos tecnológicos e digitais nas disciplinas.",
+        "No geral, os critérios de avaliação da aprendizagem foram claros.",
+        "As avaliações foram coerentes com os conteúdos e objetivos das disciplinas.",
+        "As estratégias de ensino consideraram acessibilidade e inclusão.",
+        "O curso contribuiu para o meu desenvolvimento de competências técnicas.",
+        "O curso contribuiu para o meu desenvolvimento de competências socioemocionais e profissionais.",
+        "O curso contribuiu para o meu desenvolvimento de competências empreendedoras.",
+        "O curso contribuiu para que minha atuação profissional seja no sentido de melhorar a realidade social do local onde eu atuo.",
+        "O curso estimulou iniciativas inovadoras.",
+        "Recebi informações claras sobre organização do curso e procedimentos acadêmicos.",
+        "A coordenação do curso era acessível aos(às) estudantes.",
+        "Havia canais adequados para comunicação com a coordenação e secretaria.",
+        "Houve ações de acolhimento, nivelamento ou apoio à permanência, quando necessário.",
+        "O curso proporcionou condições para a minha participação em projetos de ensino, pesquisa ou extensão.",
+        "As atividades de extensão me aproximaram das demandas da sociedade.",
+        "O curso favoreceu a minha inserção profissional.",
+        "Eu recomendaria o curso para outras pessoas.",
+      ];
+
+      const perguntasLikertDocente = [
+        "O corpo docente possuía formação adequada ao curso.",
+        "Os(as) docentes demonstravam domínio dos conteúdos que ministravam.",
+        "Os(as) docentes tinham boa capacidade de comunicação.",
+        "Os(as) docentes eram comprometidos com o processo de ensino-aprendizagem.",
+        "Os(as) docentes incentivavam a participação discente em aula.",
+        "Os(as) docentes utilizavam exemplos e situações práticas da área.",
+        "O relacionamento entre professores e estudantes foi respeitoso.",
+        "Os(as) docentes estimulavam o pensamento crítico e reflexão.",
+        "Os(as) docentes utilizavam metodologias ativas, quando apropriado.",
+        "Os(as) docentes integravam ensino, pesquisa e extensão de forma perceptível.",
+        "O curso contava com professores comprometidos com atualização profissional e acadêmica.",
+      ];
+
+      const perguntasLikertInfra = [
+        "As salas de aula atendiam às necessidades do curso.",
+        "Os espaços de aprendizagem eram confortáveis e adequados.",
+        "A infraestrutura física favorecia a aprendizagem.",
+        "Havia acessibilidade arquitetônica adequada.",
+        "Os laboratórios, quando utilizados, eram adequados ao curso.",
+        "Os equipamentos dos laboratórios estavam em bom estado de funcionamento.",
+        "Os serviços de apoio técnico nos laboratórios foram satisfatórios.",
+        "A biblioteca atendia às necessidades do curso.",
+        "O acervo bibliográfico era suficiente e atualizado.",
+        "Os recursos de informática disponíveis aos(às) estudantes eram suficientes.",
+        "A conexão à Internet era satisfatória.",
+        "A infraestrutura da UFJ contribuiu positivamente para a minha formação.",
+        "A infraestrutura geral do curso atendeu às minhas expectativas.",
+        "Os serviços de apoio acadêmico eram acessíveis.",
+      ];
+
+      let dadosGlobais = []; // Variável global para armazenar os dados de exportação
+
+      document.addEventListener("DOMContentLoaded", async function () {
+        const context = await inicializarPainel("avaliacao", "..");
+        if (!context) return;
+
+        const supabase = context.supabase;
+        const perfil = context.perfil;
+        const userId = context.session.user.id;
+
+        document.getElementById("page-subtitle").innerText =
+          perfil.nivel_acesso.toUpperCase();
+
+        // ==========================================
+        // LÓGICA DO EGRESSO
+        // ==========================================
+        if (perfil.nivel_acesso === "egresso") {
+          document.getElementById("view-egresso").style.display = "block";
+
+          // 1. Verifica se já respondeu
+          const { data: avaliacaoExiste } = await supabase
+            .from("avaliacoes")
+            .select("id")
+            .eq("usuario_id", userId)
+            .single();
+
+          if (avaliacaoExiste) {
+            document.getElementById("form-avaliacao").style.display = "none";
+            document.getElementById("step-counter").style.display = "none";
+            document.getElementById(
+              "form-progress",
+            ).parentElement.style.display = "none";
+            document.getElementById("card-sucesso").classList.remove("d-none");
+            return;
+          }
+
+          // 2. Renderiza as perguntas dinamicamente
+          renderizarFormularioEgresso(perfil);
+
+          // 3. Configura o Wizard (Navegação)
+          let currentStep = 1;
+          const totalSteps = 6;
+
+          function updateWizard() {
+            document
+              .querySelectorAll(".wizard-step")
+              .forEach((el) => el.classList.remove("active"));
+            document
+              .getElementById(`step-${currentStep}`)
+              .classList.add("active");
+
+            document
+              .getElementById("btn-prev")
+              .classList.toggle("d-none", currentStep === 1);
+
+            if (currentStep === totalSteps) {
+              document.getElementById("btn-next").classList.add("d-none");
+              document.getElementById("btn-submit").classList.remove("d-none");
+            } else {
+              document.getElementById("btn-next").classList.remove("d-none");
+              document.getElementById("btn-submit").classList.add("d-none");
+            }
+
+            document.getElementById("step-counter").innerText =
+              `Passo ${currentStep} de ${totalSteps}`;
+            document.getElementById("form-progress").style.width =
+              `${(currentStep / totalSteps) * 100}%`;
+            window.scrollTo({ top: 0, behavior: "smooth" });
+          }
+
+          document.getElementById("btn-next").addEventListener("click", () => {
+            // 1. Identifica qual é a div da etapa atual
+            const etapaAtualElemento = document.getElementById(
+              `step-${currentStep}`,
+            );
+
+            // 2. Busca todos os campos obrigatórios dentro apenas dessa etapa
+            const camposObrigatorios =
+              etapaAtualElemento.querySelectorAll("[required]");
+            let etapaValida = true;
+
+            // 3. Verifica um por um
+            for (let campo of camposObrigatorios) {
+              if (!campo.checkValidity()) {
+                campo.reportValidity(); // Exibe o balão vermelho nativo do navegador apontando o erro
+                etapaValida = false;
+                break; // Para no primeiro erro encontrado para não poluir a tela
+              }
+            }
+
+            // 4. Se tudo estiver ok, avança
+            if (etapaValida && currentStep < totalSteps) {
+              currentStep++;
+              updateWizard();
+            }
+          });
+
+          // Ação do botão "Anterior"
+          document.getElementById("btn-prev").addEventListener("click", () => {
+            if (currentStep > 1) {
+              currentStep--;
+              updateWizard();
+            }
+          });
+          updateWizard();
+
+          // 4. Submissão do Formulário
+          document
+            .getElementById("form-avaliacao")
+            .addEventListener("submit", async function (e) {
+              e.preventDefault();
+
+              const btnSubmit = document.getElementById("btn-submit");
+              btnSubmit.disabled = true;
+              btnSubmit.innerHTML = "Enviando...";
+
+              // Coleta todos os dados do formulário serializando para JSON
+              const formData = new FormData(this);
+              const respostas = {};
+
+              // Tratamento especial para checkboxes (arrays)
+              for (let [key, value] of formData.entries()) {
+                if (respostas[key]) {
+                  if (!Array.isArray(respostas[key]))
+                    respostas[key] = [respostas[key]];
+                  respostas[key].push(value);
+                } else {
+                  respostas[key] = value;
+                }
+              }
+
+              try {
+                const { error } = await supabase.from("avaliacoes").insert([
+                  {
+                    usuario_id: userId,
+                    respostas: respostas,
+                  },
+                ]);
+
+                if (error) throw error;
+
+                document.getElementById("form-avaliacao").style.display =
+                  "none";
+                document.getElementById("step-counter").style.display = "none";
+                document.getElementById(
+                  "form-progress",
+                ).parentElement.style.display = "none";
+                document
+                  .getElementById("card-sucesso")
+                  .classList.remove("d-none");
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              } catch (err) {
+                console.error(err);
+                alert("Erro ao enviar avaliação. Tente novamente.");
+                btnSubmit.disabled = false;
+                btnSubmit.innerHTML =
+                  '<i class="bi bi-check-circle me-2"></i>Finalizar e Enviar';
+              }
+            });
+        }
+        // ==========================================
+        // LÓGICA DA COORDENAÇÃO E ADMIN
+        // ==========================================
+        else {
+          document.getElementById("view-staff").style.display = "block";
+
+          // Monta a query: Admin puxa tudo, Coordenação puxa só do curso dele
+          let query = supabase
+            .from("avaliacoes")
+            .select(
+              `
+              id, criado_em, respostas,
+              perfis!inner(nome, curso_ufj, foto_perfil)
+          `,
+            )
+            .order("criado_em", { ascending: false });
+
+          if (perfil.nivel_acesso === "coordenacao") {
+            if (!perfil.curso_ufj) {
+              alert(
+                "Atenção: O seu perfil de coordenador não está vinculado a nenhum curso. A lista estará vazia.",
+              );
+            } else {
+              query = query.eq("perfis.curso_ufj", perfil.curso_ufj);
+              document.getElementById("export-hint").innerText =
+                `Exportando respostas do curso: ${perfil.curso_ufj}`;
+            }
+          }
+
+          const { data, error } = await query;
+
+          if (error) {
+            console.error(error);
+            document.getElementById("tabela-respostas").innerHTML =
+              '<tr><td colspan="3" class="text-danger text-center">Erro ao carregar dados.</td></tr>';
+            return;
+          }
+
+          dadosGlobais = data; // Salva para a exportação
+
+          // Renderiza KPIs
+          document.getElementById("kpi-total").innerText = data.length;
+
+          const trintaDiasAtras = new Date();
+          trintaDiasAtras.setDate(trintaDiasAtras.getDate() - 30);
+          const recentes = data.filter(
+            (item) => new Date(item.criado_em) >= trintaDiasAtras,
+          ).length;
+          document.getElementById("kpi-recentes").innerText = recentes;
+
+          // Renderiza Tabela
+          const tbody = document.getElementById("tabela-respostas");
+          tbody.innerHTML = "";
+
+          if (data.length === 0) {
+            tbody.innerHTML =
+              '<tr><td colspan="3" class="text-center py-4 text-muted">Nenhuma resposta registrada ainda.</td></tr>';
+          } else {
+            const ultimos = data.slice(0, 10); // Mostra os 10 últimos
+            ultimos.forEach((item) => {
+              const dataForm = new Date(item.criado_em).toLocaleDateString(
+                "pt-BR",
+              );
+              tbody.innerHTML += `
+                    <tr>
+                      <td class="fw-bold d-flex align-items-center">
+                        <img src="${item.perfis.foto_perfil || "../../assets/img/person/person-m-9.webp"}" class="rounded-circle me-3" style="width: 35px; height: 35px; object-fit: cover;">
+                        ${item.perfis.nome}
+                      </td>
+                      <td>${item.perfis.curso_ufj || "Não informado"}</td>
+                      <td>${dataForm}</td>
+                    </tr>
+                  `;
+            });
+          }
+
+          // Gráfico apenas para Admin
+          if (perfil.nivel_acesso === "administrador" && data.length > 0) {
+            document.getElementById("container-grafico").style.display =
+              "block";
+
+            // Conta respostas por curso
+            const contagemCursos = {};
+            data.forEach((item) => {
+              const curso = item.perfis.curso_ufj || "Sem Curso Informado";
+              contagemCursos[curso] = (contagemCursos[curso] || 0) + 1;
+            });
+
+            // Prepara dados pro Chart.js
+            const labels = Object.keys(contagemCursos);
+            const valores = Object.values(contagemCursos);
+
+            new Chart(document.getElementById("chartCursos"), {
+              type: "bar",
+              data: {
+                labels: labels,
+                datasets: [
+                  {
+                    label: "Nº de Respostas",
+                    data: valores,
+                    backgroundColor: "#1988c4",
+                    borderRadius: 5,
+                  },
+                ],
+              },
+              options: {
+                responsive: true,
+                plugins: { legend: { display: false } },
+                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } },
+              },
+            });
+          }
+        }
+      });
+
+      // ==========================================
+      // FUNÇÃO: EXPORTAR CSV
+      // ==========================================
+      function exportarCSV() {
+        if (!dadosGlobais || dadosGlobais.length === 0) {
+          alert("Não há dados para exportar.");
+          return;
+        }
+
+        // Cria cabecalho dinamico baseado na primeira resposta
+        let csvRows = [];
+
+        // Mapeia colunas fixas do perfil
+        const cabecalhosFixos = ["Data_Resposta", "Nome_Egresso", "Curso"];
+
+        // Mapeia as chaves do JSON da primeira pessoa (assumindo que o formulario tem as mesmas chaves)
+        const chavesRespostas = Object.keys(dadosGlobais[0].respostas);
+
+        // Adiciona ao CSV (linha 1)
+        csvRows.push([...cabecalhosFixos, ...chavesRespostas].join(";"));
+
+        // Preenche os dados
+        dadosGlobais.forEach((item) => {
+          const dataFormatada = new Date(item.criado_em).toLocaleString(
+            "pt-BR",
+          );
+          const nome = item.perfis.nome.replace(/;/g, ",");
+          const curso = (item.perfis.curso_ufj || "").replace(/;/g, ",");
+
+          const respostasArr = chavesRespostas.map((chave) => {
+            let res = item.respostas[chave] || "";
+            if (Array.isArray(res)) res = res.join(" | "); // Arrays (checkboxes)
+            // Limpa quebras de linha e ponto e virgula que quebram o CSV
+            return `"${String(res).replace(/"/g, '""')}"`;
+          });
+
+          csvRows.push([dataFormatada, nome, curso, ...respostasArr].join(";"));
+        });
+
+        // Baixar o arquivo
+        const csvContent =
+          "data:text/csv;charset=utf-8,\uFEFF" + csvRows.join("\n");
+        const encodedUri = encodeURI(csvContent);
+        const link = document.createElement("a");
+        link.setAttribute("href", encodedUri);
+        link.setAttribute(
+          "download",
+          `Exportacao_Egressos_${new Date().getTime()}.csv`,
+        );
+        document.body.appendChild(link);
+        link.click();
+        document.body.removeChild(link);
+      }
+
+      // ==========================================
+      // FUNÇÃO: CONSTRUIR O HTML DO FORMULÁRIO
+      // ==========================================
+      function renderizarFormularioEgresso(perfil) {
+        // --- PARTE 1: Inputs Simples ---
+        const listaCursos = [
+          "Agronomia",
+          "Biomedicina",
+          "Ciências Biológicas - Bacharelado",
+          "Ciências Biológicas - Licenciatura",
+          "Ciência da Computação",
+          "Direito",
+          "Educação Física - Bacharelado",
+          "Educação Física - Licenciatura",
+          "Enfermagem",
+          "Engenharia Florestal",
+          "Física - Licenciatura",
+          "Fisioterapia",
+          "Geografia - Bacharelado",
+          "Geografia - Licenciatura",
+          "História - Licenciatura",
+          "Inteligência Artificial",
+          "Letras - Inglês",
+          "Letras - Português",
+          "Matemática - Licenciatura",
+          "Medicina",
+          "Medicina Veterinária",
+          "Pedagogia",
+          "Psicologia",
+          "Química - Bacharelado",
+          "Química - Licenciatura",
+          "Zootecnia",
+        ];
+
+        let htmlP1 = `
+          <div class="row g-4">
+            <div class="col-md-12"><label class="form-label fw-medium">1. Nome completo</label><input type="text" name="q1_nome" class="form-control" value="${perfil.nome || ""}" required></div>
+            <div class="col-md-6"><label class="form-label fw-medium">2. Telefone</label><input type="text" name="q2_telefone" class="form-control" value="${perfil.celular || ""}" placeholder="(00) 00000-0000" required></div>
+            <div class="col-md-6"><label class="form-label fw-medium">3. E-mail atual</label><input type="email" name="q3_email" class="form-control" value="${perfil.email || ""}" required></div>
+            <div class="col-md-6"><label class="form-label fw-medium">4. Estado/UF</label><select id="uf-select" name="q4_uf" class="form-select" required><option value="">Selecione...</option></select></div>
+            <div class="col-md-6"><label class="form-label fw-medium">5. Município</label><select id="cidade-select" name="q5_cidade" class="form-select" required disabled><option value="">Selecione um estado primeiro</option></select></div>
+            <div class="col-md-12"><label class="form-label fw-medium">6. Formação Acadêmica</label><select name="q6_formacao" class="form-select" required><option value="">Selecione...</option>${listaCursos.map((c) => `<option value="${c}" ${perfil.curso_ufj === c ? "selected" : ""}>${c}</option>`).join("")}</select></div>
+            <div class="col-md-6"><label class="form-label fw-medium">7. Ano de ingresso no curso</label><input type="number" name="q7_ano_ingresso" class="form-control" placeholder="YYYY" min="1950" max="2030" required></div>
+            <div class="col-md-6"><label class="form-label fw-medium">8. Ano de formação</label><input type="number" name="q8_ano_formacao" class="form-control" value="${perfil.ano_conclusao || ""}" placeholder="YYYY" min="1950" max="2030" required></div>
+            
+            <div class="col-12"><label class="form-label fw-medium">9. Após a obtenção de seu diploma de graduação, você buscou a UFJ para:</label>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="q9_busca_ufj" value="Especialização"> Realizar especialização</div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="q9_busca_ufj" value="Mestrado"> Realizar mestrado</div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="q9_busca_ufj" value="Doutorado"> Realizar doutorado</div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="q9_busca_ufj" value="Capacitação"> Realizar cursos de capacitação</div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="q9_busca_ufj" value="Eventos"> Participar de eventos</div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="q9_busca_ufj" value="Nenhum"> Não busquei a UFJ em momento algum</div>
+                <div class="form-check mt-2 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" value="Outro"> Outro: <input type="text" name="q9_busca_ufj_outro" class="form-control form-control-sm w-50 ms-2"></div>
+            </div>
+
+            <div class="col-12"><label class="form-label fw-medium">10. Atualmente, você mantém algum vínculo ou interação com a UFJ?</label>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="q10_vinculo" value="Servidores"> Mantendo contato com servidores(as)</div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="q10_vinculo" value="Discentes/Egressos"> Mantenho contato com discentes atuais e/ou egressos</div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="q10_vinculo" value="Redes Sociais"> Sigo a UFJ nas redes sociais</div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="q10_vinculo" value="Eventos"> Participo/participei de eventos após minha saída</div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="q10_vinculo" value="Trabalho"> Convivo com pessoas da UFJ em meu trabalho</div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="q10_vinculo" value="Projetos"> Mantenho colaboração em projetos de pesquisa/ensino/extensão</div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="q10_vinculo" value="Servidor UFJ"> Sou servidor(a) da UFJ</div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="q10_vinculo" value="Nenhum"> Não tenho nenhum tipo de vínculo/contato com a UFJ</div>
+                <div class="form-check mt-2 d-flex align-items-center"><input class="form-check-input me-2" type="checkbox" value="Outro"> Outro: <input type="text" name="q10_vinculo_outro" class="form-control form-control-sm w-50 ms-2"></div>
+            </div>
+
+            <div class="col-12"><label class="form-label fw-medium">11. Após a obtenção de seu diploma você realizou ou está realizando:</label>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="q11_pos_formacao" value="Especialização"> Especialização</div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="q11_pos_formacao" value="Residência"> Residência</div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="q11_pos_formacao" value="Mestrado"> Mestrado</div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="q11_pos_formacao" value="Doutorado"> Doutorado</div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="q11_pos_formacao" value="Pós-doutorado"> Pós-doutorado</div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="q11_pos_formacao" value="Cursos Curtos"> Cursos de curta duração</div>
+                <div class="form-check"><input class="form-check-input" type="checkbox" name="q11_pos_formacao" value="Nenhum"> Não realizei formação adicional</div>
+            </div>
+
+            <div class="col-md-6"><label class="form-label fw-medium">12. Situação profissional atual:</label><select name="q12_situacao" class="form-select" required>
+                <option value="">Selecione...</option><option value="Empregado CLT">Empregado(a) com carteira assinada</option><option value="Servidor Público">Servidor(a) público(a)</option><option value="Autônomo">Autônomo(a)</option><option value="Empreendedor">Empreendedor(a)</option><option value="Pós-graduando">Pós-graduando(a)</option><option value="Outra graduação">Cursando outra graduação</option><option value="Desempregado">Desempregado(a)</option><option value="Outro">Outro</option>
+            </select></div>
+
+            <div class="col-md-6"><label class="form-label fw-medium">13. O curso contribuiu para sua empregabilidade?</label><select name="q13_empregabilidade" class="form-select" required>
+                <option value="">Selecione...</option><option value="Discordo totalmente">Discordo totalmente</option><option value="Discordo parcialmente">Discordo parcialmente</option><option value="Nem concordo, nem discordo">Nem concordo, nem discordo</option><option value="Concordo parcialmente">Concordo parcialmente</option><option value="Concordo totalmente">Concordo totalmente</option>
+            </select></div>
+
+            <div class="col-md-6"><label class="form-label fw-medium">14. Sua atuação profissional exige formação superior?</label><select name="q14_exige_superior" class="form-select" required>
+                <option value="">Selecione...</option><option value="Sim, totalmente">Sim, totalmente</option><option value="Sim, parcialmente">Sim, parcialmente</option><option value="Não">Não</option><option value="Não se aplica">Não se aplica (estou desempregado(a))</option>
+            </select></div>
+
+            <div class="col-md-6"><label class="form-label fw-medium">15. Sua atuação profissional está relacionada à formação na UFJ?</label><select name="q15_relacionada" class="form-select" required>
+                <option value="">Selecione...</option><option value="Sim, totalmente">Sim, totalmente</option><option value="Sim, parcialmente">Sim, parcialmente</option><option value="Não">Não</option><option value="Não se aplica">Não se aplica (estou desempregado(a))</option>
+            </select></div>
+
+            <div class="col-md-12"><label class="form-label fw-medium">16. Em que medida a formação recebeu o preparou para as demandas da atuação profissional?</label><select name="q16_preparo" class="form-select" required>
+                <option value="">Selecione...</option><option value="Não me preparou">Não me preparou</option><option value="Preparou pouco">Preparou pouco</option><option value="Preparou moderadamente">Preparou moderadamente</option><option value="Preparou muito">Preparou muito</option><option value="Preparou plenamente">Preparou plenamente</option><option value="Não se aplica">Não se aplica</option>
+            </select></div>
+
+            <div class="col-md-12"><label class="form-label fw-medium">17. Competências adquiridas mais utilizadas na atuação profissional:</label><select name="q17_competencias" class="form-select" required>
+                <option value="">Selecione...</option><option value="Conhecimentos técnicos">Conhecimentos técnicos</option><option value="Comunicação">Comunicação</option><option value="Trabalho em equipe">Trabalho em equipe</option><option value="Liderança">Liderança</option><option value="Resolução de problemas">Resolução de problemas</option><option value="Pensamento crítico">Pensamento crítico</option><option value="Uso de tecnologias">Uso de tecnologias</option><option value="Pesquisa científica">Pesquisa científica</option><option value="Gestão e planejamento">Gestão e planejamento</option>
+            </select></div>
+
+            <div class="col-md-12"><label class="form-label fw-medium">18. Frequência de uso dessas competências atualmente:</label><select name="q18_frequencia_competencias" class="form-select" required>
+                <option value="">Selecione...</option><option value="Nunca">Nunca</option><option value="Muito raramente">Muito raramente</option><option value="Às vezes">Às vezes</option><option value="Frequentemente">Frequentemente</option><option value="Muito frequentemente">Muito frequentemente</option><option value="Não se aplica">Não se aplica</option>
+            </select></div>
+
+            <div class="col-md-12"><label class="form-label fw-medium">19. Em que medida o curso contribuiu para o desenvolvimento dessas competências?</label><select name="q19_contrib_competencias" class="form-select" required>
+                <option value="">Selecione...</option><option value="Não contribuiu">Não contribuiu</option><option value="Contribuiu pouco">Contribuiu pouco</option><option value="Contribuiu moderadamente">Contribuiu moderadamente</option><option value="Contribuiu muito">Contribuiu muito</option><option value="Contribuiu plenamente">Contribuiu plenamente</option>
+            </select></div>
+
+            <div class="col-md-6"><label class="form-label fw-medium">20. Tempo para o primeiro emprego após formatura:</label><select name="q20_tempo_emprego" class="form-select" required>
+                <option value="">Selecione...</option><option value="Já saí empregado">Já saí do curso empregado(a)</option><option value="Até 6 meses">Até 6 (seis) meses</option><option value="Entre 6 meses e 1 ano">Entre 6 meses e 1 ano</option><option value="Entre 1 e 2 anos">Entre 1 e 2 anos</option><option value="Mais de 2 anos">Mais de 2 anos</option>
+            </select></div>
+
+            <div class="col-md-6"><label class="form-label fw-medium">21. Faixa de renda individual:</label><select name="q21_renda" class="form-select" required>
+                <option value="">Selecione...</option><option value="Prefiro não informar">Prefiro não informar</option><option value="Até 1 salário">Até 1 salário mínimo</option><option value="Entre 1 e 3 salários">Entre 1 e 3 salários mínimos</option><option value="Entre 3 e 5 salários">Entre 3 e 5 salários mínimos</option><option value="Entre 5 e 8 salários">Entre 5 e 8 salários mínimos</option><option value="Acima de 8 salários">Acima de 8 salários mínimos</option>
+            </select></div>
+          </div>
+        `;
+        document.getElementById("questions-part-1").innerHTML = htmlP1;
+
+        // Script IBGE para UFs e Cidades
+        fetch(
+          "https://servicodados.ibge.gov.br/api/v1/localidades/estados?orderBy=nome",
+        )
+          .then((response) => response.json())
+          .then((estados) => {
+            const ufSelect = document.getElementById("uf-select");
+            estados.forEach((estado) => {
+              ufSelect.innerHTML += `<option value="${estado.sigla}">${estado.nome}</option>`;
+            });
+          });
+
+        document
+          .getElementById("uf-select")
+          .addEventListener("change", function () {
+            const uf = this.value;
+            const cidadeSelect = document.getElementById("cidade-select");
+            cidadeSelect.innerHTML = '<option value="">Carregando...</option>';
+            cidadeSelect.disabled = true;
+
+            if (uf) {
+              fetch(
+                `https://servicodados.ibge.gov.br/api/v1/localidades/estados/${uf}/municipios`,
+              )
+                .then((response) => response.json())
+                .then((cidades) => {
+                  cidadeSelect.innerHTML =
+                    '<option value="">Selecione a cidade...</option>';
+                  cidades.forEach((cidade) => {
+                    cidadeSelect.innerHTML += `<option value="${cidade.nome}">${cidade.nome}</option>`;
+                  });
+                  cidadeSelect.disabled = false;
+                });
+            } else {
+              cidadeSelect.innerHTML =
+                '<option value="">Selecione um estado primeiro</option>';
+            }
+          });
+
+        // --- FUNÇÃO GERADORA DE LIKERT ---
+        function renderLikert(arrayPerguntas, startIndex, containerId) {
+          let html = "";
+          arrayPerguntas.forEach((pergunta, idx) => {
+            const qNum = startIndex + idx;
+            html += `
+                  <div class="likert-row">
+                    <div class="question-text">${qNum}. ${pergunta}</div>
+                    <div class="likert-scale shadow-sm">
+                      <div class="likert-option"><input type="radio" name="q${qNum}" value="1" required><span>1 - Discordo total.</span></div>
+                      <div class="likert-option"><input type="radio" name="q${qNum}" value="2"><span>2 - Discordo parc.</span></div>
+                      <div class="likert-option"><input type="radio" name="q${qNum}" value="3"><span>3 - Neutro</span></div>
+                      <div class="likert-option"><input type="radio" name="q${qNum}" value="4"><span>4 - Concordo parc.</span></div>
+                      <div class="likert-option"><input type="radio" name="q${qNum}" value="5"><span>5 - Concordo total.</span></div>
+                    </div>
+                  </div>
+                `;
+          });
+          document.getElementById(containerId).innerHTML = html;
+        }
+
+        renderLikert(perguntasLikertPedagogica, 22, "questions-part-2");
+        renderLikert(perguntasLikertDocente, 49, "questions-part-3");
+        renderLikert(perguntasLikertInfra, 60, "questions-part-4");
+
+        // --- PARTE 5: Considerações Finais ---
+        document.getElementById("questions-part-5").innerHTML = `
+            <div class="col-12">
+              <label class="form-label fw-bold" style="color: var(--color-azul-riachuelo); font-size: 1.1rem;">
+                74. Considerando sua experiência profissional após a graduação, quais conhecimentos, habilidades ou competências deveriam ser fortalecidos no curso para melhor preparar os(as) discentes?
+              </label>
+              <textarea name="q74_consideracoes" class="form-control shadow-sm" rows="6" placeholder="Escreva aqui suas considerações para a melhoria contínua do curso..." required></textarea>
+            </div>
+        `;
+      }
+    </script>
+  </body>
+</html>

@@ -8,7 +8,7 @@
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
     <link
-      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      href="https://fonts.googleapis.com/css2?family=Red+Hat+Display:ital,wght@0,300..900;1,300..900&family=Red+Hat+Text:ital,wght@0,300..700;1,300..700&display=swap"
       rel="stylesheet"
     />
     <link
@@ -26,7 +26,11 @@
   </head>
   <body>
     <div id="loading-screen">
-      <div class="spinner-border text-primary" role="status"></div>
+      <div
+        class="spinner-border"
+        style="color: var(--color-azul-riachuelo)"
+        role="status"
+      ></div>
     </div>
 
     <div class="container-fluid" id="main-panel" style="display: none">
@@ -51,7 +55,11 @@
           <div
             class="d-flex justify-content-between align-items-center mb-5 bg-white p-4 shadow-sm rounded-3 border-0"
           >
-            <h4 class="mb-0 text-secondary fw-bold" id="page-title">
+            <h4
+              class="mb-0 fw-bold"
+              style="color: var(--color-azul-riachuelo)"
+              id="page-title"
+            >
               Depoimentos
             </h4>
             <div class="d-flex align-items-center">
@@ -59,9 +67,8 @@
                 >...</span
               >
               <img
-                src="../../assets/img/person/person-m-9.webp"
+                src="../../assets/img/person/user.png"
                 id="top-avatar"
-                alt="Profile"
                 class="rounded-circle shadow-sm bg-light"
                 style="width: 45px; height: 45px; object-fit: cover"
               />
@@ -69,15 +76,19 @@
           </div>
 
           <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="fw-bold mb-0">Gerenciar Depoimentos</h5>
-            <a href="form.html" class="btn btn-primary" id="btn-novo">
+            <h5 class="fw-bold mb-0 text-secondary">Gerenciar Depoimentos</h5>
+            <a
+              href="form.html"
+              class="btn btn-primary shadow-sm fw-bold"
+              id="btn-novo"
+            >
               <i class="bi bi-plus-lg me-2"></i>Novo Depoimento
             </a>
           </div>
 
           <div class="card p-4 shadow-sm border-0 rounded-4">
             <ul class="nav nav-tabs mb-4" role="tablist">
-              <li class="nav-item">
+              <li class="nav-item" id="tab-meus-li">
                 <button
                   class="nav-link active"
                   data-bs-toggle="tab"
@@ -111,7 +122,9 @@
                     </thead>
                     <tbody id="tbody-meus">
                       <tr>
-                        <td colspan="4" class="text-center">Carregando...</td>
+                        <td colspan="4" class="text-center py-4 text-muted">
+                          Carregando...
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -131,7 +144,9 @@
                     </thead>
                     <tbody id="tbody-pendentes">
                       <tr>
-                        <td colspan="4" class="text-center">Carregando...</td>
+                        <td colspan="4" class="text-center py-4 text-muted">
+                          Carregando...
+                        </td>
                       </tr>
                     </tbody>
                   </table>
@@ -153,23 +168,36 @@
           document.getElementById("top-avatar").src =
             context.perfil.foto_perfil;
 
+        // Oculta "Meus depoimentos" e exibe apenas "Avaliar" para Staff
         if (context.perfil.nivel_acesso !== "egresso") {
+          document.getElementById("tab-meus-li").style.display = "none";
           document.getElementById("tab-pendentes-li").style.display = "block";
-          // Staff geralmente não escreve depoimento, escondemos o botão de Novo
           document.getElementById("btn-novo").style.display = "none";
-          carregarPendentes();
+
+          // Força a aba pendentes a ficar ativa
+          document
+            .querySelector('[data-bs-target="#meus-depoimentos"]')
+            .classList.remove("active");
+          document
+            .querySelector('[data-bs-target="#pendentes"]')
+            .classList.add("active");
+          document
+            .getElementById("meus-depoimentos")
+            .classList.remove("show", "active");
+          document.getElementById("pendentes").classList.add("show", "active");
+
+          carregarPendentes(context.perfil);
+        } else {
+          carregarMeusDepoimentos();
         }
 
-        carregarMeusDepoimentos();
-
-        // Função auxiliar para desenhar as estrelinhas
         function renderStars(count) {
           let starsHtml = "";
           for (let i = 0; i < 5; i++) {
             starsHtml +=
               i < count
-                ? '<i class="bi bi-star-fill text-warning me-1"></i>'
-                : '<i class="bi bi-star text-muted me-1"></i>';
+                ? `<i class="bi bi-star-fill me-1" style="color: var(--color-amarelo-abelha);"></i>`
+                : `<i class="bi bi-star text-muted me-1"></i>`;
           }
           return starsHtml;
         }
@@ -184,19 +212,20 @@
           const tbody = document.getElementById("tbody-meus");
           if (!data || data.length === 0) {
             tbody.innerHTML =
-              '<tr><td colspan="4" class="text-center">Você ainda não deixou um depoimento.</td></tr>';
+              '<tr><td colspan="4" class="text-center text-muted py-4">Você ainda não deixou um depoimento.</td></tr>';
             return;
           }
 
           tbody.innerHTML = "";
           data.forEach((d) => {
-            let badge =
+            let bgClass =
               d.status === "aprovado"
-                ? "bg-success"
+                ? "var(--color-verde-corrego)"
                 : d.status === "reprovado"
-                  ? "bg-danger"
-                  : "bg-warning text-dark";
-            // Pega só os primeiros 40 caracteres pra tabela não ficar gigante
+                  ? "#dc3545"
+                  : "var(--color-azul-perola)";
+            let badge = `<span class="badge" style="background-color: ${bgClass}; font-family: var(--font-red-hat-text);">${d.status}</span>`;
+
             let resumo =
               d.descricao.length > 40
                 ? d.descricao.substring(0, 40) + "..."
@@ -206,38 +235,89 @@
               <tr>
                 <td class="text-secondary">"${resumo}"</td>
                 <td>${renderStars(d.estrelas)}</td>
-                <td><span class="badge ${badge}">${d.status}</span></td>
-                <td class="text-end"><a href="form.html?id=${d.id}" class="btn btn-sm btn-outline-primary"><i class="bi bi-pencil"></i></a></td>
+                <td>${badge}</td>
+                <td class="text-end"><a href="form.html?id=${d.id}" class="btn btn-sm btn-outline-primary" style="border-color: var(--color-azul-riachuelo); color: var(--color-azul-riachuelo);"><i class="bi bi-pencil"></i></a></td>
               </tr>
             `;
           });
         }
 
-        async function carregarPendentes() {
-          // Puxa o depoimento e os dados de quem escreveu (nome e curso)
-          const { data } = await context.supabase
-            .from("depoimentos")
-            .select("*, perfis(nome, curso)")
-            .eq("status", "pendente");
-
+        async function carregarPendentes(perfil) {
           const tbody = document.getElementById("tbody-pendentes");
-          if (!data || data.length === 0) {
-            tbody.innerHTML =
-              '<tr><td colspan="4" class="text-center">Nenhum depoimento para avaliar.</td></tr>';
-            return;
-          }
 
-          tbody.innerHTML = "";
-          data.forEach((d) => {
-            tbody.innerHTML += `
-              <tr>
-                <td class="fw-bold">${d.perfis?.nome || "Anônimo"}</td>
-                <td>${d.perfis?.curso || "Não informado"}</td>
-                <td>${renderStars(d.estrelas)}</td>
-                <td class="text-end"><a href="form.html?id=${d.id}" class="btn btn-sm btn-primary">Avaliar</a></td>
-              </tr>
-            `;
-          });
+          try {
+            // 1. Busca APENAS os depoimentos pendentes (sem forçar relacionamento com banco)
+            const { data: depoimentos, error: errorDep } =
+              await context.supabase
+                .from("depoimentos")
+                .select("*")
+                .eq("status", "pendente");
+
+            if (errorDep) throw errorDep;
+
+            if (!depoimentos || depoimentos.length === 0) {
+              tbody.innerHTML =
+                '<tr><td colspan="4" class="text-center text-muted py-4">Nenhum depoimento pendente encontrado.</td></tr>';
+              return;
+            }
+
+            // 2. Extrai os IDs dos usuários que escreveram esses depoimentos
+            const usuariosIds = depoimentos.map((d) => d.usuario_id);
+
+            // 3. Busca o nome e curso APENAS desses usuários
+            const { data: perfis, error: errorPerf } = await context.supabase
+              .from("perfis")
+              .select("id, nome, curso_ufj")
+              .in("id", usuariosIds);
+
+            if (errorPerf) throw errorPerf;
+
+            // 4. Junta os dados manualmente (JavaScript Merge)
+            let dadosCompletos = depoimentos.map((d) => {
+              const p = perfis.find((perfil) => perfil.id === d.usuario_id);
+              return { ...d, perfis: p };
+            });
+
+            // 5. Filtra pelo curso do coordenador logado
+            if (perfil.nivel_acesso === "coordenacao") {
+              if (!perfil.curso_ufj) {
+                console.warn("Coordenador sem curso vinculado.");
+                dadosCompletos = [];
+              } else {
+                const cursoCoordenador = perfil.curso_ufj.trim().toLowerCase();
+                dadosCompletos = dadosCompletos.filter(
+                  (d) =>
+                    d.perfis &&
+                    d.perfis.curso_ufj &&
+                    d.perfis.curso_ufj.trim().toLowerCase() ===
+                      cursoCoordenador,
+                );
+              }
+            }
+
+            // 6. Renderiza na tela
+            if (!dadosCompletos || dadosCompletos.length === 0) {
+              tbody.innerHTML =
+                '<tr><td colspan="4" class="text-center text-muted py-4">Nenhum depoimento pendente para o seu curso.</td></tr>';
+              return;
+            }
+
+            tbody.innerHTML = "";
+            dadosCompletos.forEach((d) => {
+              tbody.innerHTML += `
+                  <tr>
+                    <td class="fw-bold" style="color: var(--text-primary);">${d.perfis?.nome || "Anônimo"}</td>
+                    <td class="text-secondary">${d.perfis?.curso_ufj || "Não informado"}</td>
+                    <td>${renderStars(d.estrelas)}</td>
+                    <td class="text-end"><a href="form.html?id=${d.id}" class="btn btn-sm btn-primary fw-bold">Avaliar</a></td>
+                  </tr>
+                `;
+            });
+          } catch (err) {
+            console.error("Erro ao carregar pendentes:", err);
+            tbody.innerHTML =
+              '<tr><td colspan="4" class="text-center text-danger py-4">Erro ao buscar dados do servidor. Atualize a página.</td></tr>';
+          }
         }
       });
     </script>
