@@ -64,15 +64,15 @@
                 src="../../assets/img/person/user.png"
                 id="top-avatar"
                 alt="Profile"
-                class="rounded-circle shadow-sm"
+                class="rounded-circle shadow-sm bg-light"
                 style="width: 45px; height: 45px; object-fit: cover"
               />
             </div>
           </div>
 
           <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="fw-bold mb-0">Gerenciar Eventos</h5>
-            <a href="form.html" class="btn btn-primary">
+            <h5 class="fw-bold mb-0">Meus Eventos</h5>
+            <a href="form.html" class="btn btn-primary fw-bold shadow-sm">
               <i class="bi bi-plus-lg me-2"></i>Novo Evento
             </a>
           </div>
@@ -102,6 +102,47 @@
       </div>
     </div>
 
+    <!-- Modal Alerta Padrão -->
+    <div class="modal fade" id="modalAlertas" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header text-white" id="modal-alerta-header">
+            <h5 class="modal-title fw-bold">
+              <i class="bi" id="modal-alerta-icon"></i> <span id="modal-alerta-titulo">Mensagem</span>
+            </h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body p-4 text-center">
+            <p class="fs-5 mb-0" id="modal-alerta-mensagem"></p>
+          </div>
+          <div class="modal-footer bg-light border-0 justify-content-center">
+            <button type="button" class="btn btn-secondary px-4 fw-bold" data-bs-dismiss="modal">Fechar</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Confirmação de Exclusão -->
+    <div class="modal fade" id="modalConfirmacao" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header text-white" style="background-color: var(--background);">
+            <h5 class="modal-title fw-bold"><i class="bi bi-exclamation-triangle-fill me-2"></i>Confirmação</h5>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
+          </div>
+          <div class="modal-body p-4 text-center">
+            <p class="fs-5 mb-0">Tem certeza que deseja excluir este evento? Esta ação não pode ser desfeita.</p>
+          </div>
+          <div class="modal-footer bg-light border-0 justify-content-center">
+            <button type="button" class="btn btn-secondary px-4 fw-bold" data-bs-dismiss="modal">Cancelar</button>
+            <button type="button" class="btn btn-danger px-4 fw-bold" id="btn-confirmar-exclusao">Excluir</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
     <script>
       document.addEventListener("DOMContentLoaded", async function () {
         const context = await inicializarPainel("eventos", "..");
@@ -109,10 +150,40 @@
 
         const supabase = context.supabase;
         const perfil = context.perfil;
+        const userId = context.session.user.id;
         const tbody = document.getElementById("tabela-eventos");
 
         if (perfil.foto_perfil) {
           document.getElementById("top-avatar").src = perfil.foto_perfil;
+        }
+
+        // Configuração dos Modais
+        let modalAlertas = new bootstrap.Modal(document.getElementById("modalAlertas"));
+        let modalConfirmacao = new bootstrap.Modal(document.getElementById("modalConfirmacao"));
+        let eventoIdParaExcluir = null;
+
+        function exibirAlerta(titulo, mensagem, tipo) {
+          const header = document.getElementById("modal-alerta-header");
+          const icon = document.getElementById("modal-alerta-icon");
+          
+          document.getElementById("modal-alerta-titulo").innerText = titulo;
+          document.getElementById("modal-alerta-mensagem").innerText = mensagem;
+          
+          header.className = "modal-header text-white";
+          icon.className = "bi me-2";
+
+          if (tipo === "sucesso") {
+              header.style.backgroundColor = "var(--background)";
+              icon.classList.add("bi-check-circle-fill");
+          } else if (tipo === "erro") {
+              header.style.backgroundColor = "#dc3545"; 
+              icon.classList.add("bi-exclamation-triangle-fill");
+          } else {
+              header.style.backgroundColor = "var(--color-azul-riachuelo)";
+              icon.classList.add("bi-info-circle-fill");
+          }
+          
+          modalAlertas.show();
         }
 
         function formatarData(dataISO) {
@@ -124,11 +195,12 @@
           const { data: eventos, error } = await supabase
             .from("eventos")
             .select("id, titulo, data_inicio, data_fim")
+            .eq("usuario_id", userId)
             .order("data_inicio", { ascending: false });
 
           if (error) {
             tbody.innerHTML =
-              '<tr><td colspan="4" class="text-danger text-center">Erro ao carregar dados.</td></tr>';
+              '<tr><td colspan="4" class="text-danger text-center py-4">Erro ao carregar dados.</td></tr>';
             return;
           }
 
@@ -141,7 +213,6 @@
           tbody.innerHTML = "";
 
           eventos.forEach((evento) => {
-            // Lógica para mostrar 1 dia ou um período
             let dataExibicao = formatarData(evento.data_inicio);
             if (evento.data_fim) {
               dataExibicao += ` até ${formatarData(evento.data_fim)}`;
@@ -150,10 +221,10 @@
             const tr = document.createElement("tr");
             tr.innerHTML = `
               <td class="text-secondary fw-medium">#${evento.id}</td>
-              <td class="fw-bold text-primary">${evento.titulo}</td>
+              <td class="fw-bold" style="color: var(--color-azul-riachuelo);">${evento.titulo}</td>
               <td><i class="bi bi-calendar-event me-2 text-secondary"></i>${dataExibicao}</td>
               <td class="text-end">
-                <a href="form.html?id=${evento.id}" class="btn btn-sm btn-outline-primary me-2" title="Editar">
+                <a href="form.html?id=${evento.id}" class="btn btn-sm btn-outline-primary me-2" style="border-color: var(--color-azul-riachuelo); color: var(--color-azul-riachuelo);" title="Editar">
                   <i class="bi bi-pencil"></i>
                 </a>
                 <button class="btn btn-sm btn-outline-danger btn-excluir" data-id="${evento.id}" title="Excluir">
@@ -164,24 +235,40 @@
             tbody.appendChild(tr);
           });
 
-          // Lógica de Exclusão
+          // Lógica de abertura do Modal de Exclusão
           document.querySelectorAll(".btn-excluir").forEach((btn) => {
-            btn.addEventListener("click", async function () {
-              const id = this.getAttribute("data-id");
-              if (confirm(`Excluir o evento #${id} permanentemente?`)) {
-                const { error: deleteError } = await supabase
-                  .from("eventos")
-                  .delete()
-                  .eq("id", id);
-                if (!deleteError) {
-                  carregarEventos();
-                } else {
-                  alert("Erro ao excluir.");
-                }
-              }
+            btn.addEventListener("click", function () {
+              eventoIdParaExcluir = this.getAttribute("data-id");
+              modalConfirmacao.show();
             });
           });
         }
+
+        // Confirmação de Exclusão
+        document.getElementById("btn-confirmar-exclusao").addEventListener("click", async function() {
+            if (!eventoIdParaExcluir) return;
+
+            const btnOriginal = this.innerText;
+            this.innerText = "Excluindo...";
+            this.disabled = true;
+
+            const { error: deleteError } = await supabase
+              .from("eventos")
+              .delete()
+              .eq("id", eventoIdParaExcluir);
+
+            this.innerText = btnOriginal;
+            this.disabled = false;
+            modalConfirmacao.hide();
+
+            if (deleteError) {
+              console.error(deleteError);
+              exibirAlerta("Erro", "Erro ao excluir o evento.", "erro");
+            } else {
+              exibirAlerta("Sucesso", "O evento foi excluído com sucesso!", "sucesso");
+              carregarEventos(); // Recarrega a tabela imediatamente
+            }
+        });
 
         carregarEventos();
       });

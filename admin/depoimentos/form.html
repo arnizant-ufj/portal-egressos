@@ -232,6 +232,7 @@
               type="button"
               class="btn-close btn-close-white"
               data-bs-dismiss="modal"
+              aria-label="Fechar"
             ></button>
           </div>
           <div class="modal-body p-4 text-center">
@@ -266,6 +267,7 @@
         );
         let redirectUrl = null;
 
+        // Função de Alerta Padronizada com cor --background para sucesso
         function exibirAlerta(titulo, mensagem, tipo, redUrl = null) {
           const header = document.getElementById("modal-alerta-header");
           const icon = document.getElementById("modal-alerta-icon");
@@ -278,7 +280,7 @@
           icon.className = "bi me-2";
 
           if (tipo === "sucesso") {
-            header.style.backgroundColor = "var(--color-verde-corrego)";
+            header.style.backgroundColor = "var(--background)";
             icon.classList.add("bi-check-circle-fill");
           } else if (tipo === "erro") {
             header.style.backgroundColor = "#dc3545";

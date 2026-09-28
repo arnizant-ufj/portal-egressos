@@ -71,7 +71,10 @@
           </div>
 
           <div class="mb-3">
-            <a href="listar.html" class="btn btn-outline-secondary btn-sm">
+            <a
+              href="listar.html"
+              class="btn btn-outline-secondary btn-sm fw-bold"
+            >
               <i class="bi bi-arrow-left me-1"></i> Voltar para a Lista
             </a>
           </div>
@@ -136,8 +139,9 @@
               </div>
 
               <div class="col-12">
-                <label class="form-label fw-medium"
-                  >Descrição Completa * (Permitido HTML)</label
+                <label class="form-label fw-medium text-secondary"
+                  >Texto Completo * (Permitido uso de tags HTML como &lt;p align="justify"&gt;
+                  para parágrafo justificado ou &lt;h2&gt; para subtítulo)</label
                 >
                 <textarea
                   class="form-control"
@@ -158,7 +162,7 @@
                     id="spinner-salvar"
                     role="status"
                   ></span>
-                  <span id="texto-btn-salvar"
+                  <span id="texto-btn-salvar" class="fw-bold"
                     ><i class="bi bi-check2-circle me-2"></i> Salvar
                     Evento</span
                   >
@@ -169,6 +173,41 @@
         </div>
       </div>
     </div>
+
+    <!-- Modal Alerta Padrão -->
+    <div class="modal fade" id="modalAlertas" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header text-white" id="modal-alerta-header">
+            <h5 class="modal-title fw-bold" id="modalAlertasLabel">
+              <i class="bi" id="modal-alerta-icon"></i>
+              <span id="modal-alerta-titulo">Mensagem</span>
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Fechar"
+            ></button>
+          </div>
+          <div class="modal-body p-4 text-center">
+            <p class="fs-5 mb-0" id="modal-alerta-mensagem"></p>
+          </div>
+          <div class="modal-footer bg-light border-0 justify-content-center">
+            <button
+              type="button"
+              class="btn btn-secondary px-4 fw-bold"
+              data-bs-dismiss="modal"
+              id="btn-fechar-modal"
+            >
+              Fechar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <script>
       document.addEventListener("DOMContentLoaded", async function () {
@@ -182,6 +221,46 @@
         if (perfil.foto_perfil) {
           document.getElementById("top-avatar").src = perfil.foto_perfil;
         }
+
+        // Configuração dos Modais
+        let modalAlertasInstance = new bootstrap.Modal(
+          document.getElementById("modalAlertas"),
+        );
+        let redirectUrl = null;
+
+        function exibirAlerta(titulo, mensagem, tipo, redUrl = null) {
+          const header = document.getElementById("modal-alerta-header");
+          const icon = document.getElementById("modal-alerta-icon");
+          redirectUrl = redUrl;
+
+          document.getElementById("modal-alerta-titulo").innerText = titulo;
+          document.getElementById("modal-alerta-mensagem").innerText = mensagem;
+
+          header.className = "modal-header text-white";
+          icon.className = "bi me-2";
+
+          if (tipo === "sucesso") {
+            header.style.backgroundColor = "var(--background)";
+            icon.classList.add("bi-check-circle-fill");
+          } else if (tipo === "erro") {
+            header.style.backgroundColor = "#dc3545";
+            icon.classList.add("bi-exclamation-triangle-fill");
+          } else {
+            header.style.backgroundColor = "var(--color-azul-riachuelo)";
+            icon.classList.add("bi-info-circle-fill");
+          }
+
+          modalAlertasInstance.show();
+        }
+
+        // Se tiver URL de redirecionamento, faz isso ao fechar o modal
+        document
+          .getElementById("modalAlertas")
+          .addEventListener("hidden.bs.modal", function () {
+            if (redirectUrl) {
+              window.location.href = redirectUrl;
+            }
+          });
 
         const urlParams = new URLSearchParams(window.location.search);
         const eventoId = urlParams.get("id");
@@ -210,8 +289,12 @@
             .single();
 
           if (error || !data) {
-            alert("Evento não encontrado!");
-            window.location.href = "listar.html";
+            exibirAlerta(
+              "Erro!",
+              "Evento não encontrado!",
+              "erro",
+              "listar.html",
+            );
             return;
           }
 
@@ -279,19 +362,31 @@
                 .update(payload)
                 .eq("id", eventoId);
               if (error) throw error;
-              alert("Evento atualizado com sucesso!");
+              exibirAlerta(
+                "Sucesso!",
+                "Evento atualizado com sucesso!",
+                "sucesso",
+                "listar.html",
+              );
             } else {
               const { error } = await supabase
                 .from("eventos")
                 .insert([payload]);
               if (error) throw error;
-              alert("Evento publicado com sucesso!");
+              exibirAlerta(
+                "Sucesso!",
+                "Evento publicado com sucesso!",
+                "sucesso",
+                "listar.html",
+              );
             }
-
-            window.location.href = "listar.html";
           } catch (error) {
             console.error(error);
-            alert("Ocorreu um erro ao salvar o evento.");
+            exibirAlerta(
+              "Erro!",
+              "Ocorreu um erro ao salvar o evento. Tente novamente.",
+              "erro",
+            );
           } finally {
             btnSalvar.disabled = false;
             spinner.classList.add("d-none");

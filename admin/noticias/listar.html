@@ -7,10 +7,19 @@
     <link href="../../assets/img/prograd1.ico" rel="icon" />
     <link href="https://fonts.googleapis.com" rel="preconnect" />
     <link href="https://fonts.gstatic.com" rel="preconnect" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-    <link href="../../assets/vendor/bootstrap/css/bootstrap.min.css" rel="stylesheet" />
-    <link href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css" rel="stylesheet" />
+    <link
+      href="../../assets/vendor/bootstrap/css/bootstrap.min.css"
+      rel="stylesheet"
+    />
+    <link
+      href="../../assets/vendor/bootstrap-icons/bootstrap-icons.css"
+      rel="stylesheet"
+    />
     <link href="../../assets/css/main.css" rel="stylesheet" />
     <link href="../../assets/css/painel.css" rel="stylesheet" />
 
@@ -24,30 +33,48 @@
       <h5 class="mt-3 text-secondary fw-bold">Carregando módulo...</h5>
     </div>
 
-    <div class="container-fluid" id="main-panel" style="display: none;">
+    <div class="container-fluid" id="main-panel" style="display: none">
       <div class="row">
-        
         <div class="col-md-3 col-lg-2 p-0 sidebar position-fixed">
           <div class="sidebar-header">
-            <img src="../../assets/img/logo_ufj_branca.png" alt="Logo UFJ" class="img-fluid mb-3" style="max-height: 55px" />
+            <img
+              src="../../assets/img/logo_ufj_branca.png"
+              alt="Logo UFJ"
+              class="img-fluid mb-3"
+              style="max-height: 55px"
+            />
             <h6 class="mb-0 text-white fw-bold" id="badge-nivel">Painel</h6>
           </div>
           <nav class="nav flex-column flex-grow-1" id="sidebar-menu"></nav>
-          <a href="#" class="logout-btn" id="btn-logout"><i class="bi bi-box-arrow-left"></i> Sair</a>
+          <a href="#" class="logout-btn" id="btn-logout"
+            ><i class="bi bi-box-arrow-left"></i> Sair</a
+          >
         </div>
 
         <div class="col-md-9 offset-md-3 col-lg-10 offset-lg-2 content-area">
-          <div class="d-flex justify-content-between align-items-center mb-5 bg-white p-4 shadow-sm rounded-3 border-0">
-            <h4 class="mb-0 text-secondary fw-bold" id="page-title">Notícias</h4>
+          <div
+            class="d-flex justify-content-between align-items-center mb-5 bg-white p-4 shadow-sm rounded-3 border-0"
+          >
+            <h4 class="mb-0 text-secondary fw-bold" id="page-title">
+              Notícias
+            </h4>
             <div class="d-flex align-items-center">
-              <span class="me-3 fw-medium text-secondary" id="user-name">...</span>
-              <i class="bi bi-person-circle fs-2 text-primary"></i>
+              <span class="me-3 fw-medium text-secondary" id="user-name"
+                >...</span
+              >
+              <img
+                src="../../assets/img/person/user.png"
+                id="top-avatar"
+                alt="Profile"
+                class="rounded-circle shadow-sm bg-light"
+                style="width: 45px; height: 45px; object-fit: cover"
+              />
             </div>
           </div>
 
           <div class="d-flex justify-content-between align-items-center mb-4">
-            <h5 class="fw-bold mb-0">Gerenciar Notícias</h5>
-            <a href="form.html" class="btn btn-primary">
+            <h5 class="fw-bold mb-0">Minhas Notícias</h5>
+            <a href="form.html" class="btn btn-primary fw-bold shadow-sm">
               <i class="bi bi-plus-lg me-2"></i>Nova Notícia
             </a>
           </div>
@@ -65,57 +92,183 @@
                   </tr>
                 </thead>
                 <tbody id="tabela-noticias">
-                  <tr><td colspan="5" class="text-center py-4">Carregando notícias...</td></tr>
+                  <tr>
+                    <td colspan="5" class="text-center py-4">
+                      Carregando notícias...
+                    </td>
+                  </tr>
                 </tbody>
               </table>
             </div>
           </div>
-
         </div>
       </div>
     </div>
 
+    <!-- Modal Alerta Padrão -->
+    <div class="modal fade" id="modalAlertas" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header text-white" id="modal-alerta-header">
+            <h5 class="modal-title fw-bold">
+              <i class="bi" id="modal-alerta-icon"></i>
+              <span id="modal-alerta-titulo">Mensagem</span>
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body p-4 text-center">
+            <p class="fs-5 mb-0" id="modal-alerta-mensagem"></p>
+          </div>
+          <div class="modal-footer bg-light border-0 justify-content-center">
+            <button
+              type="button"
+              class="btn btn-secondary px-4 fw-bold"
+              data-bs-dismiss="modal"
+            >
+              Fechar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Modal Confirmação de Exclusão -->
+    <div
+      class="modal fade"
+      id="modalConfirmacao"
+      tabindex="-1"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div
+            class="modal-header text-white"
+            style="background-color: var(--background)"
+          >
+            <h5 class="modal-title fw-bold">
+              <i class="bi bi-exclamation-triangle-fill me-2"></i>Confirmação
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+            ></button>
+          </div>
+          <div class="modal-body p-4 text-center">
+            <p class="fs-5 mb-0">
+              Tem certeza que deseja excluir esta notícia? Esta ação não pode
+              ser desfeita.
+            </p>
+          </div>
+          <div class="modal-footer bg-light border-0 justify-content-center">
+            <button
+              type="button"
+              class="btn btn-secondary px-4 fw-bold"
+              data-bs-dismiss="modal"
+            >
+              Cancelar
+            </button>
+            <button
+              type="button"
+              class="btn btn-danger px-4 fw-bold"
+              id="btn-confirmar-exclusao"
+            >
+              Excluir
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
     <script>
       document.addEventListener("DOMContentLoaded", async function () {
-        // Inicializa o layout avisando que estamos na página 'noticias'
-        const context = await inicializarPainel('noticias', '..');
-        if (!context) return; // Se não tem sessão, para aqui
+        const context = await inicializarPainel("noticias", "..");
+        if (!context) return;
 
         const supabase = context.supabase;
-        const tbody = document.getElementById('tabela-noticias');
+        const userId = context.session.user.id;
+        const perfil = context.perfil;
+        const tbody = document.getElementById("tabela-noticias");
 
-        // Função para buscar e listar as notícias
+        if (perfil.foto_perfil) {
+          document.getElementById("top-avatar").src = perfil.foto_perfil;
+        }
+
+        // Configuração dos Modais
+        let modalAlertas = new bootstrap.Modal(
+          document.getElementById("modalAlertas"),
+        );
+        let modalConfirmacao = new bootstrap.Modal(
+          document.getElementById("modalConfirmacao"),
+        );
+        let noticiaIdParaExcluir = null;
+
+        function exibirAlerta(titulo, mensagem, tipo) {
+          const header = document.getElementById("modal-alerta-header");
+          const icon = document.getElementById("modal-alerta-icon");
+
+          document.getElementById("modal-alerta-titulo").innerText = titulo;
+          document.getElementById("modal-alerta-mensagem").innerText = mensagem;
+
+          header.className = "modal-header text-white";
+          icon.className = "bi me-2";
+
+          if (tipo === "sucesso") {
+            header.style.backgroundColor = "var(--background)";
+            icon.classList.add("bi-check-circle-fill");
+          } else if (tipo === "erro") {
+            header.style.backgroundColor = "#dc3545";
+            icon.classList.add("bi-exclamation-triangle-fill");
+          } else {
+            header.style.backgroundColor = "var(--color-azul-riachuelo)";
+            icon.classList.add("bi-info-circle-fill");
+          }
+
+          modalAlertas.show();
+        }
+
+        // Função para buscar e listar as notícias exclusivas do usuário logado
         async function carregarNoticias() {
           const { data: noticias, error } = await supabase
-            .from('noticias')
-            .select('id, titulo, categoria, created_at')
-            .order('created_at', { ascending: false });
+            .from("noticias")
+            .select("id, titulo, categoria, created_at")
+            .eq("usuario_id", userId)
+            .order("created_at", { ascending: false });
 
           if (error) {
             console.error("Erro ao buscar notícias:", error);
-            tbody.innerHTML = '<tr><td colspan="5" class="text-danger text-center">Erro ao carregar dados.</td></tr>';
+            tbody.innerHTML =
+              '<tr><td colspan="5" class="text-danger text-center py-4">Erro ao carregar dados.</td></tr>';
             return;
           }
 
           if (noticias.length === 0) {
-            tbody.innerHTML = '<tr><td colspan="5" class="text-center text-secondary py-4">Nenhuma notícia cadastrada.</td></tr>';
+            tbody.innerHTML =
+              '<tr><td colspan="5" class="text-center text-secondary py-4">Você ainda não cadastrou nenhuma notícia.</td></tr>';
             return;
           }
 
-          tbody.innerHTML = ''; // Limpa a tabela
+          tbody.innerHTML = "";
 
-          noticias.forEach(noticia => {
-            // Formata a data (de timestamp do banco para DD/MM/YYYY)
-            const dataFormatada = new Date(noticia.created_at).toLocaleDateString('pt-BR');
+          noticias.forEach((noticia) => {
+            const dataFormatada = new Date(
+              noticia.created_at,
+            ).toLocaleDateString("pt-BR");
 
-            const tr = document.createElement('tr');
+            const tr = document.createElement("tr");
             tr.innerHTML = `
               <td class="text-secondary fw-medium">#${noticia.id}</td>
-              <td class="fw-bold">${noticia.titulo}</td>
+              <td class="fw-bold" style="color: var(--color-azul-riachuelo);">${noticia.titulo}</td>
               <td><span class="badge bg-light text-dark border">${noticia.categoria}</span></td>
               <td>${dataFormatada}</td>
               <td class="text-end">
-                <a href="form.html?id=${noticia.id}" class="btn btn-sm btn-outline-primary me-2" title="Editar">
+                <a href="form.html?id=${noticia.id}" class="btn btn-sm btn-outline-primary me-2" style="border-color: var(--color-azul-riachuelo); color: var(--color-azul-riachuelo);" title="Editar">
                   <i class="bi bi-pencil"></i>
                 </a>
                 <button class="btn btn-sm btn-outline-danger btn-excluir" data-id="${noticia.id}" title="Excluir">
@@ -126,32 +279,47 @@
             tbody.appendChild(tr);
           });
 
-          // Adiciona o evento de clique nos botões de excluir
-          document.querySelectorAll('.btn-excluir').forEach(btn => {
-            btn.addEventListener('click', async function() {
-              const id = this.getAttribute('data-id');
-              
-              if (confirm(`Tem certeza que deseja excluir a notícia #${id}?\nEssa ação não pode ser desfeita.`)) {
-                
-                // Exclui do banco
-                const { error: deleteError } = await supabase
-                  .from('noticias')
-                  .delete()
-                  .eq('id', id);
-
-                if (deleteError) {
-                  alert("Erro ao excluir notícia.");
-                  console.error(deleteError);
-                } else {
-                  alert("Notícia excluída com sucesso!");
-                  carregarNoticias(); // Recarrega a tabela na tela
-                }
-              }
+          // Adiciona o evento para abrir o modal de exclusão
+          document.querySelectorAll(".btn-excluir").forEach((btn) => {
+            btn.addEventListener("click", function () {
+              noticiaIdParaExcluir = this.getAttribute("data-id");
+              modalConfirmacao.show();
             });
           });
         }
 
-        // Chama a função ao abrir a página
+        // Ação do botão Confirmar dentro do Modal de Exclusão
+        document
+          .getElementById("btn-confirmar-exclusao")
+          .addEventListener("click", async function () {
+            if (!noticiaIdParaExcluir) return;
+
+            const btnOriginal = this.innerText;
+            this.innerText = "Excluindo...";
+            this.disabled = true;
+
+            const { error: deleteError } = await supabase
+              .from("noticias")
+              .delete()
+              .eq("id", noticiaIdParaExcluir);
+
+            this.innerText = btnOriginal;
+            this.disabled = false;
+            modalConfirmacao.hide();
+
+            if (deleteError) {
+              console.error(deleteError);
+              exibirAlerta("Erro", "Erro ao excluir notícia.", "erro");
+            } else {
+              exibirAlerta(
+                "Sucesso",
+                "A notícia foi excluída com sucesso!",
+                "sucesso",
+              );
+              carregarNoticias(); // Recarrega a tabela imediatamente
+            }
+          });
+
         carregarNoticias();
       });
     </script>

@@ -67,7 +67,10 @@
           </div>
 
           <div class="mb-3">
-            <a href="listar.html" class="btn btn-outline-secondary btn-sm">
+            <a
+              href="listar.html"
+              class="btn btn-outline-secondary btn-sm fw-bold"
+            >
               <i class="bi bi-arrow-left me-1"></i> Voltar para a Lista
             </a>
           </div>
@@ -79,7 +82,9 @@
 
             <form class="row g-3" id="form-noticia">
               <div class="col-md-8">
-                <label class="form-label fw-medium">Título da Notícia *</label>
+                <label class="form-label fw-medium text-secondary"
+                  >Título da Notícia *</label
+                >
                 <input
                   type="text"
                   class="form-control"
@@ -89,7 +94,9 @@
               </div>
 
               <div class="col-md-4">
-                <label class="form-label fw-medium">Categoria *</label>
+                <label class="form-label fw-medium text-secondary"
+                  >Categoria *</label
+                >
                 <select class="form-select" id="not-categoria" required>
                   <option value="" selected disabled>Selecione...</option>
                   <option value="Tecnologia">Tecnologia</option>
@@ -101,7 +108,7 @@
               </div>
 
               <div class="col-md-6">
-                <label class="form-label fw-medium"
+                <label class="form-label fw-medium text-secondary"
                   >Autor * (Ex: Seu nome ou Equipe UFJ)</label
                 >
                 <input
@@ -113,7 +120,7 @@
               </div>
 
               <div class="col-md-6">
-                <label class="form-label fw-medium"
+                <label class="form-label fw-medium text-secondary"
                   >Tempo de Leitura * (Ex: 3 min)</label
                 >
                 <input
@@ -125,7 +132,9 @@
               </div>
 
               <div class="col-md-6">
-                <label class="form-label fw-medium">Imagem Principal</label>
+                <label class="form-label fw-medium text-secondary"
+                  >Imagem Principal</label
+                >
                 <input
                   type="file"
                   class="form-control"
@@ -138,7 +147,9 @@
               </div>
 
               <div class="col-md-6">
-                <label class="form-label fw-medium">Imagem Secundária</label>
+                <label class="form-label fw-medium text-secondary"
+                  >Imagem Secundária</label
+                >
                 <input
                   type="file"
                   class="form-control"
@@ -151,22 +162,22 @@
               </div>
 
               <div class="col-12">
-                <label class="form-label fw-medium"
+                <label class="form-label fw-medium text-secondary"
                   >Resumo * (Texto curto para o card)</label
                 >
                 <textarea
                   class="form-control"
                   id="not-resumo"
                   rows="3"
-                  maxlength="200"
+                  maxlength="300"
                   required
                 ></textarea>
               </div>
 
               <div class="col-12">
-                <label class="form-label fw-medium"
-                  >Texto Completo * (Permitido uso de tags HTML como &lt;p&gt;
-                  ou &lt;h2&gt;)</label
+                <label class="form-label fw-medium text-secondary"
+                  >Texto Completo * (Permitido uso de tags HTML como &lt;p align="justify"&gt;
+                  para parágrafo justificado ou &lt;h2&gt; para subtítulo)</label
                 >
                 <textarea
                   class="form-control"
@@ -188,7 +199,7 @@
                     role="status"
                     aria-hidden="true"
                   ></span>
-                  <span id="texto-btn-salvar"
+                  <span id="texto-btn-salvar" class="fw-bold"
                     ><i class="bi bi-check2-circle me-2"></i> Salvar
                     Notícia</span
                   >
@@ -200,14 +211,89 @@
       </div>
     </div>
 
+    <!-- Modal Alerta Padrão -->
+    <div class="modal fade" id="modalAlertas" tabindex="-1" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content border-0 shadow">
+          <div class="modal-header text-white" id="modal-alerta-header">
+            <h5 class="modal-title fw-bold" id="modalAlertasLabel">
+              <i class="bi" id="modal-alerta-icon"></i>
+              <span id="modal-alerta-titulo">Mensagem</span>
+            </h5>
+            <button
+              type="button"
+              class="btn-close btn-close-white"
+              data-bs-dismiss="modal"
+              aria-label="Fechar"
+            ></button>
+          </div>
+          <div class="modal-body p-4 text-center">
+            <p class="fs-5 mb-0" id="modal-alerta-mensagem"></p>
+          </div>
+          <div class="modal-footer bg-light border-0 justify-content-center">
+            <button
+              type="button"
+              class="btn btn-secondary px-4 fw-bold"
+              data-bs-dismiss="modal"
+              id="btn-fechar-modal"
+            >
+              Fechar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="../../assets/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
     <script>
       document.addEventListener("DOMContentLoaded", async function () {
         // Inicializa o layout de Admin
-        const context = await inicializarPainel('noticias', '..');
+        const context = await inicializarPainel("noticias", "..");
         if (!context) return;
 
         const supabase = context.supabase;
         const session = context.session;
+
+        // Configuração dos Modais
+        let modalAlertasInstance = new bootstrap.Modal(
+          document.getElementById("modalAlertas"),
+        );
+        let redirectUrl = null;
+
+        function exibirAlerta(titulo, mensagem, tipo, redUrl = null) {
+          const header = document.getElementById("modal-alerta-header");
+          const icon = document.getElementById("modal-alerta-icon");
+          redirectUrl = redUrl;
+
+          document.getElementById("modal-alerta-titulo").innerText = titulo;
+          document.getElementById("modal-alerta-mensagem").innerText = mensagem;
+
+          header.className = "modal-header text-white";
+          icon.className = "bi me-2";
+
+          if (tipo === "sucesso") {
+            header.style.backgroundColor = "var(--background)";
+            icon.classList.add("bi-check-circle-fill");
+          } else if (tipo === "erro") {
+            header.style.backgroundColor = "#dc3545";
+            icon.classList.add("bi-exclamation-triangle-fill");
+          } else {
+            header.style.backgroundColor = "var(--color-azul-riachuelo)";
+            icon.classList.add("bi-info-circle-fill");
+          }
+
+          modalAlertasInstance.show();
+        }
+
+        // Se tiver URL de redirecionamento, faz isso ao fechar o modal
+        document
+          .getElementById("modalAlertas")
+          .addEventListener("hidden.bs.modal", function () {
+            if (redirectUrl) {
+              window.location.href = redirectUrl;
+            }
+          });
 
         // Verifica se é Edição (se tem ?id= na URL)
         const urlParams = new URLSearchParams(window.location.search);
@@ -238,8 +324,12 @@
             .single();
 
           if (error || !data) {
-            alert("Notícia não encontrada!");
-            window.location.href = "listar.html";
+            exibirAlerta(
+              "Erro!",
+              "Notícia não encontrada!",
+              "erro",
+              "listar.html",
+            );
             return;
           }
 
@@ -317,20 +407,31 @@
                 .update(payload)
                 .eq("id", noticiaId);
               if (error) throw error;
-              alert("Notícia atualizada com sucesso!");
+              exibirAlerta(
+                "Sucesso!",
+                "Notícia atualizada com sucesso!",
+                "sucesso",
+                "listar.html",
+              );
             } else {
               const { error } = await supabase
                 .from("noticias")
                 .insert([payload]);
               if (error) throw error;
-              alert("Notícia publicada com sucesso!");
+              exibirAlerta(
+                "Sucesso!",
+                "Notícia publicada com sucesso!",
+                "sucesso",
+                "listar.html",
+              );
             }
-
-            // Voltar para a lista
-            window.location.href = "listar.html";
           } catch (error) {
             console.error("Erro ao salvar:", error);
-            alert("Ocorreu um erro ao salvar a notícia. Tente novamente.");
+            exibirAlerta(
+              "Erro!",
+              "Ocorreu um erro ao salvar a notícia. Tente novamente.",
+              "erro",
+            );
           } finally {
             btnSalvar.disabled = false;
             spinner.classList.add("d-none");
