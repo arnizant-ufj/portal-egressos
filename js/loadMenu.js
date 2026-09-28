@@ -218,7 +218,7 @@ document.addEventListener("DOMContentLoaded", function () {
             : '<i class="bi bi-star text-muted me-1"></i>';
         }
 
-        const foto = depoimento.foto_perfil || "assets/img/person/person-m-9.webp";
+        const foto = depoimento.foto_perfil || "assets/img/person/user.png";
         const nome = depoimento.nome;
         const curso = depoimento.curso_ufj || 'Egresso UFJ';
 
